@@ -17,3 +17,4 @@ changelog.txt
 rrtfunnel-transmag.bbl
 rrtfunnel-transmag.blg
 rrtfunnel-transmag.dvi
+build/*
