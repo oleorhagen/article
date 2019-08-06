@@ -1,0 +1,16 @@
+*.aux
+*.log
+*.pdf
+*.synctex.gz
+IEEEtran.cls
+IEEEtran_HOWTO.pdf
+README
+auto
+bare_adv.tex
+bare_conf.tex
+bare_conf_compsoc.tex
+bare_jrnl.tex
+bare_jrnl_compsoc.tex
+bare_jrnl_comsoc.tex
+bare_jrnl_transmag.tex
+changelog.txt
