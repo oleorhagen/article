@@ -115,7 +115,7 @@
 \ifCLASSINFOpdf
   \usepackage[pdftex]{graphicx}
   % declare the path(s) where your graphic files are
-  \graphicspath{{../pdf/}{../jpeg/}}
+  \graphicspath{{pdf/}{../jpeg/}}
   % and their extensions so you won't have to specify these with
   % every instance of \includegraphics
   % \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
@@ -681,8 +681,10 @@ H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
 %\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{mshell}}]{Michael Shell}
 % or if you just want to reserve a space for a photo:
 
-\begin{IEEEbiography}{Michael Shell}
-Biography text here.
+\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{ole-p-biography-pic.png}}]{Ole
+  Petter Orhagen}
+Ole Petter Orhagen is a former master student at the \textit{University of Oslo}, and is
+currently working as a software engineer at \textit{Northern Tech}.
 \end{IEEEbiography}
 
 % if you will not have a photo at all:
