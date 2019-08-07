@@ -872,3 +872,71 @@ the problems with the Euclidean distance metric.
   \label{fig:non-holonomic-vehicle-euclidean-weakness}
 \end{figure}
 
+
+\subsection{The Funnel-Graph}
+
+Even though the \rrtfunnel{} algorithm can work just fine with a collection of
+funnels, and simply brute-force all funnels at the planning stage, it is helpful
+to associate some kind of structure with the collection. Therefore the funnels
+will be organized into a graph structure \(\mathcal{G}\) where each funnel is an
+edge in the graph, and the inlets and the outlets are vertices. The planner
+needs information about which funnels that are composable, as they may not all
+be composable with each other, implying that the resultant graph is not
+necessarily complete.
+
+\begin{figure}[!t]
+  \begin{subfigure}[b]{0.5\textwidth}
+    \includegraphics[trim={5cm 5cm 5cm 5cm},
+    width=.95\textwidth]{figures/method/trajectory-sampled}
+    \caption{Trajectory sampled 21 times.\newline}
+  \end{subfigure}%
+  \begin{subfigure}[b]{0.5\textwidth}
+    \includegraphics[trim={5cm 5cm 5cm 5cm},
+    width=.95\textwidth]{figures/method/funnel-sampled}
+    \caption{The verified trajectory ellipsis overlaid at the sample times.}
+  \end{subfigure}
+  \caption[A funnel overlaid a trajector]{The calculated reachable set overlaid
+    a straight motion trajector.}
+    \label{fig:funnel-straight-sampled}
+\end{figure}
+
+Composition of funnels is verified using \cref{def:invarant-funnel-composition},
+and the composability graph is built using \cref{alg:create-funnel-graph} on
+page~\pageref{alg:create-funnel-graph}. A \ac{SOS}-program which implements the
+composition algorithm can be found in
+\cref{sec:funnel-composability-program-sos}.
+
+\begin{algorithm}[H]
+  \caption{Check funnel composability}
+  \label{alg:create-funnel-graph}
+  \begin{algorithmic}[0]
+    \Procedure{CheckFunnelComposability}{\(\mathcal{F} \rightarrow
+      \mathcal{G}(\mathcal{F})\)} \Comment{Takes \(\mathcal{F}\), the basic set
+      of funnels, and returns \(\mathcal{G}\), a directed graph, representing
+      the composability of the funnels.}
+    \For{ \(F_{i} \in \mathcal{F}\)}
+    \For {\(F_{j} \in \mathcal{F}\)}
+    \If {\(F_{i(t_{0})} \subset F_{j}(t_{\mathit{end}})\)}
+      \State \(\mathcal{G} \leftarrow{} \left( F_{i}(t_{0}), F_{j}(t_{end})
+      \right)\)
+    \EndIf
+    \EndFor
+    \EndFor
+  \end{algorithmic}
+\end{algorithm}
+% \DontPrintSemicolon \SetAlgoNoLine
+
+%   \KwIn{\(\mathcal{F}\) -- The basis set of funnels computed around the nominal
+%     trajectories.}%
+%   \KwOut{\(\mathcal{G}(\mathcal{F})\) -- Directed graph representing the
+%     composability of funnels.}
+
+%   \ForEach{\(F_{i} \in \mathcal{F}\)}%
+%   { \ForEach{\(F_{j} \in \mathcal{F}\)} { \If{\(F_{i}(t_{0}) \subset
+%         F_{j}(t_{end})\)}%
+%       { \(\mathcal{G} \leftarrow{} \left( F_{i}(t_{0}), F_{j}(t_{end})
+%         \right)\)%
+%       }%
+%     }%
+%   }
+% \end{algorithm}
