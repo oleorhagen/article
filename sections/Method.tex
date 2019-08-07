@@ -581,3 +581,177 @@ together into a tree have a look at \cref{fig:funnel-composition-tree}.
     basis set.}
   \label{fig:funnel-composition-tree}
 \end{figure}
+
+
+\subsection{Invariance of the Funnels Calculated}
+
+The funnels generated are \textit{outer approximations} of reachable sets for
+the system at hand~\cite{majumdarFunnelLibrariesRealtime2017}. This means that
+in general they are larger than the actual reachable set for the system. This
+can be verified through a Monte-Carlo simulation. Running N-simulations from the
+funnel inlet, and storing the solutions, it is possible to visualize the actual
+funnel for the system, an example of which can be seen in
+\cref{fig:funnel-simulated-overlaid}, and further explored for a single funnel
+in \cref{fig:outer-approximation-monte-carlo}.
+
+By comparing one of the funnels in the funnel set with a funnel based from
+\(10.000\) simulation runs, it is seen that the calculated funnels are indeed
+proper outer approximations of the time-reachable sets for the uncertain
+dynamical system. Therefore, the conclusion is that the uncertain trajectories
+are contained within the funnels used in the planner, and the trajectories can
+be seen as robust to uncertainty given the uncertainty and dynamical assumptions
+made.
+
+%% TODO -- Should this monster even be included?
+% \begin{figure}[!t]
+%   \begin{subfigure}[c]{0.3\linewidth}
+%     \includegraphics[width=.95\linewidth, trim={0cm 4cm 0cm
+%       4cm}]{figures/method/FunnelSimnew4}
+%   \end{subfigure}
+%   \begin{subfigure}[c]{0.3\linewidth}
+%     \includegraphics[width=.95\linewidth, trim={0cm 4cm 0cm
+%       4cm}]{figures/method/FunnelSimnew1}
+%   \end{subfigure}
+%   \begin{subfigure}[c]{0.3\linewidth}
+%     \includegraphics[width=.95\linewidth, trim={0cm 4cm 0cm
+%       4cm}]{figures/method/FunnelSimnew5}
+%   \end{subfigure}
+%   \caption[A visualization of the simulated and the calculated reachable set]{The simulated non-polynomial system trajectories (green), overlaid
+%     with the outer approximation that is the funnel returned by the \ac{SOS}
+%     calculation (grey) for three trajectories from the trajectory library
+%     \(\mathcal{T}\).}
+%   \label{fig:funnel-simulated-overlaid}
+% \end{figure}
+
+% \begin{figure}[!t]
+%   % Regular xy-funnel
+%   \begin{subfigure}{0.5\linewidth}
+%     \includegraphics[trim={0cm 6cm 0cm 6cm},
+%     width=.95\linewidth]{figures/method/FunnelSim1}
+%     \caption{Comparison of the \ac{SOS} funnel in the xy-plane with the
+%       simulated non-polynomial system overlaid in green, generated from
+%       \(10.000\) Monte-Carlo simulations.}
+%   \end{subfigure}%
+%   % 
+%   \quad
+%   %
+%   \begin{subfigure}{0.5\linewidth}
+%     % y-theta funnel
+%     \includegraphics[trim={0cm 6cm 0cm 6cm},
+%     width=.95\linewidth]{figures/method/FunnelSimythetafunnel}
+%     \caption{Comparison of the \ac{SOS} funnel in the \(\theta\)-y plane, with
+%       the simulated non-polynomial system overlaid in green, generated from
+%       \(10.000\) Monte-Carlo simulations.}
+%   \end{subfigure}%
+%   % 
+%   \\
+%   %
+%   \fbox{%
+%     \begin{subfigure}{0.5\linewidth} % Left subfig
+%       % 
+%       \begin{subfigure}[b]{0.5\linewidth} % Inner left
+%         \includegraphics[trim={1cm 7cm 1cm 7cm},
+%         width=\linewidth]{figures/method/FunnelSimOverlaid1funnel-1}
+%       \end{subfigure}%
+%       % 
+%       \begin{subfigure}[b]{0.5\linewidth}
+%         \includegraphics[trim={1cm 7cm 1cm 7cm},
+%         width=\linewidth]{figures/method/FunnelSimOverlaid3funnel-1}
+%       \end{subfigure}%
+%       % 
+%       \\
+%       % 
+%       \begin{subfigure}[b]{0.5\linewidth}
+%         \includegraphics[trim={1cm 7cm 1cm 7cm},
+%         width=\linewidth]{figures/method/FunnelSimOverlaid6funnel-1}
+%       \end{subfigure}%
+%       % 
+%       \begin{subfigure}[b]{0.5\linewidth}
+%         \includegraphics[trim={1cm 7cm 1cm 7cm},
+%         width=\linewidth]{figures/method/FunnelSimOverlaid9funnel-1}
+%       \end{subfigure}%
+%       % 
+%       \\
+%       % 
+%       \begin{subfigure}[b]{0.5\linewidth}
+%         \includegraphics[trim={1cm 7cm 1cm 7cm},
+%         width=\linewidth]{figures/method/FunnelSimOverlaid12funnel-1}
+%       \end{subfigure}%
+%       % 
+%       \begin{subfigure}[b]{0.5\linewidth}
+%         \includegraphics[trim={1cm 7cm 1cm 7cm},
+%         width=\linewidth]{figures/method/FunnelSimOverlaid15funnel-1}
+%       \end{subfigure}%
+%       % 
+%       \\
+%       % 
+%       \begin{subfigure}[b]{0.5\linewidth}
+%         \includegraphics[trim={1cm 7cm 1cm 7cm},
+%         width=\linewidth]{figures/method/FunnelSimOverlaid18funnel-1}
+%       \end{subfigure}%
+%       % 
+%       \begin{subfigure}[b]{0.5\linewidth}
+%         \includegraphics[trim={1cm 7cm 1cm 7cm},
+%         width=\linewidth]{figures/method/FunnelSimOverlaid20funnel-1}
+%       \end{subfigure}%
+%     \end{subfigure} % End Left subfig
+%   }
+%   % 
+%   % \; % Left and right split
+%   % 
+%   \fbox{%
+%     \begin{subfigure}{0.5\linewidth} % Right subfig
+%       % 
+%       \begin{subfigure}[b]{0.5\linewidth} % Inner left
+%         \includegraphics[trim={1cm 7cm 1cm 7cm},
+%         width=\linewidth]{figures/method/FunnelSimOverlaid1funnel-1y-theta}
+%       \end{subfigure}%
+%       % 
+%       \begin{subfigure}[b]{0.5\linewidth}
+%         \includegraphics[trim={1cm 7cm 1cm 7cm},
+%         width=\linewidth]{figures/method/FunnelSimOverlaid3funnel-1y-theta}
+%       \end{subfigure}%
+%       % 
+%       \\
+%       % 
+%       \begin{subfigure}[b]{0.5\linewidth}
+%         \includegraphics[trim={1cm 7cm 1cm 7cm},
+%         width=\linewidth]{figures/method/FunnelSimOverlaid6funnel-1y-theta}
+%       \end{subfigure}%
+%       % 
+%       \begin{subfigure}[b]{0.5\linewidth}
+%         \includegraphics[trim={1cm 7cm 1cm 7cm},
+%         width=\linewidth]{figures/method/FunnelSimOverlaid9funnel-1y-theta}
+%       \end{subfigure}%
+%       % 
+%       \\
+%       % 
+%       \begin{subfigure}[b]{0.5\linewidth}
+%         \includegraphics[trim={1cm 7cm 1cm 7cm},
+%         width=\linewidth]{figures/method/FunnelSimOverlaid12funnel-1y-theta}
+%       \end{subfigure}%
+%       % 
+%       \begin{subfigure}[b]{0.5\linewidth}
+%         \includegraphics[trim={1cm 7cm 1cm 7cm},
+%         width=\linewidth]{figures/method/FunnelSimOverlaid15funnel-1y-theta}
+%       \end{subfigure}%
+%       % 
+%       \\
+%       % 
+%       \begin{subfigure}[b]{0.5\linewidth}
+%         \includegraphics[trim={1cm 7cm 1cm 7cm},
+%         width=\linewidth]{figures/method/FunnelSimOverlaid18funnel-1y-theta}
+%       \end{subfigure}%
+%       % 
+%       \begin{subfigure}[b]{0.5\linewidth}
+%         \includegraphics[trim={1cm 7cm 1cm 7cm},
+%         width=\linewidth]{figures/method/FunnelSimOverlaid20funnel-1y-theta}
+%       \end{subfigure}%
+%     \end{subfigure}%
+%   }
+%   \caption[The calculated funnel overlaid the results of a Monte-Carlo simulation]{The figures on the left show that the funnel approximation is a lot
+%     tighter to the 'real' funnel in the x-y plane, than it is in the \(\theta\)
+%     domain, which is to be expected, considering the cost function given to the
+%     procedure.}
+%   \label{fig:outer-approximation-monte-carlo}
+% \end{figure}
