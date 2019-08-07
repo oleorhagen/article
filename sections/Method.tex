@@ -778,3 +778,97 @@ controller calculations) has already been handled by the \ac{SOS} framework, and
 hence the \ac{RRT} algorithm need only concern itself with stacking one robust
 motion primitive after the other without any concern for the complexities
 mentioned above.
+
+\subsection{Uniform Sampling in \(SE(2)\)}
+
+As mentioned in \cref{sec:rrt-algorithm-intro}, the \ac{RRT} algorithm
+needs uniform sampling of the state space in order for it to operate optimally,
+as over- or under-sampling certain parts of the state space can lead to poor
+performance. Therefore one needs to be careful when sampling from a
+configuration space with non Euclidean topology, as the sampling is not
+necessarily uniform~\cite{kuffnerEffectiveSamplingDistance2004}.
+
+If sampling from a configuration space which is formed strictly from Cartesian
+products of the form \(X = X_1\times X_2\times \cdots \times X_n\), and each
+Cartesian space is sampled uniformly, then the product will also be uniformly
+sampled. One needs to be more careful when dealing with rotations however, as
+the probability density measure can become non-uniform~\cite{Lav06}. Take the
+polar coordinates as an example. Sampling uniformly from \(r\) and \(\theta\)
+does not form a uniform sample product, as the probability distribution function
+will have a higher probability density away from the origin, as the outer
+circles will contain a bigger area. For the model~\cref{eq:model-dynamics} which
+moves in \(x,y,\theta\) the samples can be generated uniformly on the
+topological cylinder through: \( (x,y,\theta) = (\mathnormal{X}, \mathnormal{Y},
+\mathnormal{\Theta}) \) where \((\mathnormal{X}, \mathnormal{Y},
+\mathnormal{\Theta})\) are a random variables in the interval
+\([0,1)\)~\cite{kuffnerEffectiveSamplingDistance2004}. The \(\mathnormal{X}\)
+and \(\mathnormal{Y}\) variables can simply be scaled by the range of the world
+space, but also the \(\mathnormal{\Theta}\) can be scaled appropriately since
+for \(SO(2)\), if the rotations are parameterized on \([0,1]\setminus\sim\)
+(where \(\setminus\sim\) means that 0 and 1 are the same), then the stochastic
+variable can be multiplied by a fixed constant, such as \(2\pi\). This means
+that the sampling will be uniform in the configuration space of the robot, as
+long as the sampling space consists of a simple Cartesian product of uniform
+random variables, which the sampling space for \cref{eq:model-dynamics}
+is~\cite{Lav06}.
+
+
+\subsection{Distance in Configuration Space}
+
+Introducing a function which measures distance between two points in
+configuration space introduces a metric space on the underlying configuration
+space \((\modelconfigurationspace{},\rho)\), where \(\rho\) is a distance
+function. Finding a good distance function for the metric space at hand is a
+hard problem. In general the ideal metric function is the actual
+\textit{cost-to-go} function for the system at hand. However calculating the
+actual cost-to-go is equivalent to solving the original motion planning problem
+anew, and is hence not viable~\cite{pengchengReducingMetricSensitivity2001}.
+
+So, in order for the \rrtfunnel{} algorithm to efficiently explore the state
+space it must have a good measure of distance between different poses in space,
+without actually solving the planning problem anew. For a problem in the
+Cartesian plane it is common to use the Euclidean distance. However, this is not
+a good distance metric for non-holonomic systems, as it does not incorporate the
+constraints of the system function, and has little bearing on the actual
+cost-to-go of the system~\cite{parkFeedbackMotionPlanning2015}. In fact, for
+sampling based planners such as the \ac{RRT}, the configuration space is only
+sufficiently explored in the case where the distance function reflects the true
+cost-to-go function~\cite{pengchengReducingMetricSensitivity2001}. Hence, all
+other metrics will be a compromise of complexity and time vs efficiency.
+
+Normally the \ac{RRT} algorithm splits the extension part into two parts. One
+for identifying the closest node in the tree, and a second for the closest
+extension that can be added onto the tree itself. Here a different distance
+metric can be employed in each step. To reflect on the difficulty of creating a
+general distance metric function have a look at the unicycle model
+from~\cref{eq:model-dynamics}. From inspection it is seen that the model is not
+able to instantaneously move in a direction orthogonal to the direction of
+travel, as is seen in \cref{fig:non-holonomic-vehicle-euclidean-weakness}. Here
+the distance between two points might be small in the sense of a regular
+Euclidean distance metric, but due to the differential constraints on the system
+model, the model has to move far in order to reach the configuration sought.
+
+The \rrtfunnel{} algorithm will use the same metric for both the closest node
+and the extend operation on the funnel graph. The metric chosen is a modified
+Euclidean metric which weights the angle \(\theta\) depending on how close the
+airplane is to the final configuration, and is defined as
+\[
+  \rho(\vect{x}_{1}, \vect{x}_{2}) = w_{1}\norm{\mathnormal{X_{1}} -
+    \mathnormal{X_{2}}} + w_{2}f(\theta_1,\theta_2) ,
+\]
+where \(\norm{\mathnormal{X_{1}} - \mathnormal{X_{2}}}\) is the standard
+Euclidean metric, \(f\) is a function giving the distance between
+headings~\cite{kuffnerEffectiveSamplingDistance2004}. The rotations and distance
+is then scaled relative to the translation distance. Which helps solve some of
+the problems with the Euclidean distance metric.
+
+\begin{figure}[!t]
+  \centering
+  \includegraphics[scale=.2,angle=-90]{figures/rrtfunnel/non-holonomic-vehicle-euclidean-weakness}
+  \caption[Distance metrics for non-holonomic vehicles]{Consider two poses
+    \(p_0\) and \(p_1\). Although \(p_1\) is nearer the robot in Euclidean
+    distance it is harder to get to due to differential constraints
+    \textcite{parkFeedbackMotionPlanning2015}.}
+  \label{fig:non-holonomic-vehicle-euclidean-weakness}
+\end{figure}
+
