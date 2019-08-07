@@ -229,3 +229,52 @@ which means that the funnel will have a diameter of one half in the xy-plane,
 and the \(\theta\) inlet will be wider closer to the center of the funnel, which
 is beneficial, as this is where most of the paths in the experiment setup is
 expected to enter.
+
+
+\subsection{Minimizing the Projected Volume of the Funnel}
+\label{subsec:xy-cost-function}
+
+In the \rrtfunnel{} algorithm, the size of the of the hyper-ellipsoid which
+contains the reachable set is not equally important in all dimensions for all
+planning problems. In the forest traversal case from the introduction, the size
+of the ellipsoid in the \(\theta\) dimension is unimportant. There is no need in
+minimizing the value of \(\theta\), as it will not make the traversal of the
+forest any easier, in fact it might inflate the size of the \((x,y)\) ellipsoid.
+As an example: For the dynamical model \eqref{eq:model-dynamics} the size of the
+funnel projected down into the xy-plane will be the most important metric.
+Whether or not the airplane's orientation parameter \(\theta\) is close to the
+nominal heading is of less concern, and is therefore down-prioritized. Having a
+large \(\theta\) semi-axis in the hyper-ellipsoid can also be beneficial, as it
+increases the inlet of the ellipsoid, which is beneficial if the funnel is to be
+composed with another funnel at some other point in the planning process.
+
+For the cost function in the funnel generation \cref{alg:funnelalgorithm} on
+page~\pageref{alg:funnelalgorithm}, which in general is a maximization of the
+determinant of the upper bound ellipse for the funnel set, it is beneficial to
+modify the cost function to penalize the size of the
+xy-ellipsoid~\cite{majumdarRobustOnlineMotion2013}.
+
+Therefore in order to minimize the actual size of the funnel where the physical
+airplane can move in the world space, the cost function has to be modified. This
+can be done through a projection map \(\pi \colon \R^n \rightarrow \R^{n_p}\),
+which gives the ellipsoid of interest as \( \mathcal{E} = \set{\bar{\vect{x}}
+  \in \R^n \mid \bar{\vect{x}}^TS_{k}\bar{\vect{x}} \leq 1} \mathEoS \) With the
+projected ellipsoid given by \( \pi(\mathcal{E}) = \set{\bar{\vect{x}} \in \R^n
+  \mid \bar{\vect{x}}^TS^{(p)}_{k}\bar{\vect{x}} \leq 1}, \) where \( S_k^{(p)}
+= \p{PS_k^{-1}P^T}^{-1}, \) and \(P\) is an \(n\times n_p\) projection matrix.
+
+Since minimizing the volume of the ellipsoid \(\pi(\mathcal{E})\) using a
+\acl{SDP} relies on maximizing the determinant of \(\matr{S}_k\), and \(\deter(
+\matr{S}_k)\) is a nonlinear function of \(S_k\), the function has to be
+linearized in order for it to be handled by the \ac{SOS} framework.
+\citeauthor{majumdarFunnelLibrariesRealtime2017}~\cite{majumdarFunnelLibrariesRealtime2017}
+solves this by linearizing \(\deter(\matr{S}_k)\) at the solution of
+\(\matr{S}_k\) from the previous iteration, and maximizes this linearization
+instead. In the end this translates to
+\begin{equation}
+  \lin \bigl( \deter \p{ \matr{S}_k} \bigr) = \Tr \bigl( \matr{P}^{T}{\p{ \matr{P}
+      \matr{S}_{k,0}^{-1} \matr{P}^T}}^{-1} \matr{P} {\matr{S}_{k,0}}^{-1}
+    \matr{S}_k {\matr{S}_{k,0}}^{-1} \bigr),
+\end{equation} 
+where \( \matr{S}_{k,0}\) is the nominal value for the linearization, and \(\Tr\)
+is the trace of the matrix.
