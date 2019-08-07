@@ -925,6 +925,7 @@ composition algorithm can be found in
   \end{algorithmic}
 \end{algorithm}
 
+
 \subsubsection{Emergency Maneuver}
 
 If the airplane is to leave the verified funnel at execution time -- this could
@@ -935,3 +936,12 @@ at hand -- such as a sudden stop for a vehicle, or idling at one place for a
 quad-copter. This will then be the last motion primitive that the planner
 executes, and the planner will come to a halt, as the robustness guarantees have
 been lost.
+
+
+\subsection{Collision Detection}
+
+Collision detection is done creating a convex hull incorporating all the
+ellipsis projected down into the xy-plane, and is what can be seen as the grey
+area in \cref{fig:funnel-straight-sampled}. Then, with \matlab's polynomial
+toolbox, collision detection is made through the \textit{intersect} function for
+polynomials, as the obstacles are also represented as polynomials.
