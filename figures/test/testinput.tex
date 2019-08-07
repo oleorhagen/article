@@ -1,0 +1,10 @@
+{\substack{V,\rho,L,L_{t},\\L_{0,i},S_{k},L_{\mathcal{E},k}}}{\sum_{k=1}^{N}
+  \mathrm{vol}(\mathcal{E}(t_{k})) = \sum_{k=1}^{N} vol(\set{ \bar{x} \mid {\bar{x}}^{T}S_{k}\bar{x} \leq 1 }}
+{\label{eq:Example1}}{}
+\addConstraint{\dot{\rho}(t) - \dot{V}(t,\bar{x}) - L(t,\bar{x}) \left[ V(t,\bar{x}) - \rho(t) \right] - L_{t}(t,\bar{x})\left[ t\left( T - t \right) \right] }{\text{is SOS}}
+\addConstraint{\rho(0) - V(0,\bar{x}) - \sum_{i}^{N}L_{0,i}(\bar{x})g_{0,i}(\bar{x}) }{\text{is SOS}}
+\addConstraint{1 - {\bar{x}}^{T}S_{k}\bar{x} - L_{\mathcal{E},k}(\bar{x}) \left[ \rho(t_{k}) - V(t_{k},\bar{x}) \right] }{\text{is SOS}\forall k \in \set{1,\ldots,N} \, S_{k} \succeq 0}
+\addConstraint{}{\forall k \in \set{1,\ldots,N} L_{t}(t,\bar{x}),\,
+  L_{0,i}(\bar{x}) \text{are SOS}}
+\addConstraint{}{\forall i \in \set{1,\ldots,N}, \forall k \in
+  \set{1,\ldots,N}}

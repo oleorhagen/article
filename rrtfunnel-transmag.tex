@@ -56,10 +56,16 @@
 % manually specify the path to it like:
 % \documentclass[journal]{../sty/IEEEtran}
 
+% \usepackage{mystyle} % Custom private macros and definitions
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%        Misc personal macros and defitions
+%        TODO -- Later migrate this to a style file
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
+\newcommand{\rrtfunnel}{RRT-Funnel}
 
-
+\usepackage{acronym}
 % Some very useful LaTeX packages include:
 % (uncomment the ones you want to load)
 
@@ -456,6 +462,29 @@ IEEE, IEEEtran, IEEE Transactions on Control Systems Technology, journal, \LaTeX
 \IEEEpeerreviewmaketitle
 
 
+\section*{Acronyms}
+
+% Workaround acronyms incompatibility with IEEE
+\renewcommand{\IEEEiedlistdecl}{\IEEEsetlabelwidth{S ONET}}
+\begin{acronym}[TDMA]
+  \acro{SDP}{Semidefinite programming}
+  \acro{LQR}{Linear Quadratic Regulator}
+  \acro{SOS}{sums-of-squares}
+  \acro{PSD}{Positive Semidefinite}
+  \acro{RRT}{Rapidly-exploring Random Tree}
+  \acro{LQR}{Linear Quadratic Regulator}
+  \acro{TV-LQR}{Time-varying Linear Quadratic Regulator}
+  \acro{ROA}{Region of Attraction}
+  \acro{CLF}{Control Lyapunov Function}
+  % \acro{\rrtfunnel{}}{Rapidly-exploring Random-tree-Funnel}
+\end{acronym}
+\renewcommand{\IEEEiedlistdecl}{\relax}% reset back
+
+
+
+
+
+
 
 \section{Introduction}
 % The very first letter is a 2 line initial drop letter followed
@@ -589,8 +618,7 @@ Subsubsection text here.
 % \fnbelowfloat command of the stfloats package.
 
 \section{Methods}
-The method goes here\ldots
-Testreference: \cite{majumdarFunnelLibrariesRealtime2017} 
+\input{sections/method}
 
 \section{Results}
 The results go here\ldots
