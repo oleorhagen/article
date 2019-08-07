@@ -1,4 +1,4 @@
-This chapter will introduce and develop the \rrtfunnel{} algorithm, by two
+This section will introduce and develop the \rrtfunnel{} algorithm, by two
 means: First develop robust motion primitives through the \ac{SOS} programming
 framework based on the work by \cite{majumdarFunnelLibrariesRealtime2017},
 and second, deploy these funnels as robust motion primitives in a discrete
@@ -16,21 +16,36 @@ be collision-free in both cases. This means that a robust motion algorithm can
 perform more aggressive maneuvers than one that is inherently conservative about
 its environment and maneuvers~\cite{singhRobustOnlineMotion2017}.
 
-The outline of the chapter is as follows: First it introduces the generation of
-the trajectories in \cref{subsec:generating-the-trajectories}, then moves on to
-making the model in \cref{eq:model-dynamics} independent of the system input
-using a \ac{TV-LQR}-controller. In \cref{subsec:generating-funnels} the funnels
-are generated for the basic formulation, which takes no uncertainty into
-account. Then later in \cref{subsec:xy-cost-function}, the cost function for the
-funnel generation is modified, so that it seeks to minimize the size of the
-funnel projected down in the xy-plane. Following in
-\cref{subsec:searching-for-a-controller}, the \ac{SOS} formulation from the
-funnel generation algorithm is modified so that it, in addition to minimizing
-the size of the funnel in the xy-plane, it also searches for a controller which
-seeks to minimize the cost function. Following in \cref{sec:adding-uncertainty}
-is the additional formulations needed to make the funnels robust to
-uncertainties, then in \cref{subsec:shifting-funnels,sec:composable-funnels},
-the composition and translation of the generated motion primitives are explored
-in order to employ them in the \ac{RRT} planning algorithm developed in
-\cref{sec:RRT}, which further explores the sampling and distance metric employed
-in the on-line planning stage of the algorithm.
+
+\subsection{Generating Robust Motion Primitives}
+\label{sec:generating-robust-motion-primitives}
+
+In order to create a basic set of funnels as the robust motion primitives for
+the \rrtfunnel{} motion planning algorithm, a few obstacles has to be overcome.
+The first one is settling on a dynamical system model for the funnel
+calculations. This thesis employs the simple unicycle model from
+\author{Lav06}~\cite[613]{Lav06} which is modified slightly into
+\begin{equation}
+  \label{eq:model-dynamics}
+  \vect{x} =
+  \begin{bmatrix}
+    x \\ y \\ \theta \\
+  \end{bmatrix}, \, \dot{\vect{x}} =
+  \begin{bmatrix}
+    -v \sin(\theta) \\
+    v \cos(\theta) \\
+    u \\
+  \end{bmatrix}
+  ,
+\end{equation}
+which is a first-order unicycle model with constant speed of
+\(v=10\) \IEEEunit{m/s}. A picture of the model can be found in
+\cref{fig:second-order-unicycle}.
+\begin{figure}[!t]
+  \def\svgwidth{\columnwidth}
+  \import{figures/method/}{unicycle-model.pdf_tex}
+  \caption{The unicycle model of an airplane.}
+  \label{fig:second-order-unicycle}
+\end{figure}
+Although this is the only model used in this thesis, the framework and the code
+is easily adapted into accommodating a different and more complicated model.
