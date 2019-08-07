@@ -755,3 +755,26 @@ made.
 %     procedure.}
 %   \label{fig:outer-approximation-monte-carlo}
 % \end{figure}
+
+
+\section{RRT}
+\label{sec:RRT}
+
+With the basic framework for dealing with funnels as motion primitives
+constructed, it is time to build the \ac{RRT} part of the \rrtfunnel{}
+algorithm. The reason for choosing to base the global path planning framework on
+the \ac{RRT} motion planning algorithm are as follows. One, it has the ability
+to quickly expand deep into the search-space, and then later progress towards a
+finer sampling, which is valuable as it avoids local minima. Two, the \ac{RRT}
+algorithm is easily extensible to larger state spaces, and thus adding to the
+generality of the \rrtfunnel{} algorithm, such that it can be adapted to fit a
+wide range of dynamical systems, while at the same time it has only three main
+components that needs to be in place in order for successful path planning to
+happen in an arbitrary configuration space. Namely, a suitable probability
+distribution to sample from, and a distance metric for the nearest neighbor and
+the extension step. The \ac{RRT} algorithm is beneficial as most of the
+complexity accompanied with the planning problem (like uncertainty and
+controller calculations) has already been handled by the \ac{SOS} framework, and
+hence the \ac{RRT} algorithm need only concern itself with stacking one robust
+motion primitive after the other without any concern for the complexities
+mentioned above.
