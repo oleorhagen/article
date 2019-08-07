@@ -454,3 +454,57 @@ be seen in \cref{fig:funnel-calculation-visuals}.
     plotted on top of their respective sampling points in time \(t_k\).}
   \label{fig:funnel-calculation-visuals}
 \end{figure}
+
+
+\subsection{Funnel Transformations and Invariance}
+\label{subsec:shifting-funnels}
+
+Now that the funnels are able to be calculated for a basic set of motion
+primitives, it is time to start looking at chaining these primitives together in
+order to construct longer and more complex motions from a basis of motion
+primitives. Thus, in order to freely shift funnels around in the configuration
+space, the cyclic coordinates of the system has to be determined, so that the
+dynamics of the system is never violated (see \cref{subsec:cyclic-coordinates}).
+Even though the funnels can now start and end in a completely different part of
+the configuration space, the original dynamics must not be violated. Therefore
+the cyclic and non-cyclic coordinates of the system must be decided. This is
+done through finding the cyclic and non-cyclic coordinates through the method
+from \cref{subsec:cyclic-coordinates}. Therefore, given the
+model~\cref{eq:model-dynamics} the cyclic coordinates of the system are found
+from:
+\begin{align*}
+  \mathcal{L} &= T - V = \frac{1}{2} mv^2 + \frac{1}{2}I\dot{\theta}^2 \\ 
+              &= \frac{1}{2} \left(  m \left(
+                \dot{\vect{x}}^2 \sin^2 \theta + \dot{\vect{x}}^2 \cos^2 \theta
+                \right)  + I {\dot{\theta}}^2 \right) \\
+              &= \frac{1}{2} \left(  m\dot{\vect{x}}^2 + I {\dot{\theta}}^2 \right)
+\end{align*}
+which shows that the Lagrangian is invariant to shifts in the \((x,y,\theta)\)
+variables, since \(\frac{\partial\mathcal{L}}{\partial q_i} = 0, \, q_i =
+x,y,\theta\). Now any funnel in the base set can be shifted freely around in the
+cyclic coordinates of the system without changing the solution to the system
+dynamic equation, and thus create an infinite set of funnels in the state space
+for the planner to work with. Through the partitioning of coordinates into
+cyclic- and non-cyclic coordinates of the form \(\vect{x} = \left[ x_c\; x_{nc}
+\right]^{T }\), the state dynamics \cref{eq:model-dynamics} only depends on the
+cyclic coordinates of the system. Thus, a trajectory of the form \(t \rightarrow
+\bigl( \vect{x}(t), \vect{u}(t) \bigr) \) which solves \(\dot{\vect{x}} = f
+\bigl(\vect{x}(t), \vect{u}(t) \bigl) \) can then be transformed through a shift
+\(\Psi_{c}\) along the cyclic coordinates of the system to yield a valid
+solution of the form
+\[
+  t \rightarrow \bigl( \Psi_{x}(\vect{x}(t)), \vect{u}(t) \bigr)
+\]
+where the transform \(\Psi\) is given by
+\[
+  \Psi \bigl( \begin{bmatrix}
+    \vect{x}_{c}  \\ \vect{x}_{\mathit{nc}} 
+  \end{bmatrix}
+  \bigr) =
+  \begin{cases}
+    \vect{x}_{c} \rightarrow \vect{x}^{'}_{c} \\
+    \vect{x}_{\mathit{nc}} \rightarrow \vect{x}_{\mathit{nc}} \mathEoS
+  \end{cases}
+\]
+However, since \( \dim (\vect{x}) = \dim(\vect{x}_{c}) \), for
+the~\cref{eq:model-dynamics}, it is not necessary to handle the non-cyclic case.
