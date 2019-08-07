@@ -922,6 +922,7 @@ composition algorithm can be found in
     \EndIf
     \EndFor
     \EndFor
+    \EndProcedure
   \end{algorithmic}
 \end{algorithm}
 
@@ -945,3 +946,42 @@ ellipsis projected down into the xy-plane, and is what can be seen as the grey
 area in \cref{fig:funnel-straight-sampled}. Then, with \matlab's polynomial
 toolbox, collision detection is made through the \textit{intersect} function for
 polynomials, as the obstacles are also represented as polynomials.
+
+
+\subsection{The \rrtfunnel{} Algorithm}
+
+With the basic framework finished, it is time to introduce the formulation of
+the \rrtfunnel{} algorithm itself. The \rrtfunnel{} algorithm is a modified
+\ac{RRT} algorithm which employs the precomputed funnels as motion primitives
+for its expansion operator, and pseudocode for its definition can be found in
+\cref{alg:rrtfunnel} on page~\pageref{alg:rrtfunnel}.
+
+\begin{algorithm}[H]
+  \caption{\rrtfunnel{} algorithm}
+  \label{alg:rrtfunnel}
+  \begin{algorithmic}[0]
+    \Procedure{rrtfunnel}{}
+    \State input: \(q_{0}\)
+    \State output: RRT-Funnel-Graph \(\mathcal{G}\)
+    \State
+    \State Offline Phase: Generate the Funnels
+    \State
+    \State Online Phase:
+    \State TestUncertainFunnels()
+    \State BuildComposabilityMatrix()
+    \State \(\mathcal{G}.\mathnormal{init}(q_{0})\)
+    \For {\(i \leftarrow 1\) to \(k\)}
+    \State \(q_{\mathnormal{rand}} \leftarrow \) SampleRandomConfiguration()
+    \State \(q_{\mathnormal{near}} \leftarrow\) FindNearestVertex(\(q_{\mathnormal{rand}}, \mathcal{G}\))
+    \State \(q_{\mathnormal{new}} \leftarrow\)  Extend(\(q_{\mathnormal{near}}, q_{\mathnormal{rand}}\))
+    \If{\(q_{\mathnormal{new}} \in \modelconfigurationspacefree{}\)}
+    \State \(\mathcal{G}\).addVertex(\(q_{\mathnormal{new}}\))
+    \State \(\mathcal{G}\).addEdge(\(q_{\mathnormal{near}},q_{\mathnormal{new}}\))
+    \If {\(q_{\mathnormal{new}} \in \mathcal{X}_{\mathnormal{goal}} \)}
+    \State \textbf{return} ExtractBranch(\(\mathcal{G}\))
+    \EndIf
+    \EndIf
+    \EndFor
+    \EndProcedure
+  \end{algorithmic} 
+\end{algorithm}
