@@ -68,12 +68,55 @@
 \usepackage{acronym}
 
 % In text referencing
-\RequirePackage{varioref}
-\RequirePackage{hyperref}
+\usepackage{varioref}
+\usepackage{hyperref}
+\usepackage{color} % For colouring inkscape include (and more)
 % \usepackage[style=ieee]{biblatex} % Needed for \textcite
+
+% Math helpers
+\usepackage{amssymb}    % Extra symbols
+\usepackage{amsthm}     % Theorem-like environments
+\usepackage{thmtools}   % Theorem-like environments, extends amsthm
+\usepackage{mathtools}  % Fonts and environments for mathematical formulae
+\usepackage{mathrsfs}   % Script font with \mathscr{}
+\usepackage{dsfont}     % Double stroke font with \mathds{}
+\usepackage{cancel}     % Cancel terms with \cancel, \bcancel or \xcancel
+\usepackage{stmaryrd}   % Brackets
+
+% Optimization problem definition
+\RequirePackage[nocomma]{optidef}
+
+%% Operators
+\DeclareMathOperator{\im}{im}
+\DeclareMathOperator{\rank}{rank}
+
+
+
+%% Delimiters
+\DeclarePairedDelimiter{\p}{\lparen}{\rparen}          % Parenthesis
+\DeclarePairedDelimiter{\set}{\lbrace}{\rbrace}        % Set
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}          % Absolute value
+\DeclarePairedDelimiter{\norm}{\lVert}{\rVert}         % Norm
+\DeclarePairedDelimiter{\ip}{\langle}{\rangle}         % Inner product, ideal
+\DeclarePairedDelimiter{\sqb}{\lbrack}{\rbrack}        % Square brackets
+\DeclarePairedDelimiter{\ssqb}{\llbracket}{\rrbracket} % Double brackets
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}         % Ceiling
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}      % Floor
+
+
+%% Sets
+\newcommand{\N}{\mathbb{N}}    % Natural numbers
+\newcommand{\Z}{\mathbb{Z}}    % Integers
+\newcommand{\Q}{\mathbb{Q}}    % Rational numbers
+\newcommand{\R}{\mathbb{R}}    % Real numbers
+\newcommand{\C}{\mathbb{C}}    % Complex numbers
+\newcommand{\A}{\mathbb{A}}    % Affine space
+\renewcommand{\P}{\mathbb{P}}  % Projective space
 
 % The IEEE style uses \upshape for units
 \newcommand{\IEEEunit}[1]{{\upshape #1}}
+
+\newcommand{\mathEoS}{\, .} % End of sentence math delimeter
 
 \def \Vectorized{} % Vectorize the math syntax.
 %% Vectors
