@@ -924,19 +924,14 @@ composition algorithm can be found in
     \EndFor
   \end{algorithmic}
 \end{algorithm}
-% \DontPrintSemicolon \SetAlgoNoLine
 
-%   \KwIn{\(\mathcal{F}\) -- The basis set of funnels computed around the nominal
-%     trajectories.}%
-%   \KwOut{\(\mathcal{G}(\mathcal{F})\) -- Directed graph representing the
-%     composability of funnels.}
+\subsubsection{Emergency Maneuver}
 
-%   \ForEach{\(F_{i} \in \mathcal{F}\)}%
-%   { \ForEach{\(F_{j} \in \mathcal{F}\)} { \If{\(F_{i}(t_{0}) \subset
-%         F_{j}(t_{end})\)}%
-%       { \(\mathcal{G} \leftarrow{} \left( F_{i}(t_{0}), F_{j}(t_{end})
-%         \right)\)%
-%       }%
-%     }%
-%   }
-% \end{algorithm}
+If the airplane is to leave the verified funnel at execution time -- this could
+happen for any number of reasons, such as unmodeled uncertainties -- the plane
+should execute the emergency maneuver, which in this case is a loiter loop. In
+general an emergency maneuver can be any sort of 'safe' maneuver for the model
+at hand -- such as a sudden stop for a vehicle, or idling at one place for a
+quad-copter. This will then be the last motion primitive that the planner
+executes, and the planner will come to a halt, as the robustness guarantees have
+been lost.
