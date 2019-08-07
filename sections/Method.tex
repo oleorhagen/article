@@ -278,3 +278,102 @@ instead. In the end this translates to
 \end{equation} 
 where \( \matr{S}_{k,0}\) is the nominal value for the linearization, and \(\Tr\)
 is the trace of the matrix.
+
+\subsection{Optimization of the Nominal \ac{LQR}-Controller}
+\label{subsec:searching-for-a-controller}
+
+With the non-optimal feedback controller given to the funnel calculation
+framework (non-optimal with regards to the funnel calculation cost function),
+the size of the funnels will in general be larger than if the optimizer is given
+a better controller. Thus in order to further minimize the size of the funnel in
+the xy-plane, this method, along with the cost function from
+\cref{subsec:xy-cost-function} is used to make traversal through obstacles in
+the world space easier, through minimizing the size of the reachable set. Hence,
+the initial controller fed to the algorithm can be optimized with the goal of
+minimizing the size of the funnel, given a few conditions on the
+system~\cite[sec~4.3.2]{majumdarFunnelLibrariesRealtime2017}.
+
+In order for the controller to be optimized, the system needs to be control
+affine\ie it can be written on the form
+\begin{equation}
+  \dot{\vect{x}} = f(\vect{x}(t)) + g(\vect{x}(t)) \vect{u} (t),
+\end{equation}
+so that the control policy can be parameterized as a polynomial
+\(\bar{\vect{u}}_f(t,\bar{\vect{x}})\), and the system dynamics written as
+\begin{equation}
+  \label{eq:dynamics-control-affine}
+  \dot{\bar{\vect{x}}} = f(\vect{x}_0(t) + \bar{\vect{x}}(t)) + g(\vect{x}(t))\left[ \vect{u}_0(t) + \bar{\vect{u}}_f(t,\bar{\vect{x}}) \right] - \bar{\vect{x}}_0 \mathEoS
+\end{equation}
+Given that the dynamical model in \cref{eq:model-dynamics} is control affine,
+since
+\begin{equation}
+  \dot{\vect{x}} = %
+  f(\vect{x}(t)) + g(\vect{x}(t)) \vect{u} (t) = %
+  \begin{bmatrix}
+    -v(t)\sin (\theta) \\
+    v(t) \cos (\theta) \\
+    0
+  \end{bmatrix}
+  +
+  \begin{bmatrix}
+    0 \\
+    0 \\
+    1 \\
+  \end{bmatrix}
+  \vect{u}(t),
+\end{equation}
+the feedback controller can be optimized by adding the coefficients of the
+polynomial \(\vect{u}_f(t,\bar{\vect{x}})\) to the set of decision variables in
+the original optimization problem~\eqref{opt:discrete}. The only issue is
+that now \(\dot{V}\) is bilinear in the decision variables \(V\) and
+\(\bar{\vect{u}}_f\), as well as the other bilinear decision variables from the
+previous formulation, as can be seen from
+\begin{equation}
+  {
+    \newcommand{\Vdot}{\dot{V}}
+    \Vdot(t,\vect{x}) = \frac{\partial V(t,\vect{x})}{\partial \vect{x}} \dot{\bar{\vect{x}}} + \frac{\partial V(t,\vect{x})}{\partial t},
+  }
+\end{equation}
+where \(\dot{\bar{\vect{x}}}\) is now given by
+\cref{eq:dynamics-control-affine}. Thus in order to optimize the control input a
+search is done in the variables \( (\bar{\vect{u}}_f,\rho,L_t,L_{0,i},S_k) \)
+while keeping \( (V,L,L_{\epsilon,k}) \) fixed. This method combined with the
+uncertainty added in~\cref{sec:adding-uncertainty}, is what forms the basis for
+the funnel computations as robust motion primitives for traversal in a dense
+forest environment, as summarized in \cref{alg:funnelalgorithm-extended}
+(Optimization 2).
+
+\begin{algorithm}[H]
+  \caption{Feedback Funnel computation} \label{alg:funnelalgorithm-extended}
+  \begin{algorithmic}[0]
+    \Procedure{Feedback Funnel Computation}{$a,b$}\Comment{Computes the feedback funnel}
+    \State \(cost_{prev} = \infty\)
+    \State converged = false
+    \While{\( \neg converged\)}
+    \State Optimization problem 1:
+    \State %
+    \begin{align*}
+      \underset{\substack{\bar{u}_f,L,L_{t},L_{0,i},S_{k},L_{}}}{\inf}&  \sum_{k=1}^{N} \vol \bigl( \mathcal{E}(t_{k}) \bigr) & \\    
+      \text{subject to } & V \text{ and } \rho \text{ constant.}& \\
+    \end{align*}
+    \State Optimization problem 2:
+    \State %
+    \begin{align*}
+      \underset{\substack{\bar{u}}_f,\rho,L_{t},L_{0,i},S_{k}}{\inf}&  \sum_{k=1}^{N} \vol \bigl( \mathcal{E}(t_{k}) \bigr) & \\    
+      \text{subject to } & (V,L,L_{\mathcal{E},k}) \text{ constant.}& \\
+    \end{align*}
+    \State Optimization problem 3:
+    \State %
+    \begin{align*}
+      \underset{\substack{V,\rho, L_{t},L_{0,i},S_{k}}}{\inf}&  \sum_{k=1}^{N} \vol \bigl( \mathcal{E}(t_{k}) \bigr) & \\    
+      \text{subject to } & (L,L_{\mathcal{E},k},\bar{u}_f) \text{ constant.}& \\
+    \end{align*}
+    \State cost = \(\sum_{k=1}^{N} \vol \bigl( \mathcal{E}(t_{k}) \bigr) \)
+    \If{\(\frac{cost_{prev} - cost}{cost_{prev}} < \epsilon\)}
+    \State converged = true
+    \EndIf
+    \State \(cost_{prev} = cost\)
+    \EndWhile
+    \EndProcedure
+  \end{algorithmic}
+\end{algorithm}
