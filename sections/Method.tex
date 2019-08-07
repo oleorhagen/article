@@ -377,3 +377,80 @@ forest environment, as summarized in \cref{alg:funnelalgorithm-extended}
     \EndProcedure
   \end{algorithmic}
 \end{algorithm}
+
+\subsection{Adding the Uncertainty Constraints}
+\label{sec:adding-uncertainty}
+
+The system dynamics and funnel generation theory presented this far has not been
+able to handle system uncertainty, which is vital for the safe execution of the
+\rrtfunnel{} algorithm. However, the basic formulations presented do have all
+the necessary formulations present, and adding uncertainty is equivalent to
+adding another constraint to the optimization problem in
+\cref{eq:sufficient-conditions}.
+
+Following are the changes to the formulation of the \ac{SOS} optimization
+condition \cref{eq:funnelsufficient} so that a funnel takes into account a
+bounded uncertainty term of the form \(\mathcal{W} = \set{ w(t) \in R^d \mid
+  g_{w,j}(w) \geq 0\, \forall j =
+  1,\ldots,N_w}\)~\cite{majumdarRobustOnlineMotion2013}. But first the
+uncertainty has to be added to the system dynamics \cref{eq:model-dynamics}.
+This is done through adding an uncertainty term \(w\)
+\begin{equation}
+  \dot{\bar{\vect{x}}} = f_{\mathit{cl}}(t, \bar{\vect{x}}(t), w(t)) \mathEoS
+\end{equation}
+Which in this thesis is an additive uncertainty so that
+\cref{eq:model-dynamics-cl} turns into
+\begin{equation}
+  \dot{\bar{\vect{x}}} = %
+  \begin{bmatrix}
+    -v(t)\sin(\theta) \\
+    v(t)\cos(\theta) \\
+    -K\vect{x} (t) \\
+  \end{bmatrix}
+  +
+  \begin{bmatrix}
+    w(t) \\
+    0 \\
+    0
+  \end{bmatrix} \mathEoS
+\end{equation}
+Then the requirement~\eqref{eq:reachableset} is slightly modified so that
+\begin{equation}
+  \label{eq:uncertain-reachableset}
+  \bar{\vect{x}}(0) \in \mathcal{X} \implies \bar{\vect{x}}(t) \in F(t),\, \forall t \in
+  [0,T], \, \forall w \colon [0,T] \rightarrow \mathcal{W},
+\end{equation} 
+where \(F(t)\) is the new formulation for reachable set of the uncertain system.
+Thus the sufficient condition in \cref{eq:funnelsufficient} turns into
+\begin{equation}
+  \label{eq:funneluncertain-sufficient}
+  V(t,\bar{\vect{x}}) = \rho(t) \implies \dot{V}(t,\bar{\vect{x}},w) < \dot{\rho}(t), \, \forall t \in [0,T], \, \forall w(t) \in \mathcal{W} \mathEoS
+\end{equation}
+The Lyapunov function derivative then becomes
+\begin{equation}
+  \dot{V}(t,\bar{\vect{x}}, w) = \frac{\partial V(t,\bar{\vect{x}})}{\partial \vect{x}} f_{\mathit{cl}}(t,\bar{\vect{x}},w) + \frac{\partial V(t,\bar{\vect{x}})}{\partial t},
+\end{equation}
+and the optimization condition \cref{eq:sufficient-conditions} turns into
+\begin{align}
+  \label{eq:optimizationconditionuncertain}
+  \dot{\rho}(t) - \dot{V}(t,\bar{\vect{x}},w) - L(t,\bar{\vect{x}},w) \bigl( V(t,\bar{\vect{x}}) - \rho(t) \bigr) - L_{t}(t,\bar{\vect{x}},w) \bigl( t\left( T - t \right) \bigr)  & \nonumber \\
+  - \sum_{j=1}^{N_{w}} L_{w,j}(t,\bar{\vect{x}},w)g_{w,j}(w) \quad \text{is SOS} &  \\
+  \left( L, L_t, L_{w,j} \right) (t,\bar{\vect{x}},w) \qquad \text{are SOS}, \; \forall j = 1,\ldots,N_w, \nonumber
+\end{align}
+with the uncertainty constraints added.
+
+A figure of a straight funnel motion primitive calculated with uncertainties by
+the \ac{SOS} solver from the code in \cref{sec:sos-program-implementation} can
+be seen in \cref{fig:funnel-calculation-visuals}.
+
+\begin{figure}
+  \centering \includegraphics[scale=.5, trim={0cm 6cm 0cm
+    6cm}]{figures/method/funnel-calculation-visuals}
+  \caption[A funnel calculated around a straight trajector]{A funnel calculated
+    around a straight motion trajector. Shown is the value of \(\rho(t)\), and
+    \(\sum \rho(t_k)\) as it is incrementally improved by the numerical solver.
+    The bottom figures are the funnel projected down in the xy-plane. The left
+    the ellipsoids are overlaid on top of each other, and on the right they are
+    plotted on top of their respective sampling points in time \(t_k\).}
+  \label{fig:funnel-calculation-visuals}
+\end{figure}
