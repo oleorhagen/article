@@ -508,3 +508,76 @@ where the transform \(\Psi\) is given by
 \]
 However, since \( \dim (\vect{x}) = \dim(\vect{x}_{c}) \), for
 the~\cref{eq:model-dynamics}, it is not necessary to handle the non-cyclic case.
+
+
+\subsection{Sequential Funnel Composition}
+\label{sec:composable-funnels}
+
+Now that funnels can be shifted freely around the configuration space along the
+cyclic coordinates of the system to create new motion primitives, it is time to
+start chaining funnels together to create trees of funnels that span out into
+the planning environment in order to create a robust motion plan.
+
+However, in order for two funnels to create a third and new motion primitive
+when chained together, they need to be composable. This means that the inlet of
+the second funnel needs to be fully contained within the outlet of the first
+one. Otherwise the robustness guarantees of the traversal will be lost. An
+abstract pictorial representation of two funnels composed together can be seen
+in~\cref{fig:two-funnels-composed} to emphasize this observation.
+
+The mathematical definition of funnel composition
+(\cref{def:funnel-composition}) that is used to verify that two funnels are
+composable is not in accordance with the new transformed funnels from
+\cref{subsec:shifting-funnels}. However, take note that the definition only has
+to be modified slightly in order to take into account the translation along the
+cyclic coordinates of the system.
+\begin{definition}
+  \label{def:invarant-funnel-composition}
+  An ordered pair \((F_1,F_2)\) of funnels \(F_1 \colon [0,T_1] \rightarrow
+  \mathcal{P}(\R^n)\) and \(F_2 \colon [0,T_2] \rightarrow \mathcal{P}(\R^n)\)
+  is \textit{sequentially composable modulo invariance} if there exists a shift
+  along cyclic coordinates such that \(F_{1}(T_1) \subset
+  \Psi_{c}\bigl(F_2(0)\bigr) \).
+\end{definition}
+In layman's terms this means that if a funnel \(F_2\) can be shifted along
+cyclic coordinates to stack up against the outlet of funnel \(F_2\) so that they
+are composable in the sense of \cref{def:funnel-composition}, they are
+composable modulo
+invariance~\cite[definition~3,sec~5]{majumdarFunnelLibrariesRealtime2017}. Since
+any funnel in the configuration space will be a set consisting of the funnel
+from the basic set, along with a transformation along the cyclic coordinates of
+the system, the set of all funnels, \(\hat{\mathcal{F}}\), in the configuration
+space, is written \(\hat{\mathcal{F}} = \set{F_n \in \R^n \mid \Psi_{c,i}(F_i),
+  F_i \in \mathcal{F}}\). Here \(\mathcal{F}\) is the basic set of funnels, and
+since the transformation is already known the composability is straightforward
+to compute.
+
+\begin{figure}
+  \centering {\includegraphics[width=.8\textwidth]{figures/method/funnel-composition}}
+  \caption[Two composable funnels]{Two funnels that can be successfully composed, as the outlet of the
+    first one is fully contained in the inlet of the second.}
+  \label{fig:two-funnels-composed}
+\end{figure}
+
+Therefore apply the generalized S-procedure on
+\begin{equation}
+  V_1(T_1,\bar{\vect{x}}) \leq \rho_1(T_1) \implies V_2(0, \bar{\vect{x}}) \leq \rho_2(0) \mathEoS
+\end{equation}
+Then the composability of two funnels can be checked through the \ac{SOS}
+program
+\begin{align}
+  & \text{Find } && L(\vect{x}) \\
+  & \text{s.t. } && \rho_2(0) - V_2(0,\vect{x}) - L(\vect{x})\left( \rho_1(T_1) - V_1(T_1,\vect{x}) \right) \text{ is SOS} \nonumber \\ 
+  &&& L(\vect{x}) \text{ is SOS} \mathEoS \nonumber
+\end{align}
+Which is implemented in \textsc{sostools}~\cite{sostools} and \matlab{} in
+\cref{sec:funnel-composability-program-sos}. For a picture of funnels composed
+together into a tree have a look at \cref{fig:funnel-composition-tree}.
+\begin{figure}
+  \centering \includegraphics[scale=.5, trim={0cm 7cm 0cm
+    7cm}]{figures/method/funnel-tree} \caption[A tree of funnels built by the
+  \rrtfunnel{} algorithm]{A tree of funnels built by the \rrtfunnel{} algorithm,
+    showing how longer motion primitives are built up from primitives in the
+    basis set.}
+  \label{fig:funnel-composition-tree}
+\end{figure}
