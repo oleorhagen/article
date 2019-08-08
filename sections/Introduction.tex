@@ -209,7 +209,7 @@ can write the optimization problem~\eqref{eq:funneloptimizationproblem} as
   \\
   \rho(0) - V(0,\bar{\vect{x}}) - \sum_{i}^{N_{0}}
   L_{0,i}(\bar{\vect{x}})g_{0,i}(\bar{\vect{x}}) & \, \text{is
-    SOS} \label{eq:sufficient-conditions-2}
+    SOS} \label{eq:sufficient-conditions-2} \IEEEyessubnumber
   \\
   L(t, \bar{\vect{x}}), \, L_{t}(\bar{\vect{x}}), \, L_{0,i}(\bar{\vect{x}})& \, \text{are SOS}, \nonumber
   \\
@@ -257,7 +257,7 @@ constraints in Equation~\eqref{eq:discrete-containment-constraint} along with
 \cref{eq:sufficient-conditions,eq:sufficient-conditions-2}, one arrives at the
 following optimization problem:
   \newcommand{\E}{\mathcal{E}}
-  \begin{mini!}[2]
+  \begin{mini!}[3]
     { \substack { V, \rho, L, L_t,
         \\
         L_{0, i}, S_{k}, L_{\E, k} } }
@@ -285,13 +285,14 @@ following optimization problem:
     {\text{ is SOS}}
     \addConstraint {S_k \nonumber}%
     {\succeq 0}%
-    {\quad \forall k \in \set{1, \ldots, N}}
+    {\forall k \in \set{1, \ldots, N}}
     \addConstraint {L(t,\vect{x}), L_t (t, \vect{x}),\, L_{0,i}(\vect{x}),\,
       L_{\mathcal{E},k}(\vect{x}) \nonumber }%
-    {\qquad\text{ are SOS}}%
-    {\quad \forall i \in \set{1, \ldots, N_0},}
-    \addConstraint{\nonumber}{}{\quad \forall
-      k \in \set{1, \ldots, N} \mathEoS }
+    {\text{ are SOS}}%
+    {\forall i \in \set{1, \ldots, N_0},}
+    \addConstraint{\nonumber}
+    {}
+    {\forall k \in \set{1, \ldots, N} \mathEoS }
   \end{mini!}
 This is the continuous finite dimensional optimization problem that is needed in
 order to search for a Lyapunov function candidate that parameterizes the
