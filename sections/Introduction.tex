@@ -333,3 +333,184 @@ funnels.
     \EndProcedure
   \end{algorithmic}
 \end{algorithm} 
+
+
+\subsection{Approximation via Time-Sampling}
+
+It is often the case that the nominal trajectory \(x_{0} \colon [0,T]
+\rightarrow \R^n\) is difficult to approximate with a low degree polynomial in
+time~\cite{majumdarFunnelLibrariesRealtime2017}. This can cause funnel
+computation to take a lot of time, therefore approximating the polynomial
+discretely speeds up the calculation, at the cost of exactness. However the
+resulting funnels are shown to be acceptable approximations, where exactness can
+be regained through increasing the sampling rate~\cite{Tobenkin_2011}. If
+\(t_{k} \in [0,T]\), where \(k \in \set{1,\ldots,N}\), the optimization
+\cref{opt:time-dependent-optimization-problem} becomes:
+\begin{mini!}[2]
+  {\substack{V_{k}, \rho, L_{k},\\ L_{0,i}, S_{k},
+      L_{\mathcal{E},k}} } % Optimization variables
+  {\sum_{k=1}^{N}\vol(\mathcal{E} \bigl(t_{k}) \bigr) = \sum_{k=1}^{N} \vol\left(
+      \set{\bar{x} \mid {\bar{x}}^{T} S_{k} \bar{x} \leq 1}
+    \right)} % Optimization function
+  {\label{opt:discrete}} % Label optimization problem
+  {} % Optimization result
+  % Constraints
+  \addConstraint{\dot{\rho}(t_{k}) - \dot{V}_{k}(\bar{\vect{x}}) -
+    L_{k}(\bar{\vect{x}}) \bigl( V_{k}(\bar{\vect{x}}) - \rho(t_{k}) \bigr)}
+  {\qquad} {\forall k \in \set{1,\ldots,N}} \addConstraint{\rho(t_{1}) -
+    V_{1}(\bar{\vect{x}}) - \sum_{i}^{N_{0}} L_{0,i}g_{0,i}(\bar{\vect{x}})}
+  {}
+  {\, \text{is SOS}} %
+  \addConstraint{1 - {\bar{\vect{x}}}^{T} S_{k} \bar{\vect{x}} -
+    L_{\mathcal{E},k} \bigl( \rho(t_{k}) - V_{k}(\bar{\vect{x}}) \bigr) }
+  {}
+  {\, \text{is SOS},}
+  \addConstraint{}
+  {}
+  {\forall k \in \set{1,\ldots,N} \nonumber} %
+  \addConstraint{S_{k} \succeq 0}
+  {}
+  {\forall k \in \set{1,\ldots,N} \nonumber} %
+  \addConstraint{L_k(\bar{\vect{x}}),\,L_{0,i}(\bar{\vect{x}}),
+    L_{\mathcal{E},k}}
+  {\qquad \text{are SOS} \nonumber}
+  {\forall i \in \set{1,\ldots,N_0} , \nonumber} %
+  \addConstraint{}
+  {}
+  {\forall k \in \set{1,\ldots,N} \mathEoS \nonumber}
+\end{mini!}
+This is the same optimization problem as in
+\cref{opt:time-dependent-optimization-problem}, but with the continuous time
+dependency removed from the equations. This leads to vastly greater performance
+in computing the funnels, but the parameterization of the funnels will be
+slightly larger, as exactness is lost~\cite{Tobenkin_2011}.
+
+
+\subsection{Funnel Composition}
+
+In order for two funnels to create one extended motion primitive from multiple
+smaller primitives, the funnels in use must be composable. In order for two
+funnels to be composable, the outlet of one funnel needs to be completely
+contained within the inlet of the other. This means that if \(\mathcal{F}_1 =
+F_1(T)\) is the outlet of funnel \(F_1\), and \(\mathcal{F}_2 = F_2(0)\) is the
+inlet of \(F_2\), then
+\begin{equation}
+  \label{eq:funnel-subset}
+  \mathcal{F}_1 \subseteq \mathcal{F}_2
+\end{equation}
+is required in order for the funnels to be composable.
+\begin{definition}
+  \label{def:funnel-composition}
+  An ordered pair \((F1, F2)\) of funnels \(F_1 \colon [0,T_1] \rightarrow
+  \mathcal{P}(\R^n)\) and \(F_2 \colon [0,T_2] \rightarrow \mathcal{P}(\R^n)\)
+  is sequentially composable if \(F_1(T) \subseteq F_2(0)\).
+\end{definition}
+Because the implication
+\begin{equation}
+  V_1(T_1,\bar{\vect{x}}) \leq \rho_1(T_1) \implies V_2(0,\bar{\vect{x}}) \leq
+  \rho_2(0)
+\end{equation}
+is an equivalent condition to \cref{eq:funnel-subset}, and because it can be
+checked through the following \ac{SOS} program
+\begin{align}
+  \text{Find } \; &L(\bar{x})  \\
+  \text{s.t.} \; &\rho_2(0) - V_2( 0,\bar{\vect{x}}) - L(\bar{\vect{x}})
+                  \bigl( \rho_1(T_1) - V_1(T_1,\bar{\vect{x}}) \bigr) \qquad \text{is SOS} \mathEoS \nonumber
+\end{align}
+Hence funnel composition can be checked in the same way that the funnels are
+generated -- through a \ac{SOS} program. Also note that the above program is a
+simple search for existence, and hence no cost function is needed.
+
+However in
+\citeauthor{majumdarFunnelLibrariesRealtime2017}~\cite{majumdarFunnelLibrariesRealtime2017},
+the program is stated simply, and it can be helpful to take a look at the
+derivation in order to gain a feel for the implementation of a \ac{SOS} program.
+
+The \nameref{sec:s-procedure} enables the search to be limited to a
+semi-algebraic set. In this case, that set is \(\mathcal{F}_2 = \set{\vect{x}
+  \in \R^n \mid V_2(0,\bar{\vect{x}}) \leq \rho_2(0)}\), and any \(\vect{x}\)
+that is not in this set is therefore not of importance, which is why employing
+the \textit{S-Procedure} is valid for limiting a search to a set. In more
+general terms this can be written
+\begin{equation}
+  \label{eq:example-s-procedure-implication}
+  \vect{x} \in \mathcal{F}_2 \implies p(\vect{x}) \geq 0,
+\end{equation}
+where \(p(\vect{x})\) is the \ac{SOS} polynomial that is to be verified. In this
+case \(p(\vect{x})\) is \(V_2(0,\bar{\vect{x}})\). Thus in order to impose the
+implication~\eqref{eq:example-s-procedure-implication} define
+\begin{equation}
+  q(\vect{x}) = V_2(0,\bar{\vect{x}}) - \rho_2(0) - L(\bar{\vect{x}}) \bigl(
+    \rho_1(T_1) - V_1(T_1,\bar{\vect{x}}) \bigr),
+\end{equation}
+where \(q(\vect{x})\) and \(L(\bar{\vect{x}})\) need to be SOS polynomials.
+
+\begin{example}
+
+  As a simple example, look at embedding a square within a circle. Give the
+  circle a radius of \(\sqrt{2}+\epsilon\), and the square sides of \(1\), and
+  center them both at the origin in the Euclidean plane. Then define the
+  set
+  \begin{equation}
+    \label{eq:beta-orig}
+    \beta = \set{\vect{x} \in \R^2 \mid \norm{\vect{x}} \leq 1},
+  \end{equation} 
+  using the Manhattan metric. Then the implication
+  \begin{equation}
+    \vect{x} \in \beta \implies p(\vect{x}) \geq 0,
+  \end{equation}
+  is needed in order to write this into a \ac{SOS} program through the use of
+  the \nameref{sec:s-procedure}. Then \eqref{eq:beta-orig} can be parameterized
+  by a positivity constraint
+  \begin{align}
+    \beta &= \set{\vect{x} \in \R^2 \mid 1 \pm \vect{x} \geq 0 }, \\
+    p(\vect{x}) &= r^2 - x^2 - y^2
+  \end{align}
+  where \(p(\vect{x})\) is the parameterization of the circle, and \(\beta\) is
+  the parameterization of the square with sides of length two. What needs to be
+  shown is that \(p(x)\) is positive on the set \(\beta\). Through the
+  \nameref{sec:s-procedure} this can be written as the search for a nonnegative
+  polynomial \(L_{\mathit{\mathit{ineq}},i}(\vect{x})\) such that \(p(\vect{x}) \geq
+  L_{\mathit{\mathit{ineq}},i}(\vect{x})g(\vect{x}) \). Thus
+  \begin{equation}
+    q(\vect{x}) = p(\vect{x}) -
+    \sum_{i=1}^{2}L_{\mathit{\mathit{ineq}},i}(\vect{x})g_{\mathit{\mathit{ineq}},i}(\vect{x}) \geq 0 \forall x \in \beta,
+  \end{equation} 
+  is required for \(q(\vect{x})\) to be a \ac{SOS} polynomial. From this it is
+  seen that when a point satisfies \(g_{\mathit{\mathit{ineq}},i}\) (i.e., when
+  \(\vect{x} \in \beta\)) the term \( -
+  \sum_{i=1}^{2}L_{\mathit{\mathit{ineq}},i}(\vect{x})g_{\mathit{\mathit{ineq}},i}(\vect{x})\)
+  is negative, and hence \(p(x)\) must be nonnegative for \(q(\vect{x})\) to be
+  positive. Meaning that \(x \wedge y\) is less than \(r\) on the set \(\beta\).
+  Therefore all the points in \(\beta\) are within the bound of the circle, and
+  is what verifies the desired implication.
+
+  Solving this problem can be done using any of a number of \ac{SOS} modeling
+  software tools. This example relies on \textsc{Yalmip}~\cite{Lofberg2004} and
+  its \ac{SOS} programming functionality for \matlab~\cite{Lofberg2009} .
+
+
+  \lstinputlisting{figures/funnel/embededsquare.m}
+
+  Which returns ``Composition successful!'' for circles with radii larger than
+  \(\sqrt{2}\) as expected.
+\end{example}
+
+
+\subsection{Cyclic Coordinates and Lagrangian Dynamics}
+\label{subsec:cyclic-coordinates}
+
+In order to move funnels around the world space, the dynamics of the system must
+not change along the coordinates at which the system is manipulated. This can be
+achieved through the theory of cyclic and non-cyclic coordinates, stemming from
+Lagrangian dynamics. Therefore, given the Lagrangian \(\mathcal{L}(q_i,
+\dot{q_i}, t)\) of a dynamical system, where the \(q_i\) are the generalized
+coordinates of the system, and \(\dot{q_i}\) are the generalized velocities. If
+the Lagrangian does not contain the \(q_j\) then \(q_j\) is a cyclic coordinate
+of the system, and the j-th Lagrangian has the form
+\[
+  \left( \frac{d}{dt} \right) \left( \frac{\partial \mathcal{L}}{\partial
+      \dot{q_j}} \right) = \mathrm{constant} \mathEoS
+\]
+This means that any \(q_j\) fulfilling the above criteria can be freely moved
+around in the state-space, yet yield the same dynamical solution of the system.
