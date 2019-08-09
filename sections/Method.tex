@@ -108,9 +108,10 @@ function. In the same way as in
 the funnel generation algorithm will be initialized with a \ac{TV-LQR}
 controller as the initial Lyapunov function employing a cost function of the
 form
-\begin{equation}
-  J = \vect{x}^{T} (t_f) \matr{F}(t_f) \vect{x} (t_f) + \int_{t_{0}}^{t_{f}} \left( \vect{x}^{T} \matr{Q} \vect{x} + \vect{u}^{T} \matr{R} \vect{u} + 2 \vect{x}^T \matr{N} \vect{u} \right) \mathrm{d}t,
-\end{equation}
+\begin{IEEEeqnarray*}{ll}
+  J &= \vect{x}^{T} (t_f) \matr{F}(t_f) \vect{x} (t_f) \IEEEyesnumber \\
+    &+ \int_{t_{0}}^{t_{f}} \left( \vect{x}^{T} \matr{Q} \vect{x} + \vect{u}^{T} \matr{R} \vect{u} + 2 \vect{x}^T \matr{N} \vect{u} \right) \mathrm{d}t,
+\end{IEEEeqnarray*}
 which when employed on the linearization of the system error
 dynamics~\eqref{eq:system-error-dynamics} gives
 \begin{equation}
@@ -135,10 +136,11 @@ which is an an initial candidate Lyapunov function of the form
   V(t,\bar{\vect{x}}) = {\bar{\vect{x}}}^{T} \matr{S}_{i}\bar{\vect{x}} ,
 \end{equation}
 where \(S_{i}\) is a solution of the \textit{Ricatti} equation
-\begin{equation}
+\begin{IEEEeqnarray*}{Cr}
   \label{eq:ricatti}
-  - \dot{\matr{S}}(t) = \matr{A}^{T} \matr{S}(t) +\matr{S}(t) \matr{A} - \left( \matr{S}(t) \matr{B} + \matr{N} \right) \matr{R}^{-1}\left( \matr{B}^{T} \matr{S}(t) + \matr{N}^{T} \right) + \matr{Q}
-\end{equation} 
+  - \dot{\matr{S}}(t) = \matr{A}^{T} \matr{S}(t) +\matr{S}(t) \matr{A} - \left( \matr{S}(t) \matr{B} + \matr{N} \right) \matr{R}^{-1} \IEEEyesnumber \\
+  \IEEEeqnarraymulticol{2}{r}{\left( \matr{B}^{T} \matr{S}(t) + \matr{N}^{T} \right) + \matr{Q}}
+\end{IEEEeqnarray*} 
 associated with the \ac{LQR} controller. The feedback is gained from
 \[
   \matr{K}(t) = \matr{R}^{-1} \left( \matr{B} \matr{S}(t) + \matr{N}^T \right),
@@ -271,11 +273,12 @@ linearized in order for it to be handled by the \ac{SOS} framework.
 solves this by linearizing \(\deter(\matr{S}_k)\) at the solution of
 \(\matr{S}_k\) from the previous iteration, and maximizes this linearization
 instead. In the end this translates to
-\begin{equation}
-  \lin \bigl( \deter \p{ \matr{S}_k} \bigr) = \Tr \bigl( \matr{P}^{T}{\p{ \matr{P}
+\begin{IEEEeqnarray*}{ll}
+  \lin \bigl( \deter \p{ \matr{S}_k} \bigr) &=  \IEEEyesnumber \\
+  \IEEEeqnarraymulticol{2}{r}{\Tr \bigl( \matr{P}^{T}{\p{ \matr{P}
       \matr{S}_{k,0}^{-1} \matr{P}^T}}^{-1} \matr{P} {\matr{S}_{k,0}}^{-1}
-    \matr{S}_k {\matr{S}_{k,0}}^{-1} \bigr),
-\end{equation} 
+    \matr{S}_k {\matr{S}_{k,0}}^{-1} \bigr)},
+\end{IEEEeqnarray*} 
 where \( \matr{S}_{k,0}\) is the nominal value for the linearization, and \(\Tr\)
 is the trace of the matrix.
 
@@ -306,9 +309,10 @@ so that the control policy can be parameterized as a polynomial
 \end{equation}
 Given that the dynamical model in \cref{eq:model-dynamics} is control affine,
 since
-\begin{equation}
-  \dot{\vect{x}} = %
-  f(\vect{x}(t)) + g(\vect{x}(t)) \vect{u} (t) = %
+\begin{IEEEeqnarray*}{rl}
+  \dot{\vect{x}} &= %
+  f(\vect{x}(t)) + g(\vect{x}(t)) \vect{u} (t) \IEEEyesnumber \\
+  &= %
   \begin{bmatrix}
     -v(t)\sin (\theta) \\
     v(t) \cos (\theta) \\
@@ -321,7 +325,7 @@ since
     1 \\
   \end{bmatrix}
   \vect{u}(t),
-\end{equation}
+\end{IEEEeqnarray*}
 the feedback controller can be optimized by adding the coefficients of the
 polynomial \(\vect{u}_f(t,\bar{\vect{x}})\) to the set of decision variables in
 the original optimization problem~\eqref{opt:discrete}. The only issue is
@@ -343,7 +347,7 @@ the funnel computations as robust motion primitives for traversal in a dense
 forest environment, as summarized in \cref{alg:funnelalgorithm-extended}
 (Optimization 2).
 
-\begin{algorithm}[H]
+\begin{figure}[!t]
   \caption{Feedback Funnel computation} \label{alg:funnelalgorithm-extended}
   \begin{algorithmic}[0]
     \Procedure{Feedback Funnel Computation}{$a,b$}\Comment{Computes the feedback funnel}
@@ -376,7 +380,7 @@ forest environment, as summarized in \cref{alg:funnelalgorithm-extended}
     \EndWhile
     \EndProcedure
   \end{algorithmic}
-\end{algorithm}
+\end{figure}
 
 \subsection{Adding the Uncertainty Constraints}
 \label{sec:adding-uncertainty}
@@ -415,28 +419,32 @@ Which in this thesis is an additive uncertainty so that
   \end{bmatrix} \mathEoS
 \end{equation}
 Then the requirement~\eqref{eq:reachableset} is slightly modified so that
-\begin{equation}
+\begin{IEEEeqnarray*}{lr}
   \label{eq:uncertain-reachableset}
-  \bar{\vect{x}}(0) \in \mathcal{X} \implies \bar{\vect{x}}(t) \in F(t),\, \forall t \in
-  [0,T], \, \forall w \colon [0,T] \rightarrow \mathcal{W},
-\end{equation} 
+  \bar{\vect{x}}(0) \in \mathcal{X} \implies \bar{\vect{x}}(t) \in F(t), \IEEEyesnumber \\
+  \IEEEeqnarraymulticol{2}{r}{\forall t \in
+  [0,T], \, \forall w \colon [0,T] \rightarrow \mathcal{W}},
+\end{IEEEeqnarray*} 
 where \(F(t)\) is the new formulation for reachable set of the uncertain system.
 Thus the sufficient condition in \cref{eq:funnelsufficient} turns into
-\begin{equation}
+\begin{IEEEeqnarray*}{rl}
   \label{eq:funneluncertain-sufficient}
-  V(t,\bar{\vect{x}}) = \rho(t) \implies \dot{V}(t,\bar{\vect{x}},w) < \dot{\rho}(t), \, \forall t \in [0,T], \, \forall w(t) \in \mathcal{W} \mathEoS
-\end{equation}
+  V(t,\bar{\vect{x}}) = \rho(t) \implies&
+  \dot{V}(t,\bar{\vect{x}},w) < \dot{\rho}(t), \IEEEyesnumber \\
+  &\forall t \in [0,T], \, \forall w(t) \in \mathcal{W} \mathEoS
+\end{IEEEeqnarray*}
 The Lyapunov function derivative then becomes
 \begin{equation}
   \dot{V}(t,\bar{\vect{x}}, w) = \frac{\partial V(t,\bar{\vect{x}})}{\partial \vect{x}} f_{\mathit{cl}}(t,\bar{\vect{x}},w) + \frac{\partial V(t,\bar{\vect{x}})}{\partial t},
 \end{equation}
 and the optimization condition \cref{eq:sufficient-conditions} turns into
-\begin{align}
+\begin{IEEEeqnarray*}{lr}
   \label{eq:optimizationconditionuncertain}
-  \dot{\rho}(t) - \dot{V}(t,\bar{\vect{x}},w) - L(t,\bar{\vect{x}},w) \bigl( V(t,\bar{\vect{x}}) - \rho(t) \bigr) - L_{t}(t,\bar{\vect{x}},w) \bigl( t\left( T - t \right) \bigr)  & \nonumber \\
-  - \sum_{j=1}^{N_{w}} L_{w,j}(t,\bar{\vect{x}},w)g_{w,j}(w) \quad \text{is SOS} &  \\
+  \dot{\rho}(t) - \dot{V}(t,\bar{\vect{x}},w) - L(t,\bar{\vect{x}},w) & \IEEEyesnumber  \\
+  \bigl( V(t,\bar{\vect{x}}) -\rho(t) \bigr) - L_{t}(t,\bar{\vect{x}},w) \bigl( t\left( T - t \right) \bigr)  & \nonumber \\
+  - \sum_{j=1}^{N_{w}} L_{w,j}(t,\bar{\vect{x}},w)g_{w,j}(w) \quad \text{is SOS} & \\
   \left( L, L_t, L_{w,j} \right) (t,\bar{\vect{x}},w) \qquad \text{are SOS}, \; \forall j = 1,\ldots,N_w, \nonumber
-\end{align}
+\end{IEEEeqnarray*}
 with the uncertainty constraints added.
 
 A figure of a straight funnel motion primitive calculated with uncertainties by

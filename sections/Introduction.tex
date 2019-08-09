@@ -444,11 +444,12 @@ Because the implication
 \end{equation}
 is an equivalent condition to \cref{eq:funnel-subset}, and because it can be
 checked through the following \ac{SOS} program
-\begin{align}
-  \text{Find } \; &L(\bar{x})  \\
-  \text{s.t.} \; &\rho_2(0) - V_2( 0,\bar{\vect{x}}) - L(\bar{\vect{x}})
-                  \bigl( \rho_1(T_1) - V_1(T_1,\bar{\vect{x}}) \bigr) \qquad \text{is SOS} \mathEoS \nonumber
-\end{align}
+\begin{IEEEeqnarray*}{lC}
+  \text{Find } \; L(\bar{x}) \IEEEyesnumber \\
+  \text{s.t.} \\
+  \IEEEeqnarraymulticol{2}{l}{\rho_2(0) - V_2( 0,\bar{\vect{x}}) - L(\bar{\vect{x}})
+                  \bigl( \rho_1(T_1) - V_1(T_1,\bar{\vect{x}}) \bigr) \quad \text{is SOS}} \mathEoS \nonumber
+\end{IEEEeqnarray*}
 Hence funnel composition can be checked in the same way that the funnels are
 generated -- through a \ac{SOS} program. Also note that the above program is a
 simple search for existence, and hence no cost function is needed.
