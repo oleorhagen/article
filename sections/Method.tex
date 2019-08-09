@@ -573,11 +573,12 @@ Therefore apply the generalized S-procedure on
 \end{equation}
 Then the composability of two funnels can be checked through the \ac{SOS}
 program
-\begin{align}
-  & \text{Find } && L(\vect{x}) \\
-  & \text{s.t. } && \rho_2(0) - V_2(0,\vect{x}) - L(\vect{x})\left( \rho_1(T_1) - V_1(T_1,\vect{x}) \right) \text{ is SOS} \nonumber \\ 
-  &&& L(\vect{x}) \text{ is SOS} \mathEoS \nonumber
-\end{align}
+\begin{IEEEeqnarray*}{ll}
+   \text{Find } L(\vect{x}) \IEEEyesnumber \\
+  \text{s.t.} \\
+   \IEEEeqnarraymulticol{2}{r}{\rho_2(0) - V_2(0,\vect{x}) - L(\vect{x})\left( \rho_1(T_1) - V_1(T_1,\vect{x}) \right) \text{ is SOS}} \\
+  \IEEEeqnarraymulticol{2}{r}{L(\vect{x}) \text{ is SOS}} \mathEoS
+\end{IEEEeqnarray*}
 Which is implemented in \textsc{sostools}~\cite{sostools} and \matlab{} in
 \cref{sec:funnel-composability-program-sos}. For a picture of funnels composed
 together into a tree have a look at \cref{fig:funnel-composition-tree}.
