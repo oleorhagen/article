@@ -2,13 +2,13 @@
 \subsection{Funnels}
 \label{sec:funnels}
 
-The uncertainty guarantees in this thesis is made through creating
+The uncertainty guarantees in this paper is given through creating
 \textit{funnels}. Funnels are the parameterization of the \textit{finite time
   reachable sets} for the dynamical system at hand. The following sections will
 introduce and develop the theory needed to understand the \ac{SOS} framework
 that lies at the bottom of the mathematical verification of these reachable
 sets. For the curious reader, a more basic introduction can be found in
-\cref{sec:first-app}.
+Appendix A of my master's thesis at \url[master-thesis]{http://www.github.com/olepor/master-thesis}.
 
 A \textit{funnel} is a parameterization of the reachable set of a dynamical
 system. This means that a Funnel holds all the states the dynamical system can
@@ -524,3 +524,27 @@ of the system, and the j-th Lagrangian has the form
 \]
 This means that any \(q_j\) fulfilling the above criteria can be freely moved
 around in the state-space, yet yield the same dynamical solution of the system.
+
+
+\subsection{S-Procedure}
+\label{sec:s-procedure}
+
+The \textit{S-procedure} is used in this thesis to check for positivity for the
+polynomial at hand over a region
+\[
+  \beta = \set{\vect{x} \in \R^n \mid g_{eq,i}(\vect{x}),\,g_{ineq,i}(\vect{x})
+    \geq 0} \mathEoS
+\]
+The interest is in showing that a polynomial \(p(\vect{x})\) is nonnegative on
+the given set \(\beta\) \ie
+\[
+  \vect{x} \in \beta \implies p(\vect{x}) \geq 0,
+\]
+which can be imposed by the following SOS constraints
+\begin{align*}
+  q(\vect{x}) = p(\vect{x}) &- \sum_{i=1}^{N_{eq}}L_{eq,i}(\vect{x})g_{eq,i}(\vect{x}) \\ &-
+                                                                                            \sum_{j=1}^{N_{ineq}}L_{ineq,i}(\vect{x})g_{ineq,j}(\vect{x})
+                                                                                            L_{ineq,j}(\vect{x}) \text{ is SOS } \forall j \in \set{0,\ldots,N_{ineq}},
+\end{align*} 
+where the multiplier polynomials \(L_{eq}\) and \(L_{ineq}\) are similar to
+Lagrange multipliers in constrained optimization.
