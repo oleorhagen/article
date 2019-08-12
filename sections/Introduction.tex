@@ -331,7 +331,6 @@ funnels.
       \underset{\substack{V,\rho, L_{t},L_{0,i},S_{k}}}{\inf}&  \sum_{k=1}^{N} \vol \bigl( \mathcal{E}(t_{k}) \bigr) & \\    
       \text{subject to } & L \text{ and } L_{\mathcal{E},k} \text{ constant.}& \\
     \end{align*}
-    \State 
     \State cost = \(\sum_{k=1}^{N} \vol \bigl( \mathcal{E}(t_{k}) \bigr) \)
     \State
     \If{\(\frac{\mathrm{cost}_{\mathit{prev}} -
@@ -356,21 +355,35 @@ resulting funnels are shown to be acceptable approximations, where exactness can
 be regained through increasing the sampling rate~\cite{Tobenkin_2011}. If
 \(t_{k} \in [0,T]\), where \(k \in \set{1,\ldots,N}\), the optimization
 \cref{opt:time-dependent-optimization-problem} becomes:
-\begin{mini!}[2]
+\begin{mini!}[1]
   {\substack{V_{k}, \rho, L_{k},\\ L_{0,i}, S_{k},
       L_{\mathcal{E},k}} } % Optimization variables
-  {\sum_{k=1}^{N}\vol(\mathcal{E} \bigl(t_{k}) \bigr) = \sum_{k=1}^{N} \vol\left(
-      \set{\bar{x} \mid {\bar{x}}^{T} S_{k} \bar{x} \leq 1}
-    \right)} % Optimization function
+  {\sum_{k=1}^{N}\vol(\mathcal{E} \bigl(t_{k}) \bigr)} % Optimization function
   {\label{opt:discrete}} % Label optimization problem
   {} % Optimization result
+  \breakObjective{= \sum_{k=1}^{N} \vol\left(
+    \set{\bar{x} \mid {\bar{x}}^{T} S_{k} \bar{x} \leq 1}
+    \right)}
   % Constraints
+  %
+  %
   \addConstraint{\dot{\rho}(t_{k}) - \dot{V}_{k}(\bar{\vect{x}}) -
     L_{k}(\bar{\vect{x}}) \bigl( V_{k}(\bar{\vect{x}}) - \rho(t_{k}) \bigr)}
-  {\qquad} {\forall k \in \set{1,\ldots,N}} \addConstraint{\rho(t_{1}) -
+                {}
+                {}
+                \addConstraint{}
+                              {}
+                              {\forall k \in \set{1,\ldots,N}}
+                %
+                %
+                %
+                \addConstraint{\rho(t_{1}) -
     V_{1}(\bar{\vect{x}}) - \sum_{i}^{N_{0}} L_{0,i}g_{0,i}(\bar{\vect{x}})}
   {}
-  {\, \text{is SOS}} %
+  {\, \text{is SOS}}
+  %
+  %
+  %
   \addConstraint{1 - {\bar{\vect{x}}}^{T} S_{k} \bar{\vect{x}} -
     L_{\mathcal{E},k} \bigl( \rho(t_{k}) - V_{k}(\bar{\vect{x}}) \bigr) }
   {}
@@ -378,13 +391,22 @@ be regained through increasing the sampling rate~\cite{Tobenkin_2011}. If
   \addConstraint{}
   {}
   {\forall k \in \set{1,\ldots,N} \nonumber} %
+  %
+  %
+  %
   \addConstraint{S_{k} \succeq 0}
   {}
   {\forall k \in \set{1,\ldots,N} \nonumber} %
+  %
+  %
+  %
   \addConstraint{L_k(\bar{\vect{x}}),\,L_{0,i}(\bar{\vect{x}}),
     L_{\mathcal{E},k}}
   {\qquad \text{are SOS} \nonumber}
   {\forall i \in \set{1,\ldots,N_0} , \nonumber} %
+  %
+  %
+  %
   \addConstraint{}
   {}
   {\forall k \in \set{1,\ldots,N} \mathEoS \nonumber}
@@ -422,11 +444,12 @@ Because the implication
 \end{equation}
 is an equivalent condition to \cref{eq:funnel-subset}, and because it can be
 checked through the following \ac{SOS} program
-\begin{align}
-  \text{Find } \; &L(\bar{x})  \\
-  \text{s.t.} \; &\rho_2(0) - V_2( 0,\bar{\vect{x}}) - L(\bar{\vect{x}})
-                  \bigl( \rho_1(T_1) - V_1(T_1,\bar{\vect{x}}) \bigr) \qquad \text{is SOS} \mathEoS \nonumber
-\end{align}
+\begin{IEEEeqnarray*}{lC}
+  \text{Find } \; L(\bar{x}) \IEEEyesnumber \\
+  \text{s.t.} \\
+  \IEEEeqnarraymulticol{2}{l}{\rho_2(0) - V_2( 0,\bar{\vect{x}}) - L(\bar{\vect{x}})
+                  \bigl( \rho_1(T_1) - V_1(T_1,\bar{\vect{x}}) \bigr) \quad \text{is SOS}} \mathEoS \nonumber
+\end{IEEEeqnarray*}
 Hence funnel composition can be checked in the same way that the funnels are
 generated -- through a \ac{SOS} program. Also note that the above program is a
 simple search for existence, and hence no cost function is needed.
