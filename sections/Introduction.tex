@@ -20,10 +20,10 @@ defined as
 \]
 where \(\mathcal{X}_0\) is the set of initial conditions, \(\sqb{0,T}\) the time
 interval, and \(F(t)\) is the set of states that the system can be in at time
-\(t\). Although this thesis concerns itself with approximating the reachable set
+\(t\). Although this paper concerns itself with approximating the reachable set
 through \textit{Lyapunov} functions, a useful analogy is imagining the funnel
-created through \textit{Monte-Carlo} simulation, where the funnel would be the
-set of all the paths traversed by the dynamical system at hand. For the simple
+created through a \textit{Monte-Carlo} simulation, where the funnel is the set
+of all the paths traversed by the dynamical system at hand. For the simple
 airplane model \cref{eq:model-dynamics}, a Monte-Carlo simulation of nine
 starting points along the y-axis, along with a simple \ac{LQR} controller on the
 heading of the aircraft, can be seen in \cref{fig:monte-carlo-sim}.
@@ -49,11 +49,11 @@ on \cite{majumdarFunnelLibrariesRealtime2017}.
 The funnel computations will be based on the \ac{SOS} theory developed in the
 following sections. When given a nominal trajectory, the goal is to compute a
 robust invariant set around this trajectory that will guarantee that the planner
-is free from collisions during execution of the obtained motion plan. This
+is free from collisions during execution of the aforementioned trajectory. This
 robustly invariant set is parameterized through Lyapunov function candidates,
 that, in this case, will be based upon an \ac{LQR} controller for the system.
 
-In order to compute funnels, a model of the dynamics for the system is required.
+In order to compute funnels, a model of the dynamics of the system is required.
 Thus, given the nonlinear dynamical system
 \begin{equation}
   \label{eq:dynamicalsystem}
@@ -62,8 +62,8 @@ Thus, given the nonlinear dynamical system
 with \(\vect{x}(t)\) the state of the system at time \(t\), and \(\vect{u}(t)\)
 the control input. Assume that an open loop nominal trajectory \(\vect{x}_0
 \colon [0,T] \rightarrow \R^n\) with control input \(\vect{u}_0 \colon [0,T]
-\rightarrow \R^n\) is given, and define a change of coordinates into the error
-coordinate frame
+\rightarrow \R^n\) is given. Where \(\vect{u}_{0}\) is the nominal control
+input. Then define a change of coordinates into the error coordinate frame
 \begin{align}
   \label{eq:system-error-dynamics}
   \bar{\vect{x}}(t) &= ( \vect{x} - \vect{x}_0 )(t) \\
@@ -77,11 +77,11 @@ obtains
 \end{equation}
 
 In order to compute a parameterized reachable set through \ac{SOS} programming
-the system~\cref{eq:dynamicalsystem-coordinatechange} needs to be polynomial,
-and parameterized by \(\vect{x}\) and \(t\) polynomially, since the \ac{SOS}
-framework can only verify polynomial inequalities. Therefore, through the use of
-a \ac{TV-LQR} (although any controller providing a \ac{CLF} can be used), the
-control input can be eliminated from the dynamical equation, giving
+the system in \cref{eq:dynamicalsystem-coordinatechange} needs to be polynomial,
+and hence be parameterized by \(\vect{x}\) and \(t\) polynomially, since the
+\ac{SOS} framework can only verify polynomial inequalities. Therefore, through
+the use of a \ac{TV-LQR} (although any controller providing a \ac{CLF} can be
+used), the control input can be eliminated from the dynamical equation, giving
 \begin{equation}
   \label{eq:dynamicclosedloop}
   \dot{\bar{\vect{x}}} = f_{cl}\big( t,\bar{\vect{x}}(t) \big) \mathEoS
@@ -94,24 +94,25 @@ nominal trajectory \(\vect{x}_0\), through a Taylor polynomial of some degree
 the system.
 
 The goal is to parameterize a \textit{tight outer approximation} of the set of
-states the system may transition into during the time interval \([0,T]\). Given
-that \(F(t)\) is the set of states the system~\cref{eq:dynamicclosedloop} can be
-in at time \(t\), then
+states the system may transition into during the time interval \([0,T]\) -- even
+in the face of uncertainty. Given that \(F(t)\) is the set of states the
+system in \cref{eq:dynamicclosedloop} can be in at time \(t\), then
 \begin{equation}
   \label{eq:reachableset}
   \bar{\vect{x}}(0) \in \mathcal{X}_0 \implies \bar{\vect{x}}(t) \in F(t), \, \forall t \in [0,T],
 \end{equation}
 where \(\mathcal{X}_0\) is the initial condition set, and \(F(t) \subset \R^n\)
-is the finite time funnel for the system.
+is the finite time funnel for the system, is the mathematical description of the
+finite time reachable funnel.
 
 \begin{definition}
   \label{def:funnel}
   A funnel associated with a closed-loop dynamical system \(\dot{\bar{\vect{x}}}
   = f_{\mathit{cl}}\big( t,\vect{x}(t) \big) \) is a map \(F \colon [0,T]
   \rightarrow \mathcal{P}(\R^n)\), from the time interval \([0,T]\) to the power
-  set (i.e., the set of subsets) of \(\R^n\) so that the sets \(F(t)\) satisfy
+  set (i.e. the set of subsets) of \(\R^n\) so that the sets \(F(t)\) satisfy
   the
-  condition~\cref{eq:reachableset}~\cite{majumdarFunnelLibrariesRealtime2017}.
+  condition in \cref{eq:reachableset}~\cite{majumdarFunnelLibrariesRealtime2017}.
 \end{definition}
 
 Next, the reachable set is parameterized through the use of Lyapunov functions,
@@ -121,7 +122,8 @@ which yields
 \end{equation}
 where \(\rho (t) \colon [0,T] \rightarrow \R^+\), is an upper bound which limits
 the size of the reachable set, and \(V \big(t,\bar{x}(t) \big)\) is a Lyapunov
-function \(V \colon [0,T] \times \R^n \rightarrow \R^+\).
+function \(V \colon [0,T] \times \R^n \rightarrow \R^+\) (in this case a
+\ac{CLF}, in the form of a simple \ac{LQR} controller).
 
 Then, by setting \(\mathcal{X}_0 \subset F(0,\bar{\vect{x}})\), one can derive
 the sufficient condition~\cref{eq:reachableset} for containing the reachable set
@@ -138,15 +140,14 @@ with \(\dot{V}(t,\bar{\vect{x}})\) computed as
 Currently there are no limitations on the functions \(V\) and \(\rho\), and
 hence there exists infinitely many functions with different sized reachable sets
 that satisfies~\cref{eq:funnelsufficient}, and is a valid funnel in the sense of
-~\cref{def:funnel}. In order for efficient planning to take place, the motion
-primitives, meaning the size of the funnels, should be as small as possible, and
-it is therefore that the volume of the funnels is minimized using the following
-optimization problem
+~\cref{def:funnel}. Hence, in order for efficient planning to take place, the
+motion primitives, meaning the size of the funnels, should be as small as
+possible. This is done through minimizing the volume of the funnels using the
+following optimization problem
 
 \begin{IEEEeqnarray*}{rCl}
-  \label{eq:funneloptimizationproblem}
   &\underset{V,\rho}{\text{infimum}} \; &\int_{0}^{T} \vol\big( F(t) \big) \,
-  \mathrm{d}t \IEEEyesnumber \\
+  \mathrm{d}t \label{eq:funneloptimizationproblem} \IEEEyesnumber \\
   &\text{subject to} \\
   \IEEEeqnarraymulticol{3}{l}{ V(t,\bar{\vect{x}}) = \rho (t) \implies
     \dot{V}(t,\bar{\vect{x}}) < \rho (t) \, \forall t \in
@@ -167,7 +168,7 @@ optimization problem
 
 \subsection{Formulating the Optimization Problem as a SOS Program}
 
-The optimization problem in \cref{eq:funneloptimizationproblem} would not be
+The optimization problem in \eqref{eq:funneloptimizationproblem} would be
 impossible to solve efficiently had it not been for advances in mathematical
 convex numerical optimization by
 \citeauthor{parilloStructuredSemidefinitePrograms}~\cite{parilloStructuredSemidefinitePrograms},
@@ -179,7 +180,7 @@ approach~\cite{tedrakeLQRtreesFeedbackMotion2009}.
 
 Thus in order to make the problem amenable to a \ac{SOS} program, there are a
 few requirements that need to be met by the problem formulation. Firstly the
-initial condition set needs to be a \textit{semi-algebraic set}, (i.e.,
+initial condition set needs to be a \textit{semi-algebraic set}, (i.e.
 parameterized by polynomial inequalities) so that
 %
 \begin{equation}
@@ -220,13 +221,13 @@ where \(L\), \(L_{t}\), and \(L_{0,i}\) are multiplier polynomials~(see
 
 The goal is to make the parameterization of the reachable set as small as
 possible, and therefore minimizing the cost function in
-\cref{eq:funneloptimizationproblem}. This is done by \cite{Tobenkin_2011}
+\eqref{eq:funneloptimizationproblem}. This is done by \cite{Tobenkin_2011}
 through approximating the cost function by first discretizing the problem and
 replacing the integral with a finite sum
 \begin{equation}
   \int_{0}^{T} \vol\big( F(t) \big) \, \mathrm{d}t \rightarrow \sum_{k=1}^{N} \vol\big( F(t_{k}) \big) \mathEoS \label{eq:discrete-costfunction}
 \end{equation}
-Since the Lyapunov function \(V(t,\bar{\vect{x}})\) in this thesis is quadratic,
+Since the Lyapunov function \(V(t,\bar{\vect{x}})\) in this paper is quadratic,
 it can be written as
 \begin{equation}
   V(t_{k}, \bar{\vect{x}}) = {\bar{\vect{x}}}^{T}S_{k}\bar{\vect{x}}, \, S_{k} \succeq 0,
@@ -234,13 +235,13 @@ it can be written as
 where \(\succeq 0\) means that the matrix is positive semi-definite. Since the
 set \(F(t_{k})\) is now an ellipsoid in which the volume can be minimized
 through maximizing the determinant of \(S_{k}\), which in turn can be
-transformed into a \acl{SDP} problem (see \cref{subsec:sdp}). If an upper bound
+transformed into a \acl{SDP} problem. If an upper bound
 on the cost function \cref{eq:discrete-costfunction} is introduced as
 \begin{equation}
   \mathcal{E} (t_{k}) = \set{\bar{\vect{x}} \in \R^n \mid {\bar{\vect{x}}}^{T}S_{k}\bar{\vect{x}} \leq 1, \, S_{k} \succeq 0},
 \end{equation}
 where \( \mathcal{E} ( t_{k} ) \) is an ellipsoid containing the reachable set
-\( F ( t_{k} ) \) at time \( t_{k} \). This containment constraint can be
+\( F ( t_{k} ) \) at time \( t_{k} \). Then this containment constraint can be
 equivalently expressed as
 \begin{equation}
   V ( t_{k}, \bar{\vect{x}} ) \leq \rho(t_{k})  \implies {\bar{\vect{x}}}^{T}\matr{S}_{k}\bar{\vect{x}} \leq 1 \mathEoS
@@ -254,18 +255,18 @@ Which when expressed using \ac{SOS} constraints gives
 %
 Then combining the cost function~\eqref{eq:discrete-costfunction} with the
 constraints in Equation~\eqref{eq:discrete-containment-constraint} along with
-\cref{eq:sufficient-conditions,eq:sufficient-conditions-2}, one arrives at the
+\eqref{eq:sufficient-conditions,eq:sufficient-conditions-2}, one arrives at the
 following optimization problem:
   \newcommand{\E}{\mathcal{E}}
   \begin{mini!}[3]
     { \substack { V, \rho, L, L_t,
         \\
         L_{0, i}, S_{k}, L_{\E, k} } }
-    { \sum_{k = 1}^{N} \vol \bigl( \E(t_{k}) \bigr) =
-      \sum_{k = 1}^{N} \vol \bigl( \set{\vect{x} \mid \vect{x}^{T} \matr{S}_{k} \vect{x}
-        \le 1} \bigr) }
+    { \sum_{k = 1}^{N} \vol \bigl( \E(t_{k}) \bigr) = \nonumber}
     {\label{opt:time-dependent-optimization-problem}}
     {}
+    \breakObjective{\sum_{k = 1}^{N} \vol \bigl( \set{\vect{x} \mid \vect{x}^{T} \matr{S}_{k} \vect{x}
+        \le 1} \bigr) }
     \addConstraint {
         \dot{\rho}(t) -
       \dot{V}(t,\vect{x}) - L(t,\vect{x}) \bigl( { V(t,\vect{x}) - \rho(t) }
@@ -355,7 +356,7 @@ resulting funnels are shown to be acceptable approximations, where exactness can
 be regained through increasing the sampling rate~\cite{Tobenkin_2011}. If
 \(t_{k} \in [0,T]\), where \(k \in \set{1,\ldots,N}\), the optimization
 \cref{opt:time-dependent-optimization-problem} becomes:
-\begin{mini!}[1]
+\begin{mini!}[3]
   {\substack{V_{k}, \rho, L_{k},\\ L_{0,i}, S_{k},
       L_{\mathcal{E},k}} } % Optimization variables
   {\sum_{k=1}^{N}\vol(\mathcal{E} \bigl(t_{k}) \bigr)} % Optimization function
@@ -420,12 +421,16 @@ slightly larger, as exactness is lost~\cite{Tobenkin_2011}.
 
 \subsection{Funnel Composition}
 
-In order for two funnels to create one extended motion primitive from multiple
-smaller primitives, the funnels in use must be composable. In order for two
-funnels to be composable, the outlet of one funnel needs to be completely
-contained within the inlet of the other. This means that if \(\mathcal{F}_1 =
-F_1(T)\) is the outlet of funnel \(F_1\), and \(\mathcal{F}_2 = F_2(0)\) is the
-inlet of \(F_2\), then
+Now that discrete motion primitives in the form of funnels can be calculated for
+a given base set of trajectories, it is time to handle the overarching goal of
+creating a plan consisting of multiple funnels stacked from start to finish, so
+that safe traversal can be guaranteed along the given path. In order for two
+funnels to create one extended motion primitive from multiple smaller
+primitives, the funnels in use must be composable. In order for two funnels to
+be composable, the outlet of one funnel needs to be completely contained within
+the inlet of the other. This means that if \(\mathcal{F}_1 = F_1(T)\) is the
+outlet of funnel \(F_1\), and \(\mathcal{F}_2 = F_2(0)\) is the inlet of
+\(F_2\), then
 \begin{equation}
   \label{eq:funnel-subset}
   \mathcal{F}_1 \subseteq \mathcal{F}_2
@@ -433,9 +438,9 @@ inlet of \(F_2\), then
 is required in order for the funnels to be composable.
 \begin{definition}
   \label{def:funnel-composition}
-  An ordered pair \((F1, F2)\) of funnels \(F_1 \colon [0,T_1] \rightarrow
+  An ordered pair \((F_{1}, F_{2})\) of funnels \(F_1 \colon [0,T_1] \rightarrow
   \mathcal{P}(\R^n)\) and \(F_2 \colon [0,T_2] \rightarrow \mathcal{P}(\R^n)\)
-  is sequentially composable if \(F_1(T) \subseteq F_2(0)\).
+  are sequentially composable if \(F_1(T) \subseteq F_2(0)\).
 \end{definition}
 Because the implication
 \begin{equation}
@@ -462,9 +467,8 @@ derivation in order to gain a feel for the implementation of a \ac{SOS} program.
 The \nameref{sec:s-procedure} enables the search to be limited to a
 semi-algebraic set. In this case, that set is \(\mathcal{F}_2 = \set{\vect{x}
   \in \R^n \mid V_2(0,\bar{\vect{x}}) \leq \rho_2(0)}\), and any \(\vect{x}\)
-that is not in this set is therefore not of importance, which is why employing
-the \textit{S-Procedure} is valid for limiting a search to a set. In more
-general terms this can be written
+that is not in this set is therefore not of importance. In more general terms
+this can be written
 \begin{equation}
   \label{eq:example-s-procedure-implication}
   \vect{x} \in \mathcal{F}_2 \implies p(\vect{x}) \geq 0,
@@ -481,12 +485,12 @@ where \(q(\vect{x})\) and \(L(\bar{\vect{x}})\) need to be SOS polynomials.
 \begin{example}
 
   As a simple example, look at embedding a square within a circle. Give the
-  circle a radius of \(\sqrt{2}+\epsilon\), and the square sides of \(1\), and
-  center them both at the origin in the Euclidean plane. Then define the
-  set
+  circle a radius of \(\sqrt{2}+\epsilon\), and the square with sides of \(2\),
+  and center them both at the origin in the Euclidean plane. Then define the
+  square
   \begin{equation}
     \label{eq:beta-orig}
-    \beta = \set{\vect{x} \in \R^2 \mid \norm{\vect{x}} \leq 1},
+    \beta = \set{\vect{x} \in \R^2 \mid \norm{\vect{x_{i}}} \leq 1, \, i=1,2},
   \end{equation} 
   using the Manhattan metric. Then the implication
   \begin{equation}
@@ -533,14 +537,17 @@ where \(q(\vect{x})\) and \(L(\bar{\vect{x}})\) need to be SOS polynomials.
 \subsection{Cyclic Coordinates and Lagrangian Dynamics}
 \label{subsec:cyclic-coordinates}
 
-In order to move funnels around the world space, the dynamics of the system must
-not change along the coordinates at which the system is manipulated. This can be
-achieved through the theory of cyclic and non-cyclic coordinates, stemming from
-Lagrangian dynamics. Therefore, given the Lagrangian \(\mathcal{L}(q_i,
-\dot{q_i}, t)\) of a dynamical system, where the \(q_i\) are the generalized
-coordinates of the system, and \(\dot{q_i}\) are the generalized velocities. If
-the Lagrangian does not contain the \(q_j\) then \(q_j\) is a cyclic coordinate
-of the system, and the j-th Lagrangian has the form
+With the ability to create a base set of funnels, and verify their ability to be
+composed together to create longer motion primitives, the time has come to move
+funnels from the initial base set around the world space of the planning
+problem. Thus, in order to move funnels around the world space, the dynamics of
+the system must not change along the coordinates at which the system is
+manipulated. This can be achieved through the theory of cyclic and non-cyclic
+coordinates, stemming from Lagrangian dynamics. Therefore, given the Lagrangian
+\(\mathcal{L}(q_i, \dot{q_i}, t)\) of a dynamical system, where the \(q_i\) are
+the generalized coordinates of the system, and \(\dot{q_i}\) are the generalized
+velocities. If the Lagrangian does not contain the \(q_j\) then \(q_j\) is a
+cyclic coordinate of the system, and the j-th Lagrangian has the form
 \[
   \left( \frac{d}{dt} \right) \left( \frac{\partial \mathcal{L}}{\partial
       \dot{q_j}} \right) = \mathrm{constant} \mathEoS
@@ -553,7 +560,7 @@ around in the state-space, yet yield the same dynamical solution of the system.
 \label{sec:s-procedure}
 
 The \textit{S-procedure} is used in this thesis to check for positivity for the
-polynomial at hand over a region
+polynomial at hand over a region given by the set \(\beta\), where
 \[
   \beta = \set{\vect{x} \in \R^n \mid g_{eq,i}(\vect{x}),\,g_{ineq,i}(\vect{x})
     \geq 0} \mathEoS
@@ -564,10 +571,10 @@ the given set \(\beta\) \ie
   \vect{x} \in \beta \implies p(\vect{x}) \geq 0,
 \]
 which can be imposed by the following SOS constraints
-\begin{align*}
-  q(\vect{x}) = p(\vect{x}) &- \sum_{i=1}^{N_{eq}}L_{eq,i}(\vect{x})g_{eq,i}(\vect{x}) \\ &-
-                                                                                            \sum_{j=1}^{N_{ineq}}L_{ineq,i}(\vect{x})g_{ineq,j}(\vect{x})
-                                                                                            L_{ineq,j}(\vect{x}) \text{ is SOS } \forall j \in \set{0,\ldots,N_{ineq}},
-\end{align*} 
+\begin{IEEEeqnarray*}{rl}
+  q(\vect{x}) &= p(\vect{x}) - \sum_{i=1}^{N_{eq}}L_{eq,i}(\vect{x})g_{eq,i}(\vect{x}) \\ 
+  &-\sum_{j=1}^{N_{ineq}}L_{ineq,i}(\vect{x})g_{ineq,j}(\vect{x}) L_{ineq,j}(\vect{x}) \\ 
+  \IEEEeqnarraymulticol{2}{r}{\text{ is SOS } \forall j \in \set{3,\ldots,N_{ineq}},}
+\end{IEEEeqnarray*} 
 where the multiplier polynomials \(L_{eq}\) and \(L_{ineq}\) are similar to
 Lagrange multipliers in constrained optimization.
