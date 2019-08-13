@@ -56,8 +56,7 @@ that, in this case, will be based upon an \ac{LQR} controller for the system.
 In order to compute funnels, a model of the dynamics of the system is required.
 Thus, given the nonlinear dynamical system
 \begin{equation}
-  \label{eq:dynamicalsystem}
-  \dot{\vect{x}} = f\big(\vect{x}(t), \vect{u}(t) \big),
+  \dot{\vect{x}} = f\big(\vect{x}(t), \vect{u}(t) \big), \label{eq:dynamicalsystem}
 \end{equation}
 with \(\vect{x}(t)\) the state of the system at time \(t\), and \(\vect{u}(t)\)
 the control input. Assume that an open loop nominal trajectory \(\vect{x}_0
@@ -72,8 +71,7 @@ input. Then define a change of coordinates into the error coordinate frame
 Then, transforming \cref{eq:dynamicalsystem} to the new coordinate frame one
 obtains
 \begin{equation}
-  \label{eq:dynamicalsystem-coordinatechange}
-  \dot{\bar{\vect{x}}} = \dot{\vect{x}} - \dot{\vect{x}}_0 = f\big( \vect{x}_0(t) + \bar{\vect{x}}(t), \vect{u}_0(t) + \bar{\vect{u}}(t) \big) - \dot{\vect{x}}_0(t) \mathEoS
+  \dot{\bar{\vect{x}}} = \dot{\vect{x}} - \dot{\vect{x}}_0 = f\big( \vect{x}_0(t) + \bar{\vect{x}}(t), \vect{u}_0(t) + \bar{\vect{u}}(t) \big) - \dot{\vect{x}}_0(t) \mathEoS \label{eq:dynamicalsystem-coordinatechange}
 \end{equation}
 
 In order to compute a parameterized reachable set through \ac{SOS} programming
