@@ -204,12 +204,10 @@ can write the optimization problem~\eqref{eq:funneloptimizationproblem} as
   V(t,\bar{\vect{x}}) - \rho(t) \big)& \nonumber
   \\
   - L_{t}(t,\bar{\vect{x}})\big( t\left( T - t \right) \big)& \, \text{is
-    SOS} \label{eq:sufficient-conditions} \IEEEeqnarraynumspace \IEEEyesnumber
-  \\
+    SOS} \IEEEeqnarraynumspace \IEEEyesnumber \label{eq:sufficient-conditions} \\
   \rho(0) - V(0,\bar{\vect{x}}) - \sum_{i}^{N_{0}}
   L_{0,i}(\bar{\vect{x}})g_{0,i}(\bar{\vect{x}}) & \, \text{is
-    SOS} \label{eq:sufficient-conditions-2} \IEEEyessubnumber
-  \\
+    SOS} \IEEEyessubnumber \label{eq:sufficient-conditions-2} \\
   L(t, \bar{\vect{x}}), \, L_{t}(\bar{\vect{x}}), \, L_{0,i}(\bar{\vect{x}})& \, \text{are SOS}, \nonumber
   \\
   \IEEEeqnarraymulticol{2}{r}{\forall i \in \set{1,\ldots,N_{0}}}, \nonumber
@@ -253,7 +251,7 @@ Which when expressed using \ac{SOS} constraints gives
 %
 Then combining the cost function~\eqref{eq:discrete-costfunction} with the
 constraints in Equation~\eqref{eq:discrete-containment-constraint} along with
-\eqref{eq:sufficient-conditions,eq:sufficient-conditions-2}, one arrives at the
+\eqref{eq:sufficient-conditions}\eqref{eq:sufficient-conditions-2}, one arrives at the
 following optimization problem:
   \newcommand{\E}{\mathcal{E}}
   \begin{mini!}[3]
