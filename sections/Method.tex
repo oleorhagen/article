@@ -450,8 +450,8 @@ A figure of a straight funnel motion primitive calculated with uncertainties by
 the \ac{SOS} solver from the code in \cref{sec:sos-program-implementation} can
 be seen in \cref{fig:funnel-calculation-visuals}.
 
-\begin{figure}
-  \centering \includegraphics[scale=.5, trim={0cm 6cm 0cm
+\begin{figure}[!t]
+  \centering \includegraphics[width=\linewidth, scale=.5, trim={0cm 6cm 0cm
     6cm}]{figures/method/funnel-calculation-visuals}
   \caption[A funnel calculated around a straight trajector]{A funnel calculated
     around a straight motion trajector. Shown is the value of \(\rho(t)\), and
@@ -470,15 +470,14 @@ Now that the funnels are able to be calculated for a basic set of motion
 primitives, it is time to start looking at chaining these primitives together in
 order to construct longer and more complex motions from a basis of motion
 primitives. Thus, in order to freely shift funnels around in the configuration
-space, the cyclic coordinates of the system has to be determined, so that the
+space, the cyclic coordinates of the system have to be determined, so that the
 dynamics of the system is never violated (see \cref{subsec:cyclic-coordinates}).
 Even though the funnels can now start and end in a completely different part of
 the configuration space, the original dynamics must not be violated. Therefore
 the cyclic and non-cyclic coordinates of the system must be decided. This is
 done through finding the cyclic and non-cyclic coordinates through the method
-from \cref{subsec:cyclic-coordinates}. Therefore, given the
-model~\cref{eq:model-dynamics} the cyclic coordinates of the system are found
-from:
+from \cref{subsec:cyclic-coordinates}. Therefore, given the modelfrom
+\cref{eq:model-dynamics} the cyclic coordinates of the system are found from:
 \begin{align*}
   \mathcal{L} &= T - V = \frac{1}{2} mv^2 + \frac{1}{2}I\dot{\theta}^2 \\ 
               &= \frac{1}{2} \left(  m \left(
@@ -559,7 +558,7 @@ space, is written \(\hat{\mathcal{F}} = \set{F_n \in \R^n \mid \Psi_{c,i}(F_i),
 since the transformation is already known the composability is straightforward
 to compute.
 
-\begin{figure}
+\begin{figure}[!t]
   \centering {\includegraphics[width=.8\textwidth]{figures/method/funnel-composition}}
   \caption[Two composable funnels]{Two funnels that can be successfully composed, as the outlet of the
     first one is fully contained in the inlet of the second.}
@@ -578,8 +577,7 @@ program
    \IEEEeqnarraymulticol{2}{r}{\rho_2(0) - V_2(0,\vect{x}) - L(\vect{x})\left( \rho_1(T_1) - V_1(T_1,\vect{x}) \right) \text{ is SOS}} \\
   \IEEEeqnarraymulticol{2}{r}{L(\vect{x}) \text{ is SOS}} \mathEoS
 \end{IEEEeqnarray*}
-Which is implemented in \textsc{sostools}~\cite{sostools} and \matlab{} in
-\cref{sec:funnel-composability-program-sos}. For a picture of funnels composed
+Which is implemented using \textsc{sostools}~\cite{sostools} and \matlab{}. For a picture of funnels composed
 together into a tree have a look at \cref{fig:funnel-composition-tree}.
 \begin{figure}
   \centering \includegraphics[scale=.5, trim={0cm 7cm 0cm
@@ -770,9 +768,9 @@ made.
 
 With the basic framework for dealing with funnels as motion primitives
 constructed, it is time to build the \ac{RRT} part of the \rrtfunnel{}
-algorithm. The reason for choosing to base the global path planning framework on
-the \ac{RRT} motion planning algorithm are as follows. One, it has the ability
-to quickly expand deep into the search-space, and then later progress towards a
+algorithm. The reason for basing the global path planning framework on the
+\ac{RRT} motion planning algorithm are as follows. One, it has the ability to
+quickly expand deep into the search-space, and then later progress towards a
 finer sampling, which is valuable as it avoids local minima. Two, the \ac{RRT}
 algorithm is easily extensible to larger state spaces, and thus adding to the
 generality of the \rrtfunnel{} algorithm, such that it can be adapted to fit a
@@ -789,12 +787,11 @@ mentioned above.
 
 \subsection{Uniform Sampling in \(SE(2)\)}
 
-As mentioned in \cref{sec:rrt-algorithm-intro}, the \ac{RRT} algorithm
-needs uniform sampling of the state space in order for it to operate optimally,
-as over- or under-sampling certain parts of the state space can lead to poor
-performance. Therefore one needs to be careful when sampling from a
-configuration space with non Euclidean topology, as the sampling is not
-necessarily uniform~\cite{kuffnerEffectiveSamplingDistance2004}.
+The \ac{RRT} algorithm needs uniform sampling of the state space in order for it
+to operate optimally, as over- or under-sampling certain parts of the state
+space can lead to poor performance. Therefore one needs to be careful when
+sampling from a configuration space with non Euclidean topology, as the sampling
+is not necessarily uniform~\cite{kuffnerEffectiveSamplingDistance2004}.
 
 If sampling from a configuration space which is formed strictly from Cartesian
 products of the form \(X = X_1\times X_2\times \cdots \times X_n\), and each
@@ -893,18 +890,16 @@ be composable with each other, implying that the resultant graph is not
 necessarily complete.
 
 \begin{figure}[!t]
-  \begin{subfigure}[b]{0.5\textwidth}
+  \begin{minipage}[c]{.5\columnwidth}
     \includegraphics[trim={5cm 5cm 5cm 5cm},
-    width=.95\textwidth]{figures/method/trajectory-sampled}
+    width=.9\columnwidth]{figures/method/trajectory-sampled}
     \caption{Trajectory sampled 21 times.\newline}
-  \end{subfigure}%
-  \begin{subfigure}[b]{0.5\textwidth}
+  \end{minipage}%
+  \begin{minipage}[c]{.5\columnwidth}
     \includegraphics[trim={5cm 5cm 5cm 5cm},
-    width=.95\textwidth]{figures/method/funnel-sampled}
+    width=.9\columnwidth]{figures/method/funnel-sampled}
     \caption{The verified trajectory ellipsis overlaid at the sample times.}
-  \end{subfigure}
-  \caption[A funnel overlaid a trajector]{The calculated reachable set overlaid
-    a straight motion trajector.}
+  \end{minipage}
     \label{fig:funnel-straight-sampled}
 \end{figure}
 
@@ -941,7 +936,7 @@ If the airplane is to leave the verified funnel at execution time -- this could
 happen for any number of reasons, such as unmodeled uncertainties -- the plane
 should execute the emergency maneuver, which in this case is a loiter loop. In
 general an emergency maneuver can be any sort of 'safe' maneuver for the model
-at hand -- such as a sudden stop for a vehicle, or idling at one place for a
+at hand -- such as a sudden stop for a vehicle, or idling in one place for a
 quad-copter. This will then be the last motion primitive that the planner
 executes, and the planner will come to a halt, as the robustness guarantees have
 been lost.
