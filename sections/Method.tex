@@ -890,12 +890,12 @@ be composable with each other, implying that the resultant graph is not
 necessarily complete.
 
 \begin{figure}[!t]
-  \begin{minipage}[c]{.5\columnwidth}
+  \begin{minipage}[c]{.45\columnwidth}
     \includegraphics[trim={5cm 5cm 5cm 5cm},
     width=.9\columnwidth]{figures/method/trajectory-sampled}
-    \caption{Trajectory sampled 21 times.\newline}
-  \end{minipage}%
-  \begin{minipage}[c]{.5\columnwidth}
+    \caption{Trajectory sampled 21 times.}
+  \end{minipage} \; %
+  \begin{minipage}[c]{.45\columnwidth}
     \includegraphics[trim={5cm 5cm 5cm 5cm},
     width=.9\columnwidth]{figures/method/funnel-sampled}
     \caption{The verified trajectory ellipsis overlaid at the sample times.}
@@ -909,7 +909,7 @@ page~\pageref{alg:create-funnel-graph}. A \ac{SOS}-program which implements the
 composition algorithm can be found in
 \cref{sec:funnel-composability-program-sos}.
 
-\begin{algorithm}[H]
+\begin{figure}[!t]
   \caption{Check funnel composability}
   \label{alg:create-funnel-graph}
   \begin{algorithmic}[0]
@@ -927,7 +927,7 @@ composition algorithm can be found in
     \EndFor
     \EndProcedure
   \end{algorithmic}
-\end{algorithm}
+\end{figure}
 
 
 \subsubsection{Emergency Maneuver}
@@ -959,7 +959,7 @@ the \rrtfunnel{} algorithm itself. The \rrtfunnel{} algorithm is a modified
 for its expansion operator, and pseudocode for its definition can be found in
 \cref{alg:rrtfunnel} on page~\pageref{alg:rrtfunnel}.
 
-\begin{algorithm}[H]
+\begin{figure}[!t]
   \caption{\rrtfunnel{} algorithm}
   \label{alg:rrtfunnel}
   \begin{algorithmic}[0]
@@ -987,4 +987,4 @@ for its expansion operator, and pseudocode for its definition can be found in
     \EndFor
     \EndProcedure
   \end{algorithmic} 
-\end{algorithm}
+\end{figure}
