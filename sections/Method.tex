@@ -42,7 +42,8 @@ which is a first-order unicycle model with constant speed of
 \(v=10\) \IEEEunit{m/s}. A picture of the model can be found in
 \cref{fig:second-order-unicycle}.
 \begin{figure}[!t]
-  \def\svgwidth{\columnwidth}
+  \centering
+  \def\svgwidth{.5\columnwidth}
   \import{figures/method/}{unicycle-model.pdf_tex}
   \caption{The unicycle model of an airplane.}
   \label{fig:second-order-unicycle}
@@ -559,7 +560,7 @@ since the transformation is already known the composability is straightforward
 to compute.
 
 \begin{figure}[!t]
-  \centering {\includegraphics[width=.8\textwidth]{figures/method/funnel-composition}}
+  \centering {\includegraphics[width=.8\columnwidth]{figures/method/funnel-composition}}
   \caption[Two composable funnels]{Two funnels that can be successfully composed, as the outlet of the
     first one is fully contained in the inlet of the second.}
   \label{fig:two-funnels-composed}
@@ -579,8 +580,9 @@ program
 \end{IEEEeqnarray*}
 Which is implemented using \textsc{sostools}~\cite{sostools} and \matlab{}. For a picture of funnels composed
 together into a tree have a look at \cref{fig:funnel-composition-tree}.
-\begin{figure}
-  \centering \includegraphics[scale=.5, trim={0cm 7cm 0cm
+\begin{figure}[!t]
+  \centering
+  \includegraphics[scale=.4, trim={0cm 7cm 0cm
     7cm}]{figures/method/funnel-tree} \caption[A tree of funnels built by the
   \rrtfunnel{} algorithm]{A tree of funnels built by the \rrtfunnel{} algorithm,
     showing how longer motion primitives are built up from primitives in the
