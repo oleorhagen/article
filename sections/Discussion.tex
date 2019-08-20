@@ -1,0 +1,57 @@
+
+This paper has developed and shown that the \rrtfunnel{} motion planning
+algorithm does provide robust feedback motion planning for nonlinear dynamical
+systems. Although, the current implementation cannot give lent to the proof that
+the funnel compositions in general are provably safe, due to the \ac{SOS}
+formulations employed do not handle input saturations and multiple controller
+inputs. However, this can be added given a few extra conditions on the \ac{SOS}
+optimization problem, and will be referred to as further work.
+
+
+Currently the algorithm handles uncertainties in position, but not in the
+environment, and must therefore be run in a known environment, and is hence a
+strictly off-line motion planner. This is a known limitation of the \ac{RRT}
+algorithm, and methods have been devised for amending this limitation. However,
+none of them have been implemented with the \rrtfunnel{} algorithm at present.
+
+
+In general, the funnels generated are tight outer approximations of the true
+reachable set for the system. However, note that since the Lyapunov function
+employed is quadratic, it will always be symmetric around the trajector
+verified. This means that even though the real nonlinear system dynamics can
+have a tight reachable set on one side of the trajector, the symmetry of the
+quadratic Lyapunov function might lead the funnel to be too conservative on one
+side of the trajector. For this paper however, the system dynamics are
+symmetrical, so this was not an issue. That the funnels generated do provide
+tight outer approximations was shown to be true through a Monte-Carlo simulation
+of the nonlinear system with bounded uncertainty. Over the course of \(10.000\)
+simulations the system never left the funnels, and the funnels were shown to
+provide a tight outer approximation.
+
+
+The strength of the algorithm lies in that it can separate handling the
+uncertainty into an off-line pre-computation phase. Therefore, the global motion
+planner does not need to be significantly more complex than if it had not
+reasoned about uncertainty at all. In fact, it can remain oblivious to the
+overarching problem difficulty of handling uncertainties for a complex nonlinear
+system. In fact once the motion primitives have been calculated and verified
+off-line, they might as well be employed in any global motion planner able to
+handle discrete motion primitives.
+
+
+Even though the robustness guarantees of the \ac{SOS} framework were lost in the
+experiments section, due to the planner not handling multiple controller inputs,
+the \rrtfunnel{} algorithm did not cause the airplane to collide a single time
+over the course of \(300\) simulation runs. This was in starch contrast to the
+benchmark planner, which did not handle uncertainty at all, and instead relied
+on avoiding the obstacles by as big a margin as possible, and therefore
+consistently had a collision rate of \(25\%\) or higher. Therefore, not only was
+the \rrtfunnel{} planner able to provide safer traversal of the experiment
+environment, but it could also provide more direct traversal, as the distance to
+the trees did not matter, and more aggressive maneuvers could be executed
+freely.
+
+% The implementation of the algorithm in this paper leveraged the discrete
+% sampling of points in order to generate funnels around these discrete points.
+% However, a continuous approach might have been better suited, as the time for
+% generating the funnels off-line are not important for the algorithm at runtime.
