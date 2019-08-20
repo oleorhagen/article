@@ -1141,3 +1141,42 @@ seen in \cref{fig:intial-trajectories-exp}.
   \caption{The experiment environment.}
   \label{fig:simulated-forest}
 \end{figure}
+
+\subsection{Quality of the Funnels Calculated (Approximated)}
+
+The funnels generated are \textit{outer approximations} of reachable sets for
+the system at hand~\cite{majumdarFunnelLibrariesRealtime2017}. This means that
+in general they are larger than the actual reachable set for the system. This
+can be verified through a Monte-Carlo simulation. Running N-simulations from the
+funnel inlet, and storing the solutions, it is possible to visualize the actual
+funnel for the system, an example of which can be seen in
+\cref{fig:funnel-simulated-overlaid}, and further explored for a single funnel
+in \cref{fig:outer-approximation-monte-carlo}.
+
+By comparing one of the funnels in the funnel set with a funnel based from
+\(10.000\) simulation runs, it is seen that the calculated funnels are indeed
+proper outer approximations of the time-reachable sets for the uncertain
+dynamical system. Therefore, the conclusion is that the uncertain trajectories
+are contained within the funnels used in the planner, and the trajectories can
+be seen as robust to uncertainty given the uncertainty and dynamical assumptions
+made.
+
+\begin{figure}[!t]
+  \begin{subfig}[c]{0.3\columnwidth}
+    \includegraphics[width=.2\columnwidth, trim={0cm 4cm 0cm
+      4cm}]{figures/method/FunnelSimnew4}
+  \end{subfig}
+  \begin{subfig}[c]{0.3\columnwidth}
+    \includegraphics[width=.2\columnwidth, trim={0cm 4cm 0cm
+      4cm}]{figures/method/FunnelSimnew1}
+  \end{subfig}
+  \begin{subfig}[c]{0.3\columnwidth}
+    \includegraphics[width=.2\columnwidth, trim={0cm 4cm 0cm
+      4cm}]{figures/method/FunnelSimnew5}
+  \end{subfig}
+  \caption[A visualization of the simulated and the calculated reachable set]{The simulated non-polynomial system trajectories (green), overlaid
+    with the outer approximation that is the funnel returned by the \ac{SOS}
+    calculation (grey) for three trajectories from the trajectory library
+    \(\mathcal{T}\).}
+  \label{fig:funnel-simulated-overlaid}
+\end{figure}
