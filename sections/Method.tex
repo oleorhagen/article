@@ -1009,16 +1009,51 @@ transform back), as can be seen in \cref{fig:expanded-funnel}.
   \label{fig:expanded-funnel}
 \end{figure}
 
+\subsection{Distance Metric}
+
+For a non-holonomic system, like \cref{eq:model-dynamics}, the regular Euclidean
+distance metric is a poor approximation ot the true cost-to-go of the system
+(see \cref{fig:non-holonomic-vehicle-euclidean-weakness}). In general the
+distance function is supposed to reflect the true cost-to-go of the system.
+However, in general, calculating the true cost-to-go would result in solving the
+planning problem anew, and hence is not
+viable~\cite{pengchengReducingMetricSensitivity2001}.
+
+The \rrtfunnel{} algorithm will use the same metric for both the closest node
+and the extend operation on the funnel graph. The metric chosen is a modified
+Euclidean metric which weights the angle \(\theta\) depending on how close the
+airplane is to the final configuration, and is defined as
+\[
+  \rho(\vect{x}_{1}, \vect{x}_{2}) = w_{1}\norm{\mathnormal{X_{1}} -
+    \mathnormal{X_{2}}} + w_{2}f(\theta_1,\theta_2) ,
+\]
+where \(\norm{\mathnormal{X_{1}} - \mathnormal{X_{2}}}\) is the standard
+Euclidean metric, \(f\) is a function giving the distance between
+headings~\cite{kuffnerEffectiveSamplingDistance2004}. The rotations and distance
+is then scaled relative to the translation distance. Which helps solve some of
+the problems with the Euclidean distance metric.
+
 \subsection{Experiment Setup}
 
 The algorithm will be tested by generating a random strip of forest of depth
 \(35m\), and then letting it, along with the benchmark algorithm find a way
 through the environment to the other side, whilst being the subject of a
-simulated crosswind (the uncertainty) of \((0,3,6) m/s\). The funnels for
-the \rrtfunnel{} algorithm are in this case made to handle uncertainties up to
-and including \(3\) in the x-direction of the airplane, but does not currently
-have any control over the y-direcction (the speed). A figure of the test
-environment can be seen in \cref{fig:simulated-forest}.
+simulated crosswind (the uncertainty) of \((0,3,6) m/s\). The trees are circles
+with a radius of \(0.2m\), and are placed randomly along the strip \(O=\left{
+    \vect{x} \mid -25 \le x_{1} \le 25 \text{ and } 5 \le x_{2} \le 35
+  \right}\), as the realization of a \textit{Poisson} process with density
+\(\lambda = 0.2\) on this set. For each trial run, a new forest is generated in
+this random fashion, and the algorithms are given the task to traverse the
+generated map, see~\cite{Kroese_2014} for an introduction to Poisson processes.
+
+The funnels for the \rrtfunnel{} algorithm are in this case made to handle
+uncertainties up to and including \(3m/s\) in the x-direction of the airplane,
+but does not currently have any control over the y-direcction (the speed). A
+figure of the test environment can be seen in \cref{fig:simulated-forest}. The
+\rrtfunnel{} algorithm is run with a goal bias of \(5\%\), in order to guide the
+exploration of the state-space towards the other end of the planning map. Also,
+a maximum of \(5000\) nodes is set as an upper treshold on both of the
+algorithm's exploration trees.
 
 \begin{figure}[!t]
   \centering
