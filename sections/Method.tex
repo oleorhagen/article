@@ -990,3 +990,32 @@ for its expansion operator, and pseudocode for its definition can be found in
     \EndProcedure
   \end{algorithmic} 
 \end{figure}
+
+\subsection{Expanding the Size of the Funnels}
+
+In general the funnels generated are computed for the point model in
+\cref{eq:dynamicalsystem} only, and hence, in order to run the experiment with a
+model of some size, the funnels have to be expanded by the largest radius of the
+given model. As the funnels are ellipsis surrounding the point at the trajectory
+that they verify, the funnels can be expanded by any radius by a linear
+transformation (like to the unit circle, expand by the wanted radii, and then
+transform back), as can be seen in \cref{fig:expanded-funnel}.
+
+
+\begin{figure}[!t]
+  \centering \includegraphics[scale=.5]{figures/method/expanded-funnel}
+  \caption[The expanded experiment funnel]{The original funnel created from the point model, with a funnel
+    expanded by a radius of 0.1 surrounding it.}
+  \label{fig:expanded-funnel}
+\end{figure}
+
+\subsection{Experiment Setup}
+
+The algorithm will be tested by generating a random strip of forest of depth
+\(35m\), and then letting it, along with the benchmark algorithm find a way
+through the environment to the other side, whilst being the subject of a
+simulated crosswind (the uncertainty) of \((0,3,6) m/s\). The funnels for
+the \rrtfunnel{} algorithm are in this case made to handle uncertainties up to
+and including \(3\) in the x-direction of the airplane, but does not currently
+have any control over the y-direcction (the speed). A figure of the test
+environment can be seen in \cref{fig:test-environment}.
