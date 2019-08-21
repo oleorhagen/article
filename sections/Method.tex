@@ -1050,13 +1050,13 @@ exemplified in the~\cref{fig:funnel-conv}. This is further exemplified in
 projected xy-funnel.
 
 \begin{figure}[!t]
-  \begin{subfigure}[c]{0.45\columnwidth}
-    \includegraphics[width=.95\columnwidth]{figures/experiments/sos-calculation}
-  \end{subfigure}
-  \quad
-  \begin{subfigure}[c]{0.45\columnwidth}
-    \includegraphics[width=.95\columnwidth]{figures/experiments/sos-calculation-inlet-outlet}
-  \end{subfigure}
+  \centering
+  \begin{minipage}{0.5\columnwidth}
+    \includegraphics[width=.8\linewidth]{figures/experiments/sos-calculation}
+  \end{minipage}%
+  \begin{minipage}{0.5\columnwidth}
+    \includegraphics[width=.8\linewidth]{figures/experiments/sos-calculation-inlet-outlet}
+  \end{minipage}
   \caption[A slice of the inlet and the outlet ellipsis]{A slice of the inlet and the outlet ellipsis in the x-y and
     x-theta dimensions.}
   \label{fig:funnel-conv}
@@ -1162,18 +1162,18 @@ be seen as robust to uncertainty given the uncertainty and dynamical assumptions
 made.
 
 \begin{figure}[!t]
-  \begin{subfig}[c]{0.3\columnwidth}
-    \includegraphics[width=.2\columnwidth, trim={0cm 4cm 0cm
-      4cm}]{figures/method/FunnelSimnew4}
-  \end{subfig}
-  \begin{subfig}[c]{0.3\columnwidth}
-    \includegraphics[width=.2\columnwidth, trim={0cm 4cm 0cm
-      4cm}]{figures/method/FunnelSimnew1}
-  \end{subfig}
-  \begin{subfig}[c]{0.3\columnwidth}
-    \includegraphics[width=.2\columnwidth, trim={0cm 4cm 0cm
-      4cm}]{figures/method/FunnelSimnew5}
-  \end{subfig}
+  \begin{minipage}[r]{0.3\columnwidth}
+    \includegraphics[width=1\columnwidth, trim={0cm 6cm 0cm
+      6cm}]{figures/method/FunnelSimnew4}
+  \end{minipage}
+  \begin{minipage}[c]{0.3\columnwidth}
+    \includegraphics[width=1\columnwidth, trim={0cm 6cm 0cm
+      6cm}]{figures/method/FunnelSimnew1}
+  \end{minipage}
+  \begin{minipage}[l]{0.3\columnwidth}
+    \includegraphics[width=1\columnwidth, trim={0cm 6cm 0cm
+      6cm}]{figures/method/FunnelSimnew5}
+  \end{minipage}
   \caption[A visualization of the simulated and the calculated reachable set]{The simulated non-polynomial system trajectories (green), overlaid
     with the outer approximation that is the funnel returned by the \ac{SOS}
     calculation (grey) for three trajectories from the trajectory library
