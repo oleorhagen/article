@@ -106,7 +106,7 @@ form
     &+ \int_{t_{0}}^{t_{f}} \left( \vect{x}^{T} \matr{Q} \vect{x} + \vect{u}^{T} \matr{R} \vect{u} + 2 \vect{x}^T \matr{N} \vect{u} \right) \mathrm{d}t,
 \end{IEEEeqnarray*}
 which when employed on the linearization of the system error
-dynamics~\eqref{eq:system-error-dynamics} gives
+dynamics in Equation~\eqref{eq:system-error-dynamics} gives
 \begin{equation}
   \dot{\bar{\vect{x}}} \approx \matr{A} (t)\bar{\vect{x}}(t) + \matr{B}(t) \bar{\vect{u}}(t)
 \end{equation}
@@ -140,8 +140,8 @@ associated with the \ac{LQR} controller. The feedback is gained from
 \]
 and enables the system dynamics \cref{eq:model-dynamics} to be written
 \(f_{\mathit{cl}}(t,\vect{x})\) by direct substitution of \(\vect{u} =
--K\vect{x}\), and hence making the system \cref{eq:model-dynamics} only
-dependent on \(t\) and \(\vect{x}\),
+-K\vect{x}\), where \(K\) is a \(3 \times 1\) matrix, and hence making the system in \cref{eq:model-dynamics} 
+dependent only on \(t\) and \(\vect{x}\),
 \begin{equation}
   \label{eq:model-dynamics-cl}
   \vect{x} =
