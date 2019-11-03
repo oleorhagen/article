@@ -21,7 +21,7 @@ its environment and maneuvers~\cite{singhRobustOnlineMotion2017}.
 \label{sec:generating-robust-motion-primitives}
 
 In order to create a basic set of funnels as the robust motion primitives for
-the \rrtfunnel{} motion planning algorithm, a few obstacles has to be overcome.
+the \rrtfunnel{} motion planning algorithm, a few obstacles have to be overcome.
 The first one is settling on a dynamical system model for the funnel
 calculations. This paper employs the simple unicycle model from
 \author{Lav06}~\cite[613]{Lav06} which is modified slightly into
@@ -38,18 +38,10 @@ calculations. This paper employs the simple unicycle model from
   \end{bmatrix}
   ,
 \end{equation}
-which is a first-order unicycle model with constant speed of
-\(v=10\) \IEEEunit{m/s}. A picture of the model can be found in
-\cref{fig:second-order-unicycle}.
-\begin{figure}[!t]
-  \centering
-  \def\svgwidth{.5\columnwidth}
-  \import{figures/method/}{unicycle-model.pdf_tex}
-  \caption{The unicycle model of an airplane.}
-  \label{fig:second-order-unicycle}
-\end{figure}
-Although this is the only model used in this paper, the framework and the code
-is easily adapted into accommodating a different and more complicated model.
+which is a first-order unicycle model with a constant speed of \(v=10\)
+\IEEEunit{m/s}. Although this is the only model used in this paper, the
+framework and the code is easily adapted into accommodating a different and more
+complicated model.
 
 
 \subsubsection{Generating Trajectories}
@@ -170,8 +162,7 @@ dependent on \(t\) and \(\vect{x}\),
 With the nominal trajectories, and the initial Lyapunov functions ready, the
 funnels around the nominal trajectories can be calculated using
 \cref{alg:funnelalgorithm} on page~\pageref{alg:funnelalgorithm}, and is
-implemented in software through the \textsc{sostools}~\cite{sostools} toolbox as
-shown in \cref{sec:sos-program-implementation}.
+implemented in software through the \textsc{sostools}~\cite{sostools} toolbox.
 
 However, the dynamics for the model in \cref{eq:model-dynamics-cl} are still not
 polynomial, given the \(\sin\) and \(\cos\) terms
@@ -185,8 +176,8 @@ through the equation
   \rho(t_{k}) = \mathrm{exp}\left( \rho_{\tau}\frac{\left( t_{f} - t \right)}{\left( t_{f} - t_{0}  \right)}\right) + \rho_0
 \end{equation}
 where \(\rho_{\tau}\) is a positive constant determining the upper bound on the
-funnel, along with the zero value \(\rho_0\)~\cite{Tobenkin_2011}. If the given
-choice of \(\rho_{\tau}\) does not verify a funnel, either increase the value of
+funnel, along with the zero value \(\rho_0\). If the given choice of
+\(\rho_{\tau}\) does not verify a funnel, either increase the value of
 \(\rho_{\tau}\) and \(\rho_0\), and optionally the number of sampled points from
 the trajectory to be verified~\cite{Tobenkin_2011}.
 
@@ -194,7 +185,8 @@ The initial condition set also has to be decided before the reachable set can be
 calculated. In general the initial condition set can be any semi-algebraic set
 in the state-space. However, a simple way of obtaining an initial condition set
 for the trajectories at hand is by taking advantage of the Lyapunov function
-candidate from the \ac{LQR}-controller. Thus by setting
+candidate from the \ac{LQR}-controller~\cite{tedrakeLQRtreesFeedbackMotion2009}.
+Thus by setting
 \begin{equation}
   \mathcal{X}_{0} = \frac{ \matr{S}_{k}}{\rho_{\tau}},
 \end{equation}
@@ -226,12 +218,8 @@ by the hyper-ellipsoid
     2 & 0 & 0 \\
     0 & 2 & 0 \\
     0 & 0 & 4
-  \end{bmatrix},
+  \end{bmatrix} \mathEoS
 \end{align}
-which means that the funnel will have a diameter of one half in the xy-plane,
-and the \(\theta\) inlet will be wider closer to the center of the funnel, which
-is beneficial, as this is where most of the paths in the experiment setup is
-expected to enter.
 
 
 \subsection{Minimizing the Projected Volume of the Funnel}
@@ -240,8 +228,8 @@ expected to enter.
 In the \rrtfunnel{} algorithm, the size of the of the hyper-ellipsoid which
 contains the reachable set is not equally important in all dimensions for all
 planning problems. In the forest traversal case from the introduction, the size
-of the ellipsoid in the \(\theta\) dimension is unimportant. There is no need in
-minimizing the value of \(\theta\), as it will not make the traversal of the
+of the ellipsoid in the \(\theta\) dimension is unimportant. There is no need
+for minimizing the value of \(\theta\), as it will not make the traversal of the
 forest any easier, in fact it might inflate the size of the \((x,y)\) ellipsoid.
 As an example: For the dynamical model \eqref{eq:model-dynamics} the size of the
 funnel projected down into the xy-plane will be the most important metric.
@@ -264,7 +252,8 @@ which gives the ellipsoid of interest as \( \mathcal{E} = \set{\bar{\vect{x}}
   \in \R^n \mid \bar{\vect{x}}^TS_{k}\bar{\vect{x}} \leq 1} \mathEoS \) With the
 projected ellipsoid given by \( \pi(\mathcal{E}) = \set{\bar{\vect{x}} \in \R^n
   \mid \bar{\vect{x}}^TS^{(p)}_{k}\bar{\vect{x}} \leq 1}, \) where \( S_k^{(p)}
-= \p{PS_k^{-1}P^T}^{-1}, \) and \(P\) is an \(n\times n_p\) projection matrix.
+= \p{PS_k^{-1}P^T}^{-1}, \) and \(P\) is an \(n\times n_p\) projection
+matrix~\cite{majumdarFunnelLibrariesRealtime2017}.
 
 Since minimizing the volume of the ellipsoid \(\pi(\mathcal{E})\) using
 \acl{SDP} relies on maximizing the determinant of \(\matr{S}_k\), and \(\deter(
@@ -295,7 +284,7 @@ the xy-plane, this method, along with the cost function from
 the world space easier, through minimizing the size of the reachable set. Hence,
 the initial controller fed to the algorithm can be optimized with the goal of
 minimizing the size of the funnel, given a few conditions on the
-system~\cite[sec~4.3.2]{majumdarFunnelLibrariesRealtime2017}.
+system.
 
 In order for the controller to be optimized, the system needs to be control
 affine, i.e. it can be written on the form
@@ -328,10 +317,11 @@ since
 \end{IEEEeqnarray*}
 the feedback controller can be optimized by adding the coefficients of the
 polynomial \(\vect{u}_f(t,\bar{\vect{x}})\) to the set of decision variables in
-the original optimization problem~\eqref{opt:discrete}. The only issue is
-that now \(\dot{V}\) is bilinear in the decision variables \(V\) and
-\(\bar{\vect{u}}_f\), as well as the other bilinear decision variables from the
-\cref{opt:time-dependent-optimization-problem}, as can be seen from
+the original optimization
+problem~\eqref{opt:discrete}~\cite[sec~4.3.2]{majumdarFunnelLibrariesRealtime2017}.
+The only issue is that now \(\dot{V}\) is bilinear in the decision variables
+\(V\) and \(\bar{\vect{u}}_f\), as well as the other bilinear decision variables
+from the \cref{opt:time-dependent-optimization-problem}, as can be seen from
 \begin{equation}
   {
     \dot{V}(t,\vect{x}) = \frac{\partial V(t,\vect{x})}{\partial \vect{x}} \dot{\bar{\vect{x}}} + \frac{\partial V(t,\vect{x})}{\partial t},
@@ -394,11 +384,10 @@ adding another constraint to the optimization problem in
 Following are the changes to the formulation of the \ac{SOS} optimization
 condition \cref{eq:funnelsufficient} so that a funnel takes into account a
 bounded uncertainty term of the form \(\mathcal{W} = \set{ w(t) \in R^d \mid
-  g_{w,j}(w) \geq 0\, \forall j =
-  1,\ldots,N_w}\)~\cite{majumdarRobustOnlineMotion2013}. But first the
-uncertainty has to be added to the system dynamics \cref{eq:model-dynamics}.
-This is done through adding an uncertainty term \(w\) into
-\eqref{eq:dynamicalsystem}, so that
+  g_{w,j}(w) \geq 0\, \forall j = 1,\ldots,N_w}\), all taken
+from~\cite{majumdarRobustOnlineMotion2013}. But first the uncertainty has to be
+added to the system dynamics \cref{eq:model-dynamics}. This is done through
+adding an uncertainty term \(w\) into \eqref{eq:dynamicalsystem}, so that
 \begin{equation}
   \dot{\bar{\vect{x}}} = f_{\mathit{cl}}(t, \bar{\vect{x}}(t), w(t)) \mathEoS
 \end{equation}
@@ -445,11 +434,10 @@ and the optimization condition \cref{eq:sufficient-conditions} turns into
   - \sum_{j=1}^{N_{w}} L_{w,j}(t,\bar{\vect{x}},w)g_{w,j}(w) \quad \text{is SOS} & \\
   \left( L, L_t, L_{w,j} \right) (t,\bar{\vect{x}},w) \qquad \text{are SOS}, \; \forall j = 1,\ldots,N_w, \nonumber
 \end{IEEEeqnarray*}
-with the uncertainty constraints added.
+with the uncertainty constraints added~\cite{majumdarRobustOnlineMotion2013}.
 
 A figure of a straight funnel motion primitive calculated with uncertainties by
-the \ac{SOS} solver from the code in \cref{sec:sos-program-implementation} can
-be seen in \cref{fig:funnel-calculation-visuals}.
+the \ac{SOS} solver can be seen in \cref{fig:funnel-calculation-visuals}.
 
 \begin{figure}[!t]
   \centering \includegraphics[width=\linewidth, scale=.5, trim={0cm 6cm 0cm
@@ -472,13 +460,13 @@ primitives, it is time to start looking at chaining these primitives together in
 order to construct longer and more complex motions from a basis of motion
 primitives. Thus, in order to freely shift funnels around in the configuration
 space, the cyclic coordinates of the system have to be determined, so that the
-dynamics of the system is never violated (see \cref{subsec:cyclic-coordinates}).
-Even though the funnels can now start and end in a completely different part of
-the configuration space, the original dynamics must not be violated. Therefore
-the cyclic and non-cyclic coordinates of the system must be decided. This is
-done through finding the cyclic and non-cyclic coordinates through the method
-from \cref{subsec:cyclic-coordinates}. Therefore, given the modelfrom
-\cref{eq:model-dynamics} the cyclic coordinates of the system are found from:
+dynamics of the system is never violated. Even though the funnels can now start
+and end in a completely different part of the configuration space, the original
+dynamics must not be violated. Therefore the cyclic and non-cyclic coordinates
+of the system must be decided. This is done through finding the cyclic and
+non-cyclic coordinates through the method from \cref{subsec:cyclic-coordinates}.
+Therefore, given the model from \cref{eq:model-dynamics} the cyclic coordinates
+of the system are found from:
 \begin{align*}
   \mathcal{L} &= T - V = \frac{1}{2} mv^2 + \frac{1}{2}I\dot{\theta}^2 \\ 
               &= \frac{1}{2} \left(  m \left(
@@ -599,8 +587,7 @@ in general they are larger than the actual reachable set for the system. This
 can be verified through a Monte-Carlo simulation. Running N-simulations from the
 funnel inlet, and storing the solutions, it is possible to visualize the actual
 funnel for the system, an example of which can be seen in
-\cref{fig:funnel-simulated-overlaid}, and further explored for a single funnel
-in \cref{fig:outer-approximation-monte-carlo}.
+\cref{fig:funnel-simulated-overlaid}.
 
 By comparing one of the funnels in the funnel set with a funnel based from
 \(10.000\) simulation runs, it is seen that the calculated funnels are indeed
@@ -901,15 +888,13 @@ necessarily complete.
     \includegraphics[trim={5cm 5cm 5cm 5cm},
     width=.9\columnwidth]{figures/method/funnel-sampled}
     \caption{The verified trajectory ellipsis overlaid at the sample times.}
-  \end{minipage}
     \label{fig:funnel-straight-sampled}
+  \end{minipage}
 \end{figure}
 
 Composition of funnels is verified using \cref{def:invarant-funnel-composition},
 and the composability graph is built using \cref{alg:create-funnel-graph} on
-page~\pageref{alg:create-funnel-graph}. A \ac{SOS}-program which implements the
-composition algorithm can be found in
-\cref{sec:funnel-composability-program-sos}.
+page~\pageref{alg:create-funnel-graph}.
 
 \begin{figure}[!t]
   \caption{Check funnel composability}
@@ -936,21 +921,21 @@ composition algorithm can be found in
 
 If the airplane is to leave the verified funnel at execution time -- this could
 happen for any number of reasons, such as unmodeled uncertainties -- the plane
-should execute the emergency maneuver, which in this case is a loiter loop. In
-general an emergency maneuver can be any sort of 'safe' maneuver for the model
-at hand -- such as a sudden stop for a vehicle, or idling in one place for a
-quad-copter. This will then be the last motion primitive that the planner
-executes, and the planner will come to a halt, as the robustness guarantees have
-been lost.
+should execute the emergency maneuver, which in this case is a sudden stop, due
+to the simplicity of the dynamical model. In general, however, an emergency
+maneuver can be any sort of 'safe' maneuver for the model at hand -- such as a
+loiter loop for an airplane, or idling in one place for a quad-copter. This will
+then be the last motion primitive that the planner executes, and the planner
+will come to a halt, as the robustness guarantees have been lost.
 
 
 \subsection{Collision Detection}
 
 Collision detection is done creating a convex hull incorporating all the
 ellipsis projected down into the xy-plane, and is what can be seen as the grey
-area in \cref{fig:funnel-straight-sampled}. Then, with \matlab's polynomial
-toolbox, collision detection is made through the \textit{intersect} function for
-polynomials, as the obstacles are also represented as polynomials.
+area in Figure \ref{fig:funnel-straight-sampled}. Then, with \matlab's
+polynomial toolbox, collision detection is made through the \textit{intersect}
+function for polynomials, as the obstacles are also represented as polynomials.
 
 
 \subsection{The \rrtfunnel{} Algorithm}
@@ -997,9 +982,10 @@ In general the funnels generated are computed for the point model in
 \cref{eq:dynamicalsystem} only, and hence, in order to run the experiment with a
 model of some size, the funnels have to be expanded by the largest radius of the
 given model. As the funnels are ellipsis surrounding the point at the trajectory
-that they verify, the funnels can be expanded by any radius by a linear
+that they verify, the funnels can be expanded by any radius with a linear
 transformation (like to the unit circle, expand by the wanted radii, and then
-transform back), as can be seen in \cref{fig:expanded-funnel}.
+transform back). An expansion of the point model funnel can be seen in
+\cref{fig:expanded-funnel}.
 
 
 \begin{figure}[!t]
@@ -1008,30 +994,6 @@ transform back), as can be seen in \cref{fig:expanded-funnel}.
     expanded by a radius of 0.1 surrounding it.}
   \label{fig:expanded-funnel}
 \end{figure}
-
-\subsection{Distance Metric}
-
-For a non-holonomic system, like \cref{eq:model-dynamics}, the regular Euclidean
-distance metric is a poor approximation ot the true cost-to-go of the system
-(see \cref{fig:non-holonomic-vehicle-euclidean-weakness}). In general the
-distance function is supposed to reflect the true cost-to-go of the system.
-However, in general, calculating the true cost-to-go would result in solving the
-planning problem anew, and hence is not
-viable~\cite{pengchengReducingMetricSensitivity2001}.
-
-The \rrtfunnel{} algorithm will use the same metric for both the closest node
-and the extend operation on the funnel graph. The metric chosen is a modified
-Euclidean metric which weights the angle \(\theta\) depending on how close the
-airplane is to the final configuration, and is defined as
-\[
-  \rho(\vect{x}_{1}, \vect{x}_{2}) = w_{1}\norm{\mathnormal{X_{1}} -
-    \mathnormal{X_{2}}} + w_{2}f(\theta_1,\theta_2) ,
-\]
-where \(\norm{\mathnormal{X_{1}} - \mathnormal{X_{2}}}\) is the standard
-Euclidean metric, \(f\) is a function giving the distance between
-headings~\cite{kuffnerEffectiveSamplingDistance2004}. The rotations and distance
-is then scaled relative to the translation distance. Which helps solve some of
-the problems with the Euclidean distance metric.
 
 \subsection{Funnel Composition}
 \label{subsec:funnel-no-composable}
@@ -1043,11 +1005,14 @@ compose as per this definition in the experiments run, and the composition
 testing of the algorithm has to be left out. Thus the experiments are run with a
 funnel graph that is complete, and all funnels can compose with each other, at
 the cost of the mathematical robustness guarantees of the system. This is
-because the controller has no influence on the speed of the airplane, and hence
-there is no way to make the system converge in the direction of speed as
-exemplified in the~\cref{fig:funnel-conv}. This is further exemplified in
-\cref{fig:funnel-inlet-outlet}, where the inlet is overlaid the outlets for the
-projected xy-funnel.
+because the one dimensional controller employed has no influence on the speed of
+the airplane, and hence there is no way to make the system converge in the
+direction of speed as exemplified in the~\cref{fig:funnel-conv}. This is further
+exemplified in \cref{fig:funnel-inlet-outlet}, where the inlet is overlaid the
+outlets for the projected xy-funnel, and it can be seen that the controller is
+able to converge the xy-funnel in the x-direction, but not in the y-direction,
+as it has no control over this dimension at all. The framework can be expanded
+with this functionality however, but this will be referred to as future work.
 
 \begin{figure}[!t]
   \centering
@@ -1072,12 +1037,6 @@ projected xy-funnel.
   \label{fig:funnel-inlet-outlet}
 \end{figure}
 
-Since the dynamical system has only one
-
-as can be seen in \cref{fig:lyapunov-values}
-
-as can be seen in \cref{fig:airplane-in-funnel}
-
 \begin{figure}[!t]
   \centering
   \includegraphics[width=.8\columnwidth]{figures/experiments/airplane-in-funnel} \caption[A
@@ -1096,14 +1055,13 @@ as can be seen in \cref{fig:airplane-in-funnel}
 %   figure of the airplane in the funnel]{A figure of the airplane in the funnel
 %     projected down on the xy-plane during a simulation run.}
 % \end{figure}
-
-During the execution of the \rrtfunnel{} algorithm the planner keeps track of
-whether the model has left the funnel during execution, and aborts the
-simulation with the emergency maneuver if the airplane leaves one of the funnels
-at runtime. This happens if the value of the Lyapunov function is larger than
-one. This will be counted in the experiments as a collision on the part of the
-\rrtfunnel{} algorithm. A plot of the Lyapunov values for a simulation run can
-be seen in \cref{fig:lyapunov-values}.
+In order to remedy this off-line compositional robustness guarantees, the
+\rrtfunnel{} algorithm will keep track of whether the model has left the funnel
+during execution, and aborts the simulation with the emergency maneuver if the
+airplane leaves one of the funnels at runtime. This happens if the value of the
+Lyapunov function is larger than one. This will be counted in the experiments as
+a collision on the part of the \rrtfunnel{} algorithm. A plot of the Lyapunov
+values for a simulation run can be seen in \cref{fig:lyapunov-values}.
 
 \begin{figure}[!t]
   \centering
@@ -1127,7 +1085,7 @@ A Poisson process requires a few key parameters. Firstly, \(\lambda\) is the
 intensity of the spatial process, deciding the density of the generated forest,
 and hence the difficulty in traversing it. For these experiments, the intensity
 will be held constant for each experiment run, and not vary with points in space
-\ie the process is homogeneous.
+i.e. the process is homogeneous.
 
 \begin{definition}{Generating a Poisson random measure}
   \label{def:Poisson-def}
@@ -1362,7 +1320,9 @@ the nearest obstacle as the extension operator \ie{}
 \end{equation}
 where \(x_{i}(t) \in \mathcal{T}\), is a trajectory from the basic motion
 primitive set, and \(o_{j} \in \modelobstacle{}\) is an obstacle in the
-configuration space \(\modelconfigurationspace{}\).
+configuration space \(\modelconfigurationspace{}\). Note also that in order to
+guide the expansion towards the goal, a goal bias of \(0.1\) is given to the
+benchmark planner.
 
 The end goal is set so that it will not take pose into account, and will only be
 concerned with getting within an \(\epsilon\) of the \((x,y)\) in the test map.
