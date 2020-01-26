@@ -75,15 +75,44 @@ program to converge.
 
 Given the nonlinear dynamical system
 \begin{equation}
-  \dot{\vect{x}} = f\big(\vect{x}(t), \vect{u}(t), w(t) \big), \label{eq:dynamicalsystem}
+  \dot{\vect{x}} = f\big(\vect{x}(t), \vect{u}(t), w(t)
+  \big), \label{eq:dynamicalsystem}
 \end{equation}
-with state \(\vect{x}(t) \in \R^3\), \(\vect{u}(t) \in \R\), and \(w(t) \in \R\). Then create
-a set of robustly verified discrete motion primitives through the use of
-\ac{SOS} programming to verify the reachable set for each of the trajectories in
-a base set of trajectories \(T_{0}\). Next, apply these trajectories, with the
-robust reachable set surrounding them as motion primitives for a discrete
-\ac{RRT} motion planning algorithm and compare the results to a \ac{RRT}
-algorithm which does not employ the reachable sets around the base trajectories,
-but instead relies on maximizing the distance to the nearest obstacles, in order
-to handle uncertainty.
+with state \(\vect{x}(t) \in \R^3\), \(\vect{u}(t) \in \R\), and \(w(t) \in
+\R\). Then create a set of robustly verified discrete motion primitives through
+the use of \ac{SOS} programming to verify the reachable set for each of the
+trajectories in a base set of trajectories \(T_{0}\). Next, apply these
+trajectories, with the robust reachable set surrounding them as motion
+primitives for a discrete \ac{RRT} motion planning algorithm and compare the
+results to a \ac{RRT} algorithm which does not employ the reachable sets around
+the base trajectories, but instead relies on maximizing the distance to the
+nearest obstacles, in order to handle uncertainty.
+
+\subsection{Survey of Papers}
+
+It is similar in spirit to~\cite{tedrakeLQRtreesFeedbackMotion2009} where a tree
+of \ac{LQR}-controllers is created, in order to safely take a dynamical system
+from one intial state to a final state. The difference however is that in this
+thesis the funnels are computed off-line, and are employed as motion primitives
+to a \ac{RRT}-planner, in addition the \ac{LQR}-trees algoritm plans backwards,
+while this implementation plans forwards in time. The funnel generation is also
+slightly different, as the funnels in this thesis, which is based off of the
+formulation in~\cite{majumdarFunnelLibrariesRealtime2017} also seeks to limit
+the size of the funnels, and bound the uncertainties. Other approaches that are
+similar in spirit to this implementation
+is~\cite{lenySequentialCompositionRobust2012}, as the paper also employs an
+\ac{RRT} algorithm which builds a tree of funnels. The differences however are
+that this algorithm is discrete and the funnels are computed using a \ac{SOS}
+framework.
+
+Applying motion primitives in a \ac{RRT} planner is shown to be beneficial for
+generating smoother paths, and offers a significant speedup on the planning
+process if the motion primitive library is
+sparse~\cite{vonasekGlobalMotionPlanning2013}. An example of motion primitives
+offering an advantage to continuously generated motion trajectories is shown
+in~\cite{vonasekHighlevelMotionPlanning2015}, where a modular robot is given the
+motion primitives \(\set{\mathrm{'left'}, \mathrm{'right'},
+  \mathrm{'straight'}}\), and the robot is able to get from the initial to the
+goal state in reasonable time, despite very complicated dynamics.
+
 
