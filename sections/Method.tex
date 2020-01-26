@@ -1,3 +1,4 @@
+
 This section will introduce and develop the \rrtfunnel{} algorithm, by two
 means: First develop robust motion primitives through the \ac{SOS} programming
 framework based on the work by \cite{majumdarFunnelLibrariesRealtime2017}, and
@@ -1130,11 +1131,11 @@ grid can be seen in figure~\cref{fig:poisson009}.
 The funnels generated thus far are created from a point model of the airplane,
 and its dynamics. If the grid that the simulations are run on are set to have an
 unit size of one meter, then the funnels from the basic set are given a velocity
-of \([v(t)] = \IEEEunits{m/s}\), \([\theta] = \IEEEunits{rad}\), and \([\dot{\theta}]
-= \IEEEunits{rad/s}\), where \( [\, \cdot \,] \) is the unit operator. The
+of \([v(t)] = \IEEEunit{m/s}\), \([\theta] = \IEEEunit{rad}\), and \([\dot{\theta}]
+= \IEEEunit{rad/s}\), where \( [\, \cdot \,] \) is the unit operator. The
 size of the airplane is arbitrary, and can be chosen freely, but if it is
-imagined as a radio controlled aircraft, with a speed of \(10}\) \IEEEunits{m/s},
-then a size of \(10 \times 20 \) \IEEEunits{c/m} keeps everything within the
+imagined as a radio controlled aircraft, with a speed of \(10}\) \IEEEunit{m/s},
+then a size of \(10 \times 20 \) \IEEEunit{c/m} keeps everything within the
 realm of a normal radio controlled aircraft and its capabilities. The mass is
 not relevant for our first order dynamics, but still the airplane is assigned a
 mass of \(1\, \textit{kilo}\), so that the translation of the model dynamics is not
@@ -1238,32 +1239,6 @@ the experiments can be seen in \cref{fig:intial-trajectories-exp}.
   \label{fig:intial-trajectories-exp}
 \end{figure}
 
-\subsection{Continuous Verification of Invariance}
-\label{subsec:check-vehicle-in-funnel}
-
-During the execution of the \rrtfunnel{} algorithm the planner keeps track of
-whether the model has left the funnel during execution, and aborts the
-simulation with the emergency maneuver if the airplane leaves one of the funnels
-at runtime. This happens if the value of the Lyapunov function is larger than
-one. This will be counted in the experiments as a collision on the part of the
-\rrtfunnel{} algorithm. A plot of the Lyapunov values for a simulation run can
-be seen in \cref{fig:lyapunov-values}.
-
-\subsection{Funnel Composition}
-\label{subsec:funnel-no-composable}
-
-In accordance with \cref{sec:composable-funnels}, the funnels robustness
-guarantees are only conserved if the funnels are composable as per
-\cref{def:invarant-funnel-composition}. Unfortunately, the funnels do not
-compose as per this definition in the experiments run, and the composition
-testing of the algorithm has to be left out. Thus the experiments are run with a
-funnel graph that is complete, and all funnels can compose with each other, at
-the cost of the mathematical robustness guarantees of the system. This is
-because the controller has no influence on the speed of the airplane, and hence
-there is no way to make the system converge in the direction of speed as
-exemplified in the~\cref{fig:funnel-conv}. This is further exemplified in
-\cref{fig:funnel-inlet-outlet}, where the inlet is overlaid the outlets for the
-projected xy-funnel.
 
 \section{Experiments}
 \label{sec:experiments-final}
@@ -1287,7 +1262,7 @@ benchmark planner.
 
 The end goal is set so that it will not take pose into account, and will only be
 concerned with getting within an \(\epsilon\) of the \((x,y)\) in the test map.
-For all the experiments below, an \(\epsilon\) of 5\si{\metre} is given to the
+For all the experiments below, an \(\epsilon\) of 5\IEEEunit{m} is given to the
 planners.
 
 Each test-run will be run in a forest generated with the \textit{Poisson
@@ -1305,15 +1280,15 @@ Before the experiments are run, all individual funnels in the base set are run
 with a hundred simulations runs from random starting positions in its inlet, to
 check if the invariant holds, and that the airplane stays within the funnel at
 all times. Uncertainty is added in terms of an additive noise with \(w =
-0.3\) \IEEEunits{m/s} in the world x-direction.
+0.3\) \IEEEunit{m/s} in the world x-direction.
 
 \subsection{Experiment Setup}
 
 The algorithm will be tested by generating a random strip of forest of depth
-\(25\)\IEEEunits{m}, and then letting it, along with the benchmark algorithm find a way
+\(25\)\IEEEunit{m}, and then letting it, along with the benchmark algorithm find a way
 through the environment to the other side, whilst being the subject of a
-simulated crosswind  of \(0,3\) and \(6\) \IEEEunits{m/s}. The trees are circles
-with a radius of \(0.2\) \IEEEunits{m}, and are placed randomly on the set \(O=\{
+simulated crosswind  of \(0,3\) and \(6\) \IEEEunit{m/s}. The trees are circles
+with a radius of \(0.2\) \IEEEunit{m}, and are placed randomly on the set \(O=\{
     \vect{x} \mid -50 \le x_{1} \le 50 \text{ and } 5 \le x_{2} \le 25
   \}\), as the realization of a \textit{Poisson} process with density
 \(\lambda = 0.2\) on this set. For each trial run, a new forest is generated in
@@ -1321,7 +1296,7 @@ this random fashion, and the algorithms are given the task to traverse the
 generated map, see~\cite{Kroese_2014} for an introduction to Poisson processes.
 
 The funnels for the \rrtfunnel{} algorithm are in this case made to handle
-uncertainties up to and including \(3\) \IEEEunits{m/s} in the x-direction of the airplane,
+uncertainties up to and including \(3\) \IEEEunit{m/s} in the x-direction of the airplane,
 but does not currently have any control over the y-direcction (the speed). A
 figure of the test environment can be seen in \cref{fig:simulated-forest}. The
 \rrtfunnel{} algorithm is run with a goal bias of \(5\%\), in order to guide the
@@ -1348,8 +1323,7 @@ in general they are larger than the actual reachable set for the system. This
 can be verified through a Monte-Carlo simulation. Running N-simulations from the
 funnel inlet, and storing the solutions, it is possible to visualize the actual
 funnel for the system, an example of which can be seen in
-\cref{fig:funnel-simulated-overlaid}, and further explored for a single funnel
-in \cref{fig:outer-approximation-monte-carlo}.
+\cref{fig:funnel-simulated-overlaid}.
 
 By comparing one of the funnels in the funnel set with a funnel based from
 \(10.000\) simulation runs, it is seen that the calculated funnels are indeed
