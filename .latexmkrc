@@ -18,4 +18,4 @@ $jobname = 'rrtfunnel';
 # Success command should open the document for viewing
 $success_cmd = "open build/rrtfunnel.pdf";
 $pdflatex = 'pdflatex -synctex=1 -interaction=nonstopmode';
-$pdf_previewer = 'open -a Skim';
+$pdf_previewer = 'okular';

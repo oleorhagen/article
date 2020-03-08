@@ -8,8 +8,7 @@ The uncertainty guarantees in this paper is given through creating
   reachable sets} for the dynamical system at hand. The following sections will
 introduce and develop the theory needed to understand the \ac{SOS} framework
 that lies at the bottom of the mathematical verification of these reachable
-sets. For the curious reader, a more basic introduction can be found in
-Appendix A of my master's thesis at \url[master-thesis]{http://www.github.com/olepor/master-thesis}.
+sets. 
 
 A \textit{funnel} is a parameterization of the reachable set of a dynamical
 system. This means that a Funnel holds all the states the dynamical system can
@@ -21,20 +20,11 @@ defined as
 \]
 where \(\mathcal{X}_0\) is the set of initial conditions, \(\sqb{0,T}\) the time
 interval, and \(F(t)\) is the set of states that the system can be in at time
-\(t\). Although this paper concerns itself with approximating the reachable set
-through \textit{Lyapunov} functions, a useful analogy is imagining the funnel
-created through a \textit{Monte-Carlo} simulation, where the funnel is the set
-of all the paths traversed by the dynamical system at hand. For the simple
-airplane model \cref{eq:model-dynamics}, a Monte-Carlo simulation of nine
-starting points along the y-axis, along with a simple \ac{LQR} controller on the
-heading of the aircraft, can be seen in \cref{fig:monte-carlo-sim}.
-
-\begin{figure}[!t]
-  \centering \includegraphics[scale=.6]{figures/preliminaries/montecarlofunnel}
-  \caption[Monte-Carlo simulation of the funnel for the \ac{LQR}-controller]{The simulation of N paths starting from a random point in the
-    interval \(\sqb{-.5,.5}\), and controlled with a LQR controller.}
-  \label{fig:monte-carlo-sim}
-\end{figure}
+\(t\) \cite{majumdarFunnelLibrariesRealtime2017}. Although this paper concerns
+itself with approximating the reachable set through \textit{Lyapunov} functions,
+a useful analogy is imagining the funnel created through a \textit{Monte-Carlo}
+simulation, where the funnel is the set of all the paths traversed by the
+dynamical system at hand.
 
 In the literature, the term funnel first appears in
 \cite{masonMechanicsManipulation1985}, but is later employed in a lot of
