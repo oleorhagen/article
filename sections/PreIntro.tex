@@ -8,40 +8,36 @@ This is especially difficult for nonlinear dynamical systems. Knowledge of
 position, the environment and the dynamics of the system are all uncertain to
 some degree. Sensory noise, tuning and readings may be off. Limited precision,
 and accidents may hinder the measurements and leave them with an error term.
-Thus in order for a planner to guarantee safe traversal through a real world
-environment, a motion planner needs to handle uncertainties.Knowledge of
-position, the environment and the dynamics of the system are all uncertain to
-some degree. Sensory noise, tuning and readings may be off. Limited precision,
-and accidents may hinder the measurements and leave them with an error term.
-Thus in order for a planner to guarantee safe traversal through a real world
-environment, the motion planner needs to handle uncertainties.
+Sensory noise, tuning and readings may be off. Thus in order for a planner to
+guarantee safe traversal through a real world environment, a motion planner
+needs to handle uncertainties.
 
-In this case some planners choose to ignore these error sources and instead
-apply heuristics such as maximizing the distance to the obstacles in the
-environment. However, this adds the disadvantage that the plans can become
+In the face of uncertainty some planners choose to ignore these error sources
+and instead apply heuristics such as maximizing the distance to the obstacles in
+the environment. However, this adds the disadvantage that the plans can become
 overly conservative. Explicitly handling the uncertainties in the planning stage
-enables the planner to employ more aggressive maneuvers, such as flying through
-two trees close together, as opposed to flying around the entire grove. Flying
-straight through is an acceptable maneuver for a planner that has guarantees on
-the whereabouts of the dynamical system, and hence is not afraid to go close to
-an obstacle.
+enables the planner to employ more aggressive maneuvers, such as going through
+two obstacles that are close together, as opposed to going around the difficult
+area . If uncertainties are accounted for, going straight through is an
+acceptable maneuver for a planner that has guarantees on the whereabouts of the
+dynamical system, and hence is not afraid to get close to an obstacle.
 
 \subsection{Contributions}
 
 This paper combines the theory of verified reachable sets, referred to as
-funnels, with a discrete \acro{RRT} motion planner in order to provide provably
-robust motion planning for a nonlinear dynamical system. To the best of the
-author's knowledge, this is the only known \ac{RRT} algorithm which implements
-verified reachable sets as discrete motion primitives as extension operators for
-the algorithm.
+funnels, with a discrete RRT motion planner in order to provide provably robust
+motion planning for a nonlinear dynamical system. To the best of the author's
+knowledge, this is the only known RRT algorithm which implements verified
+reachable sets as discrete motion primitives as extension operators for the
+algorithm.
 
 The result of this work is the RRT-Funnel motion planning algorithm, a discrete
 motion planning algorithm which can guarantee safe passage through an obstacle
-space, given assumptions on the uncertainty in the system.
+space, given the assumption that the uncertainty in the system is bounded.
 
 This paper builds upon the work done on verifying regions of attraction for
 nonlinear dynamical systems through the use of Lyapunov functions which are
-verified for polynomial systems through the use of \ac{SOS} programming. These
+verified for polynomial systems through the use of SOS programming. These
 regions of attraction are referred to as funnels, and first appeared in the
 literature in \cite{masonMechanicsManipulation1985}, but is later employed in a
 lot of research. The funnel definitions in this paper is taken from a series of
@@ -59,28 +55,27 @@ Given the nonlinear dynamical system
 \end{equation}
 with state \(\vect{x}(t) \in \R^3\), \(\vect{u}(t) \in \R\), and \(w(t) \in
 \R\). Then create a set of robustly verified discrete motion primitives through
-the use of \ac{SOS} programming to verify the reachable set for each of the
+the use of SOS programming to verify the reachable set for each of the
 trajectories in a base set of trajectories \(T_{0}\). Next, apply these
 trajectories, with the robust reachable set surrounding them as motion
-primitives for a discrete \ac{RRT} motion planning algorithm and compare the
-results to a \ac{RRT} algorithm which does not employ the reachable sets around
-the base trajectories, but instead relies on maximizing the distance to the
-nearest obstacles, in order to handle uncertainty.
+primitives for a discrete RRT motion planning algorithm and compare the results
+to a RRT algorithm which does not employ the reachable sets around the base
+trajectories, but instead relies on maximizing the distance to the nearest
+obstacles, in order to handle uncertainty.
 
 \subsection{Survey of Papers}
 
-It is similar in spirit to~\cite{tedrakeLQRtreesFeedbackMotion2009} where a tree
-of \ac{LQR}-controllers is created, in order to safely take a dynamical system
-from one intial state to a final state. The difference however is that in this
-paper the funnels are computed off-line, and are employed as motion primitives
-to a \ac{RRT}-planner, in addition the \ac{LQR}-trees algoritm plans backwards,
+This paper is similar in spirit to~\cite{tedrakeLQRtreesFeedbackMotion2009}
+where a tree of LQR-controllers is created, in order to safely take a dynamical
+system from one intial state to a final state. The difference however is that in
+this paper the funnels are computed off-line, and are employed as motion
+primitives to a RRT-planner, in addition the LQR-trees algoritm plans backwards,
 while this implementation plans forwards in time. The funnel generation is also
-slightly different, as the funnels in this paper, which is based off of the
-formulation in~\cite{majumdarFunnelLibrariesRealtime2017} also seeks to limit
-the size of the funnels, and bound the uncertainties. Other approaches that are
-similar in spirit to this implementation
-is~\cite{lenySequentialCompositionRobust2012}, as the paper also employs an
-\ac{RRT} algorithm which builds a tree of funnels. The differences however are
-that this algorithm is discrete and the funnels are computed using a \ac{SOS}
-framework.
+slightly different, as the funnels in this paper, are based off of the
+formulation in~\cite{majumdarFunnelLibrariesRealtime2017}, which also seeks to
+limit the size of the funnels. Other approaches that are similar in spirit to
+this implementation is~\cite{lenySequentialCompositionRobust2012}, as the paper
+also employs an RRT algorithm which builds a tree of funnels. The differences
+however are that this algorithm is discrete and the funnels are computed using a
+SOS framework.
 

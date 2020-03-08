@@ -3,12 +3,9 @@
 \subsection{Funnels}
 \label{sec:funnels}
 
-The uncertainty guarantees in this paper is given through creating
-\textit{funnels}. Funnels are the parameterization of the \textit{finite time
-  reachable sets} for the dynamical system at hand. The following sections will
-introduce and develop the theory needed to understand the \ac{SOS} framework
-that lies at the bottom of the mathematical verification of these reachable
-sets. 
+The uncertainty guarantees in this paper is given through the creation of
+so-called \textit{funnels}. Funnels are the parameterization of the
+\textit{finite time reachable sets} for the dynamical system at hand.
 
 A \textit{funnel} is a parameterization of the reachable set of a dynamical
 system. This means that a Funnel holds all the states the dynamical system can
@@ -37,16 +34,15 @@ on \cite{majumdarFunnelLibrariesRealtime2017}.
 
 \subsection{Funnel Composition}
 
-Now that discrete motion primitives in the form of funnels can be calculated for
-a given base set of trajectories, it is time to handle the overarching goal of
-creating a plan consisting of multiple funnels stacked from start to finish, so
-that safe traversal can be guaranteed along the given path. In order for two
-funnels to create one extended motion primitive from multiple smaller
-primitives, the funnels in use must be composable. In order for two funnels to
-be composable, the outlet of one funnel needs to be completely contained within
-the inlet of the other. This means that if \(\mathcal{F}_1 = F_1(T)\) is the
-outlet of funnel \(F_1\), and \(\mathcal{F}_2 = F_2(0)\) is the inlet of
-\(F_2\), then
+Once funnels have been generated as discrete motion primitives, it is time to
+handle the overarching goal of creating a plan consisting of multiple funnels
+chained from start to finish, so that safe traversal can be guaranteed along the
+given planning trajectory. In order for two funnels to create one extended
+motion primitive from multiple smaller primitives, the funnels in use must be
+composable. In order for two funnels to be composable, the outlet of one funnel
+needs to be completely contained within the inlet of the other. This means that
+if \(\mathcal{F}_1 = F_1(T)\) is the outlet of funnel \(F_1\), and
+\(\mathcal{F}_2 = F_2(0)\) is the inlet of \(F_2\), then
 \begin{equation}
   \label{eq:funnel-subset}
   \mathcal{F}_1 \subseteq \mathcal{F}_2
@@ -64,36 +60,13 @@ Because the implication
   \rho_2(0)
 \end{equation}
 is an equivalent condition to \cref{eq:funnel-subset}, and because it can be
-checked through the following \ac{SOS} program
+checked through the following SOS program
 \begin{IEEEeqnarray*}{lC}
   \text{Find } \; L(\bar{x}) \IEEEyesnumber \\
   \text{s.t.} \\
   \IEEEeqnarraymulticol{2}{l}{\rho_2(0) - V_2( 0,\bar{\vect{x}}) - L(\bar{\vect{x}})
                   \bigl( \rho_1(T_1) - V_1(T_1,\bar{\vect{x}}) \bigr) \quad \text{is SOS}} \mathEoS \nonumber
 \end{IEEEeqnarray*}
-Hence funnel composition can be checked in the same way that the funnels are
-generated -- through a \ac{SOS} program. Also note that the above program is a
-simple search for existence, and hence no cost function is needed.
-
-However in
-\citeauthor{majumdarFunnelLibrariesRealtime2017}~\cite{majumdarFunnelLibrariesRealtime2017},
-the program is stated simply, and it can be helpful to take a look at the
-derivation in order to gain a feel for the implementation of a \ac{SOS} program.
-
-The \nameref{sec:s-procedure} enables the search to be limited to a
-semi-algebraic set. In this case, that set is \(\mathcal{F}_2 = \set{\vect{x}
-  \in \R^n \mid V_2(0,\bar{\vect{x}}) \leq \rho_2(0)}\), and any \(\vect{x}\)
-that is not in this set is therefore not of importance. In more general terms
-this can be written
-\begin{equation}
-  \label{eq:example-s-procedure-implication}
-  \vect{x} \in \mathcal{F}_2 \implies p(\vect{x}) \geq 0,
-\end{equation}
-where \(p(\vect{x})\) is the \ac{SOS} polynomial that is to be verified. In this
-case \(p(\vect{x})\) is \(V_2(0,\bar{\vect{x}})\). Thus in order to impose the
-implication~\eqref{eq:example-s-procedure-implication} define
-\begin{equation}
-  q(\vect{x}) = V_2(0,\bar{\vect{x}}) - \rho_2(0) - L(\bar{\vect{x}}) \bigl(
-    \rho_1(T_1) - V_1(T_1,\bar{\vect{x}}) \bigr),
-\end{equation}
-where \(q(\vect{x})\) and \(L(\bar{\vect{x}})\) need to be SOS polynomials.
+Which means that funnel composition can be checked in the same way that the
+funnels are generated -- through a SOS program. Also note that the above program
+is a simple search for existence, and hence no cost function is needed.

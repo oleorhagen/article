@@ -1,17 +1,11 @@
 
 This paper has developed and shown that the \rrtfunnel{} motion planning
 algorithm does provide robust feedback motion planning for nonlinear dynamical
-systems. Although, the current implementation cannot give lent to the proof that
-the funnel compositions in general are provably safe, due to the \ac{SOS}
-formulations employed do not handle input saturations. However, this can be
-added given a few extra conditions on the \ac{SOS} optimization problem, and
-will be referred to as further work (see
-\cite{majumdarFunnelLibrariesRealtime2017}).
-
+systems.
 
 Currently the algorithm handles uncertainties in position, but not in the
 environment, and must therefore be run in a known environment, and is hence a
-strictly off-line motion planner. This is a known limitation of the \ac{RRT}
+strictly off-line motion planner. This is a known limitation of the RRT
 algorithm, and methods have been devised for amending this limitation. However,
 none of them have been implemented with the \rrtfunnel{} algorithm at present.
 
@@ -40,7 +34,7 @@ off-line, they might as well be employed in any global motion planner able to
 handle discrete motion primitives.
 
 
-Even though the robustness guarantees of the \ac{SOS} framework were lost in the
+Even though the robustness guarantees of the SOS framework were lost in the
 experiments section, due to the planner not handling multiple controller inputs,
 the \rrtfunnel{} algorithm did not cause the airplane to collide a single time
 over the course of \(300\) simulation runs. This was in starch contrast to the
