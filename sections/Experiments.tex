@@ -64,37 +64,6 @@ The model in the experiments are imagined as being a plane, with the dimensions
 \textsl{20x10cm}, and the basis of trajectories employed can be
 seen in \cref{fig:intial-trajectories-exp}.
 
-\begin{figure}[!t]
-  \centering
-  \begin{minipage}[c]{.9\columnwidth}
-  \includegraphics[scale=.5, trim={5cm, 9cm, 5cm, 7cm}, clip]{figures/experiments/rrtfunnel-1samples.pdf}
-  \caption[The expansion of the \rrtfunnel algorithm at 1, and 101 iterations]{Visualized is the expansion of the \rrtfunnel algorithm at 1 iterations of the algorithm.}
-  \end{minipage}
-  \newline
-  \begin{minipage}[c]{.9\columnwidth}
-  \includegraphics[scale=.5, trim={5cm, 9cm, 5cm, 7cm}, clip]{figures/experiments/rrtfunnel-101samples.pdf}
-  \caption[The expansion of the \rrtfunnel algorithm at 1, and 101 iterations]{Visualized is the expansion of the \rrtfunnel algorithm at 101 iterations of the algorithm.}
-  \end{minipage}
-\end{figure}
-
-\begin{figure}[!t]
-  \centering
-  \begin{minipage}[c]{.8\columnwidth}
-  \includegraphics[width=1\columnwidth, trim={0cm, 10cm, 0cm, 9cm}, clip]{figures/experiments/rrtfunnel-1samples-dyn.pdf}
-  \caption[The expansion of the \rrtfunnel algorithm at 1, and 101 iterations]{Visualized is the expansion of the \rrtfunnel algorithm at 1 iterations of the algorithm.}
-  \end{minipage}
-  \newline
-  \begin{minipage}[c]{.8\columnwidth}
-    \includegraphics[width=1\columnwidth, trim={0cm, 10cm, 0cm, 9cm}, clip]{figures/experiments/rrtfunnel-101samples-dyn.pdf}
-  \caption[The expansion of the \rrtfunnel algorithm at 1, and 101 iterations]{Visualized is the expansion of the \rrtfunnel algorithm at 101 iterations of the algorithm}
-  \end{minipage}
-  \newline
-  \begin{minipage}[c]{.8\columnwidth}
-    \includegraphics[width=1\columnwidth, trim={0cm, 10cm, 0cm, 9cm}, clip]{figures/experiments/rrtfunnel-701samples-dyn.pdf}
-  \caption[The expansion of the \rrtfunnel algorithm at 1, and 101 iterations]{Visualized is the expansion of the \rrtfunnel algorithm at 701 iterations of the algorithm}
-  \end{minipage}
-\end{figure}
-
 \subsection{Generating Robust Motion Primitives}
 
 This paper employs the simple unicycle model from
@@ -405,9 +374,8 @@ Here \(E\) is the set over which the points should be generated, and the
 \[
   \mu(E) = \int_{E} \lambda(\vect{x})\, \mathrm{d} \vect{x} \mathEoS
 \]
-For the experiments the set \(E\) will be a square defined as \(E =
-{[-\alpha, \alpha]}^2 \) of which the resultant forest on a \(20 \times 20\)
-grid can be seen in figure~\cref{fig:poisson009}.
+For the experiments the set \(E\) will be a square defined as \(E = {[-\alpha,
+    \alpha]}^2 \) of which the resultant forest on a \(20 \times 20\) grid.
 
 \subsection{The Size of the Airplane and the Obstacles Models}
 \label{subsec:deciding-model-size}
@@ -466,4 +434,36 @@ volume of the airplane for all verified states in the funnel, and
 is the wingspan. A picture of the initial funnel and the funnel expanded around
 the airplane model can be seen in
 figure~\cref{fig:expanded-funnel,fig:expanded-and-unexpanded}.
+
+
+\begin{figure}[!t]
+  \centering
+  \begin{minipage}[c]{.9\columnwidth}
+  \includegraphics[scale=.5, trim={5cm, 9cm, 5cm, 7cm}, clip]{figures/experiments/rrtfunnel-1samples.pdf}
+  \caption[The expansion of the \rrtfunnel algorithm at 1, and 101 iterations]{Visualized is the expansion of the \rrtfunnel algorithm at 1 iterations of the algorithm.}
+  \end{minipage}
+  \newline
+  \begin{minipage}[c]{.9\columnwidth}
+  \includegraphics[scale=.5, trim={5cm, 9cm, 5cm, 7cm}, clip]{figures/experiments/rrtfunnel-101samples.pdf}
+  \caption[The expansion of the \rrtfunnel algorithm at 1, and 101 iterations]{Visualized is the expansion of the \rrtfunnel algorithm at 101 iterations of the algorithm.}
+  \end{minipage}
+\end{figure}
+
+\begin{figure}[!t]
+  \centering
+  \begin{minipage}[c]{.8\columnwidth}
+  \includegraphics[width=1\columnwidth, trim={0cm, 10cm, 0cm, 9cm}, clip]{figures/experiments/rrtfunnel-1samples-dyn.pdf}
+  \caption[The expansion of the \rrtfunnel algorithm at 1, and 101 iterations]{Visualized is the expansion of the \rrtfunnel algorithm at 1 iterations of the algorithm.}
+  \end{minipage}
+  \newline
+  \begin{minipage}[c]{.8\columnwidth}
+    \includegraphics[width=1\columnwidth, trim={0cm, 10cm, 0cm, 9cm}, clip]{figures/experiments/rrtfunnel-101samples-dyn.pdf}
+  \caption[The expansion of the \rrtfunnel algorithm at 1, and 101 iterations]{Visualized is the expansion of the \rrtfunnel algorithm at 101 iterations of the algorithm}
+  \end{minipage}
+  \newline
+  \begin{minipage}[c]{.8\columnwidth}
+    \includegraphics[width=1\columnwidth, trim={0cm, 10cm, 0cm, 9cm}, clip]{figures/experiments/rrtfunnel-701samples-dyn.pdf}
+  \caption[The expansion of the \rrtfunnel algorithm at 1, and 101 iterations]{Visualized is the expansion of the \rrtfunnel algorithm at 701 iterations of the algorithm}
+  \end{minipage}
+\end{figure}
 
