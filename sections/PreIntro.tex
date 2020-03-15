@@ -18,18 +18,20 @@ the environment. However, this adds the disadvantage that the plans can become
 overly conservative. Explicitly handling the uncertainties in the planning stage
 enables the planner to employ more aggressive maneuvers, such as going through
 two obstacles that are close together, as opposed to going around the difficult
-area . If uncertainties are accounted for, going straight through is an
+area. If uncertainties are accounted for, going straight through is an
 acceptable maneuver for a planner that has guarantees on the whereabouts of the
-dynamical system, and hence is not afraid to get close to an obstacle.
+dynamical system, and hence is not afraid to get close to an obstacle. This is
+where the RRT-Funnel algorithm introduced in this paper works better than
+traditional motion planners, which do not explicitly handle uncertainty.
 
 \subsection{Contributions}
 
 This paper combines the theory of verified reachable sets, referred to as
 funnels, with a discrete RRT motion planner in order to provide provably robust
-motion planning for a nonlinear dynamical system. To the best of the author's
+motion planning for a nonlinear dynamical system. To the best of the authors'
 knowledge, this is the only known RRT algorithm which implements verified
-reachable sets as discrete motion primitives as extension operators for the
-algorithm.
+reachable sets as discrete motion primitives as extension operators for the a
+RRT algorithm.
 
 The result of this work is the RRT-Funnel motion planning algorithm, a discrete
 motion planning algorithm which can guarantee safe passage through an obstacle

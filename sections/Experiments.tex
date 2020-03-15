@@ -1,12 +1,12 @@
 
 The experiments will run the \rrtfunnel{} against a benchmark regular RRT
-planner with the motion primitive set pictured in
-\cref{fig:intial-trajectories-exp} on the forest traversal problem pictured in
-\cref{fig:simulated-forest}. The benchmark-planner is an RRT algorithm
-using the same motion primitive set as the \rrtfunnel{} algorithm, with the same
-LQR controller, and the same distance metric. The difference is that it does not
-take uncertainty into account, and instead maximizes the distance to the nearest
-obstacle as the extension operator \ie{}
+planner with the motion primitive set pictured
+in \cref{fig:intial-trajectories-exp} on a forest traversal problem. The
+benchmark-planner is a RRT algorithm employing the same motion primitive set as
+the \rrtfunnel{} algorithm, with the same LQR controller, and the same distance
+metric. The difference is that the benchmark planner does not take uncertainty
+into account, and instead maximizes the distance to the nearest obstacle as the
+extension operator \ie{}
 \begin{equation}
   \max_{i}\min_{t,j} \bigl( \vect{x}_{i}(t), o_{j} \bigr)
 \end{equation}
@@ -21,32 +21,31 @@ concerned with getting within an \(\epsilon\) of the \((x,y)\) in the test map.
 For all the experiments below, an \(\epsilon\) of 5\IEEEunit{m} is given to the
 planners.
 
-Each test-run will be run in a forest generated with the \textit{Poisson
-  process} method from \cref{sec:Poisson-Process}, and an intensity parameter
-\(\lambda = 0.2\).
+Each test-run will be run in a forest generated with a \textit{Poisson process}
+method.
 
 The experiments will record the number of collisions for each algorithm across
 all test-runs. The planners will run in the same environment for each test, with
 the same initial starting point, but the environments will be different for each
 run, as the Poisson process generating the obstacle forest is random in nature.
-With this test setup the difference between a planner which takes into account
-uncertainty should become evident.
+With this test setup the difference between a planner which takes into account,
+and one that does not, should become evident.
 
 Before the experiments are run, all individual funnels in the base set are run
 with a hundred simulations runs from random starting positions in its inlet, to
-check if the invariant holds, and that the airplane stays within the funnel at
-all times. Uncertainty is added in terms of an additive noise with \(w =
-0.3\) \IEEEunit{m/s} in the world x-direction.
+check if the invariant holds, and that the model stays within the funnel at all
+times. Uncertainty is added in terms of an additive noise with \(w =
+0.3\) \IEEEunit{m/s} in the world \(x\)-direction, imitating a cross-wind.
 
 \subsection{Experiment Setup}
 
 The algorithm will be tested by generating a random strip of forest of depth
 \(25\)\IEEEunit{m}, and then letting it, along with the benchmark algorithm find a way
 through the environment to the other side, whilst being the subject of a
-simulated crosswind  of \(0,3\) and \(6\) \IEEEunit{m/s}. The trees are circles
-with a radius of \(0.2\) \IEEEunit{m}, and are placed randomly on the set \(O=\{
-    \vect{x} \mid -50 \le x_{1} \le 50 \text{ and } 5 \le x_{2} \le 25
-  \}\), as the realization of a \textit{Poisson} process with density
+simulated crosswind of \(0,0\), \(0,3\) and \(6\) \IEEEunit{m/s}. The trees are
+circles with a radius of \(0.2\) \IEEEunit{m}, and are placed randomly on the
+set \(O=\{ \vect{x} \mid -50 \le x_{1} \le 50 \text{ and } 5 \le x_{2} \le
+25 \}\), as the realization of a \textit{Poisson process} with density
 \(\lambda = 0.2\) on this set. For each trial run, a new forest is generated in
 this random fashion, and the algorithms are given the task to traverse the
 generated map, see~\cite{Kroese_2014} for an introduction to Poisson processes.
