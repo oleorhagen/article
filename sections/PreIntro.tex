@@ -24,6 +24,23 @@ dynamical system, and hence is not afraid to get close to an obstacle. This is
 where the RRT-Funnel algorithm introduced in this paper works better than
 traditional motion planners, which do not explicitly handle uncertainty.
 
+\subsection{Survey of Papers}
+
+This paper is similar in spirit to~\cite{tedrakeLQRtreesFeedbackMotion2009}
+where a tree of LQR-controllers is created, in order to safely take a dynamical
+system from one intial state to a final state. The difference however is that in
+this paper the funnels are computed off-line, and are employed as motion
+primitives to a RRT-planner, in addition the LQR-trees algoritm plans backwards,
+while this implementation plans forwards in time. The funnel generation is also
+slightly different, as the funnels in this paper, are based off of the
+formulation in~\cite{majumdarFunnelLibrariesRealtime2017}, which also seeks to
+limit the size of the funnels. Other approaches that are similar in spirit to
+this implementation is~\cite{lenySequentialCompositionRobust2012}, as the paper
+also employs an RRT algorithm which builds a tree of funnels. The differences
+however are that this algorithm is discrete and the funnels are computed using a
+SOS framework.
+
+
 \subsection{Contributions}
 
 This paper combines the theory of verified reachable sets, referred to as
@@ -47,37 +64,3 @@ articles on funnels~\cite{Tobenkin_2011,tedrakeLQRtreesFeedbackMotion2009,
   majumdarRobustOnlineMotion2013,
   majumdarFunnelLibrariesRealtime2017,ahmadi2014dsos}, with the main focus being
 on \cite{majumdarFunnelLibrariesRealtime2017}.
-
-\subsection{Problem Statement}
-
-Given the nonlinear dynamical system
-\begin{equation}
-  \dot{\vect{x}} = f\big(\vect{x}(t), \vect{u}(t), w(t)
-  \big), \label{eq:dynamicalsystem}
-\end{equation}
-with state \(\vect{x}(t) \in \R^3\), \(\vect{u}(t) \in \R\), and \(w(t) \in
-\R\). Then create a set of robustly verified discrete motion primitives through
-the use of SOS programming to verify the reachable set for each of the
-trajectories in a base set of trajectories \(T_{0}\). Next, apply these
-trajectories, with the robust reachable set surrounding them as motion
-primitives for a discrete RRT motion planning algorithm and compare the results
-to a RRT algorithm which does not employ the reachable sets around the base
-trajectories, but instead relies on maximizing the distance to the nearest
-obstacles, in order to handle uncertainty.
-
-\subsection{Survey of Papers}
-
-This paper is similar in spirit to~\cite{tedrakeLQRtreesFeedbackMotion2009}
-where a tree of LQR-controllers is created, in order to safely take a dynamical
-system from one intial state to a final state. The difference however is that in
-this paper the funnels are computed off-line, and are employed as motion
-primitives to a RRT-planner, in addition the LQR-trees algoritm plans backwards,
-while this implementation plans forwards in time. The funnel generation is also
-slightly different, as the funnels in this paper, are based off of the
-formulation in~\cite{majumdarFunnelLibrariesRealtime2017}, which also seeks to
-limit the size of the funnels. Other approaches that are similar in spirit to
-this implementation is~\cite{lenySequentialCompositionRobust2012}, as the paper
-also employs an RRT algorithm which builds a tree of funnels. The differences
-however are that this algorithm is discrete and the funnels are computed using a
-SOS framework.
-
