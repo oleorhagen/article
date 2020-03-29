@@ -96,8 +96,6 @@ the initial Lyapunov function employing a cost function of the form
 \label{sec:composable-funnels}
 
 
-\subsubsection{Funnel Composition}
-
 Once funnels have been generated as discrete motion primitives, it is time to
 handle the overarching goal of creating a plan consisting of multiple funnels
 chained from start to finish, so that safe traversal can be guaranteed along the
@@ -185,10 +183,11 @@ dynamical system is to the final configuration, and is defined as
     \mathnormal{X_{2}}} + w_{2}f(\theta_1,\theta_2) ,
 \]
 where \(\norm{\mathnormal{X_{1}} - \mathnormal{X_{2}}}\) is the standard
-Euclidean metric, \(f\) is a function giving the distance between
+Euclidean metric, \(f\) is a positive scalar function giving the angle between
 headings~\cite{kuffnerEffectiveSamplingDistance2004}. The rotations and distance
-is then scaled relative to the translation distance. Which helps solve some of
-the problems with the Euclidean distance metric \cite{Lav06}.
+is then scaled relative to the translation distance by \(w_{1}\) and \(w_{2}\).
+Which helps solve some of the problems with the Euclidean distance metric
+\cite{Lav06}.
 
 \subsection{The Funnel-Graph}
 

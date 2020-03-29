@@ -20,25 +20,43 @@ enables the planner to employ more aggressive maneuvers, such as going through
 two obstacles that are close together, as opposed to going around the difficult
 area. If uncertainties are accounted for, going straight through is an
 acceptable maneuver for a planner that has guarantees on the whereabouts of the
-dynamical system, and hence is not afraid to get close to an obstacle. This is
-where the RRT-Funnel algorithm introduced in this paper works better than
-traditional motion planners, which do not explicitly handle uncertainty.
+dynamical system, and hence is not afraid to get close to an obstacle.
 
-\subsection{Survey of Papers}
+\subsection{Literature Review - TODO}
 
-This paper is similar in spirit to~\cite{tedrakeLQRtreesFeedbackMotion2009}
-where a tree of LQR-controllers is created, in order to safely take a dynamical
-system from one intial state to a final state. The difference however is that in
-this paper the funnels are computed off-line, and are employed as motion
-primitives to a RRT-planner, in addition the LQR-trees algoritm plans backwards,
-while this implementation plans forwards in time. The funnel generation is also
-slightly different, as the funnels in this paper, are based off of the
-formulation in~\cite{majumdarFunnelLibrariesRealtime2017}, which also seeks to
-limit the size of the funnels. Other approaches that are similar in spirit to
-this implementation is~\cite{lenySequentialCompositionRobust2012}, as the paper
-also employs an RRT algorithm which builds a tree of funnels. The differences
-however are that this algorithm is discrete and the funnels are computed using a
-SOS framework.
+Part I) Robust motion planning
+
+Robust motion planning has received a lot of attention as a field of research.
+
+Part II) RRT with robust motion primitives
+
+On the topic of combining the \textit{RRT} algorithm with robust motion
+primitives, Tedrake~\cite{tedrakeLQRtreesFeedbackMotion2009} creates a tree of
+robust LQR controllers, in order to guarantee safe traversal of the dynamical
+system at hand.
+
+A lot of interesting research has been done on the topic of merging \textit{SOS}
+theory with motion planning. In Tedrake~\cite{tedrakeLQRtreesFeedbackMotion2009}
+a tree of LQR-controllers is created, in order to safely take a dynamical system
+from one intial state to a final state. The difference however is that in this
+paper the funnels are computed off-line, and are employed as motion primitives
+to a RRT-planner, in addition the LQR-trees algoritm plans backwards, while this
+implementation plans forwards in time. The funnel generation is also slightly
+different, as the funnels in this paper, are based off of the formulation
+in~\cite{majumdarFunnelLibrariesRealtime2017}, which also seeks to limit the
+size of the funnels. Other approaches that are similar in spirit to this
+implementation is~\cite{lenySequentialCompositionRobust2012}, as the paper also
+employs an RRT algorithm which builds a tree of funnels. The differences however
+are that this algorithm is discrete and the funnels are computed using a SOS
+framework.
+
+
+This paper builds upon the work done on verifying regions of attraction for
+nonlinear dynamical systems through the use of Lyapunov functions which are
+verified for polynomial systems through the use of SOS programming. These
+regions of attraction are referred to as funnels, and first appeared in the
+literature in \cite{masonMechanicsManipulation1985}, but is later employed in a
+lot of research.
 
 
 \subsection{Contributions}
@@ -52,15 +70,12 @@ RRT algorithm.
 
 The result of this work is the RRT-Funnel motion planning algorithm, a discrete
 motion planning algorithm which can guarantee safe passage through an obstacle
-space, given the assumption that the uncertainty in the system is bounded.
-
-This paper builds upon the work done on verifying regions of attraction for
-nonlinear dynamical systems through the use of Lyapunov functions which are
-verified for polynomial systems through the use of SOS programming. These
-regions of attraction are referred to as funnels, and first appeared in the
-literature in \cite{masonMechanicsManipulation1985}, but is later employed in a
-lot of research. The funnel definitions in this paper is taken from a series of
-articles on funnels~\cite{Tobenkin_2011,tedrakeLQRtreesFeedbackMotion2009,
+space, given the assumption that the uncertainty in the system is bounded. The
+funnel definitions in this paper is taken from a series of articles on
+funnels~\cite{Tobenkin_2011,tedrakeLQRtreesFeedbackMotion2009,
   majumdarRobustOnlineMotion2013,
   majumdarFunnelLibrariesRealtime2017,ahmadi2014dsos}, with the main focus being
 on \cite{majumdarFunnelLibrariesRealtime2017}.
+
+
+

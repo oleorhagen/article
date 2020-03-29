@@ -13,8 +13,10 @@ extension operator \ie{}
 where \(x_{i}(t) \in \mathcal{T}\), is a trajectory from the basic motion
 primitive set, and \(o_{j} \in \modelobstacle{}\) is an obstacle in the
 configuration space \(\modelconfigurationspace{}\). Note also that in order to
-guide the expansion towards the goal, a goal bias of \(0.1\) is given to the
-benchmark planner.
+guide the expansion towards the goal, a goal bias of \(10%\) is given to the
+benchmark planner, which is beneficial for decreasing the dispersion of the
+algorithm~\cite{Lav06}. This is introduced to counter the distance metric, which
+tries to maximize the distance to the obstacles.
 
 The end goal is set so that it will not take pose into account, and will only be
 concerned with getting within an \(\epsilon\) of the \((x,y)\) in the test map.
@@ -40,48 +42,43 @@ times. Uncertainty is added in terms of an additive noise with \(w =
 \subsection{Experiment Setup}
 
 The algorithm will be tested by generating a random strip of forest of depth
-\(25\)\IEEEunit{m}, and then letting it, along with the benchmark algorithm find a way
-through the environment to the other side, whilst being the subject of a
-simulated crosswind of \(0,0\), \(0,3\) and \(6\) \IEEEunit{m/s}. The trees are
-circles with a radius of \(0.2\) \IEEEunit{m}, and are placed randomly on the
-set \(O=\{ \vect{x} \mid -50 \le x_{1} \le 50 \text{ and } 5 \le x_{2} \le
-25 \}\), as the realization of a \textit{Poisson process} with density
-\(\lambda = 0.2\) on this set. For each trial run, a new forest is generated in
+\(25\)\IEEEunit{m}, and then letting the \rrtfunnel{}, along with the benchmark algorithm
+find a way through the environment to the other side, whilst being subjected to
+a crosswind of \(0\) \IEEEunit{m/s} in the first experiment, in order to set up
+a experiment baseline. Second a run with a crosswind of \(0.3\) \IEEEunit{m/s},
+which is the maximum the \rrtfunnel{} algorithm is set up to handle is done, to
+show the difference between explicitly handling uncertainty, in comparison to
+not doing it. Lastly, an experiment with a \(0.6\) \IEEEunit{m/s} is done, to
+show that if the uncertainty assumptions are broken, the \rrtfunnel{} algorithm
+does no longer guarantee safe traversal. The obstacles are imagined to be trees
+with trunks modelled as circles with a radius of \(0.1\) \IEEEunit{m}, and are
+placed randomly on the area \(O=\{ \vect{x} \mid -50 \le x_{1} \le 50 \text{ and
+} 5 \le x_{2} \le 25 \}\), as the realization of a \textit{Poisson process} with
+density
+\(\lambda = 0.2\). For each trial run, a new forest is generated in
 this random fashion, and the algorithms are given the task to traverse the
-generated map, see~\cite{Kroese_2014} for an introduction to Poisson processes.
+generated map in turn, see~\cite{Kroese_2014} for an introduction to Poisson
+processes.
 
 The funnels for the \rrtfunnel{} algorithm are in this case made to handle
 uncertainty, in the form of a cross-wind up to and including \(3\)
 \IEEEunit{m/s} in the x-direction of the airplane, but does not currently have
-any control over the y-direcction (the speed). The \rrtfunnel{} algorithm is run
-with a goal bias of \(5\%\), in order to guide the exploration of the
-state-space towards the other end of the planning map. Also, a maximum of
-\(5000\) nodes is set as an upper treshold on both of the algorithm's
+any control over the y-direcction. Since the model used is single input, and
+only controls the angle of travel, not the speed of the aircraft.
+A maximum of \(5000\) nodes is set as an upper treshold on both of the algorithms'
 exploration trees.
-
-The model in the experiments are imagined as being a plane, with the dimensions
-\textsl{20x10cm}, and the basis of trajectories employed can be
-seen in \cref{fig:intial-trajectories-exp}.
 
 \subsection{Generating Robust Motion Primitives}
 
 This paper employs the simple unicycle model from
-\author{Lav06}~\cite[613]{Lav06} which is modified slightly into
+\author{Lav06}~\cite{Lav06} which is modified slightly into
 \begin{equation}
-  \label{eq:model-dynamics}
-  \vect{x} =
-  \begin{bmatrix}
-    x \\ y \\ \theta \\
-  \end{bmatrix}, \, \dot{\vect{x}} =
-  \begin{bmatrix}
-    -v \sin(\theta) \\
-    v \cos(\theta) \\
-    u \\
-  \end{bmatrix}
-  ,
+  \label{eq:model-dynamics} \vect{x} = \begin{bmatrix} x \\
+  y \\ \theta \\ \end{bmatrix}, \, \dot{\vect{x}} = \begin{bmatrix}
+  -v \sin(\theta) \\ v \cos(\theta) \\ u \\ \end{bmatrix} ,
 \end{equation}
 which is a first-order unicycle model with a constant speed. Although this is
-the only model used in this paper, the framework and the code is easily adapted
+the only model used in this paper, the framework and the code can be adapted
 into accommodating a different and more complicated model.
 
 
@@ -234,72 +231,12 @@ However, since \( \dim (\vect{x}) = \dim(\vect{x}_{c}) \), for
 the~\cref{eq:model-dynamics}, it is not necessary to handle the non-cyclic case.
 
 
-
-\subsection{Optimization of the Nominal LQR-Controller}
-\label{subsec:searching-for-a-controller}
-
-With the non-optimal feedback controller given to the funnel calculation
-framework (non-optimal with regards to the funnel calculation cost function),
-the size of the funnels will in general be larger than if the optimizer is given
-a better controller. Thus in order to further minimize the size of the funnel in
-the xy-plane, this method, along with the cost function from
-\cref{subsec:xy-cost-function} is used to make traversal through obstacles in
-the world space easier, through minimizing the size of the reachable set. Hence,
-the initial controller fed to the algorithm can be optimized with the goal of
-minimizing the size of the funnel, given a few conditions on the
-system.
-
-In order for the controller to be optimized, the system needs to be control
-affine, i.e. it can be written on the form
-\begin{equation}
-  \dot{\vect{x}} = f(\vect{x}(t)) + g(\vect{x}(t)) \vect{u} (t),
-\end{equation}
-so that the control policy can be parameterized as a polynomial
-\(\bar{\vect{u}}_f(t,\bar{\vect{x}})\), and the system dynamics written as
-\begin{equation}
-  \dot{\bar{\vect{x}}} = f(\vect{x}_0(t) + \bar{\vect{x}}(t)) + g(\vect{x}(t))\left( \vect{u}_0(t) + \bar{\vect{u}}_f(t,\bar{\vect{x}}) \right) - \bar{\vect{x}}_0 \mathEoS \label{eq:dynamics-control-affine}
-\end{equation}
-Given that the dynamical model in \cref{eq:model-dynamics} is control affine,
-since
-\begin{IEEEeqnarray*}{rl}
-  \dot{\vect{x}} &= %
-  f(\vect{x}(t)) + g(\vect{x}(t)) \vect{u} (t) \IEEEyesnumber \\
-  &= %
-  \begin{bmatrix}
-    -v(t)\sin (\theta) \\
-    v(t) \cos (\theta) \\
-    0
-  \end{bmatrix}
-  +
-  \begin{bmatrix}
-    0 \\
-    0 \\
-    1 \\
-  \end{bmatrix}
-  \vect{u}(t),
-\end{IEEEeqnarray*}
-the feedback controller can be optimized by adding the coefficients of the
-polynomial \(\vect{u}_f(t,\bar{\vect{x}})\) to the set of decision variables in
-the original optimization
-problem~\eqref{opt:discrete}~\cite[sec~4.3.2]{majumdarFunnelLibrariesRealtime2017}.
-The only issue is that now \(\dot{V}\) is bilinear in the decision variables
-\(V\) and \(\bar{\vect{u}}_f\), as well as the other bilinear decision variables
-from the \cref{opt:time-dependent-optimization-problem}, as can be seen from
-\begin{equation}
-  {
-    \dot{V}(t,\vect{x}) = \frac{\partial V(t,\vect{x})}{\partial \vect{x}} \dot{\bar{\vect{x}}} + \frac{\partial V(t,\vect{x})}{\partial t},
-  }
-\end{equation}
-where \(\dot{\bar{\vect{x}}}\) is now given by
-\cref{eq:dynamics-control-affine}.
-
-
 \subsection{Funnel Composition}
 \label{subsec:funnel-no-composable}
 
 In accordance with \cref{sec:composable-funnels}, the funnel robustness
-guarantees are only valid if the funnels are composable as per
-\cref{def:invarant-funnel-composition}. Unfortunately, the funnels do not
+guarantees are only valid if the funnels are composable 
+\cref{def:funnel-composition}. Unfortunately, the funnels do not
 compose as per this definition in the experiments run, and the composition
 testing of the algorithm has to be left out. Thus the experiments are run with a
 funnel graph that is complete, and all funnels can compose with each other, at
@@ -342,39 +279,6 @@ values for a simulation run can be seen in \cref{fig:lyapunov-values}.
   \label{fig:lyapunov-values}
 \end{figure}
 
-\subsection{The Obstacle Forest}
-\label{sec:Poisson-Process}
-
-In order to generate the obstacle field, which is to resemble a forest, a
-\textit{spatial Poisson process} is employed. Poisson processes are used to
-model random configurations of points in space, and hence are well suited for
-generating a different obstacle forest for each simulation
-run~\cite{Kroese_2014}. For the experiments below, a forest will be the special
-case of realizing a spatial Poisson process on \(\R^2\).
-
-A Poisson process requires a few key parameters. Firstly, \(\lambda\) is the
-intensity of the spatial process, deciding the density of the generated forest,
-and hence the difficulty in traversing it. For these experiments, the intensity
-will be held constant for each experiment run, and not vary with points in space
-i.e. the process is homogeneous.
-
-\begin{definition}{Generating a Poisson random measure}
-  \label{def:Poisson-def}
-  \begin{enumerate}
-  \item Generate a Poisson random variable \(N \sim \poi \bigl( \mu(E) \bigr) \).
-  \item Draw \(X_1,X_2,\ldots,X_N \sim g\), where \(g(\vect{x}) =
-    \lambda(\vect{x})/ \mu(E)\).
-  \end{enumerate}
-\end{definition}
-Here \(E\) is the set over which the points should be generated, and the
-\textit{probability distribution function} \(g(x_1, x_2) =
-\lambda(\vect{x})/\mu(E)\)~\cite[Definition~1.1.1]{Kroese_2014}. Finally,
-\(\mu(E)\) is defined as
-\[
-  \mu(E) = \int_{E} \lambda(\vect{x})\, \mathrm{d} \vect{x} \mathEoS
-\]
-For the experiments the set \(E\) will be a square defined as \(E = {[-\alpha,
-    \alpha]}^2 \) of which the resultant forest on a \(20 \times 20\) grid.
 
 \subsection{The Size of the Airplane and the Obstacles Models}
 \label{subsec:deciding-model-size}
