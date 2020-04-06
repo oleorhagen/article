@@ -5,10 +5,7 @@ systems.
 
 Currently the algorithm handles uncertainties in position, but not in the
 environment, and must therefore be run in a known environment, and is hence a
-strictly off-line motion planner. This is a known limitation of the RRT
-algorithm, and methods have been devised for amending this limitation. However,
-none of them have been implemented with the \rrtfunnel{} algorithm at present.
-
+strictly off-line motion planner.
 
 In general, the funnels generated are tight outer approximations of the true
 reachable set for the system. However, note that since the Lyapunov function
@@ -34,19 +31,18 @@ off-line, they might as well be employed in any global motion planner able to
 handle discrete motion primitives.
 
 
-Even though the robustness guarantees of the SOS framework were lost in the
-experiments section, due to the planner not handling multiple controller inputs,
-the \rrtfunnel{} algorithm did not cause the airplane to collide a single time
+Even though the robustness guarantees of the SOS framework could not be
+guaranteed for an entire off-line phase, due to the planner not handling
+multiple controller inputs, and hence the funnels did not compose off-line.
+Still, the \rrtfunnel{} algorithm did run-time verification of funnel abidance.
+Even though the model leaving a non-composable funnel at run-time was
+theoretically possible, this did not cause the airplane to collide a single time
 over the course of \(300\) simulation runs. This was in starch contrast to the
 benchmark planner, which did not handle uncertainty at all, and instead relied
 on avoiding the obstacles by as big a margin as possible, and therefore
-consistently had a collision rate of \(25\%\) or higher. Therefore, not only was
-the \rrtfunnel{} planner able to provide safer traversal of the experiment
-environment, but it could also provide more direct traversal, as the distance to
-the trees did not matter, and more aggressive maneuvers could be executed
-freely.
-
-% The implementation of the algorithm in this paper leveraged the discrete
-% sampling of points in order to generate funnels around these discrete points.
-% However, a continuous approach might have been better suited, as the time for
-% generating the funnels off-line are not important for the algorithm at runtime.
+consistently had a collision rate of \(6\%\) or higher. This collission rate can
+be expected to be a lot higher in a denser planning environment, but this would
+also significantly add to the time of the off-line planning phase. As can be
+seen in the last column, when the cross-wind added to the experiment violated
+the upper bound of \(3\) \IEEEunit{m/s}, the \rrtfunnel{} algorithm did also
+start crashing.

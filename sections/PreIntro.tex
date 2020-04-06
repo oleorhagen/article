@@ -22,42 +22,43 @@ area. If uncertainties are accounted for, going straight through is an
 acceptable maneuver for a planner that has guarantees on the whereabouts of the
 dynamical system, and hence is not afraid to get close to an obstacle.
 
-\subsection{Literature Review - TODO}
+\subsection{Literature Review}
 
-Part I) Robust motion planning
 
-Robust motion planning has received a lot of attention as a field of research.
+\subsubsection{Robust Motion Planning}
 
-Part II) RRT with robust motion primitives
+This work is a part of the broader field of planning under uncertainty. The
+algorithms are further classified depending on classes of uncertainty they can
+handle. That is, uncertainty in the planning environment, uncertainty in the
+model, uncertainty in sensing, and uncertainty in the map.
+
+\subsubsection{RRT with Robust Motion Primitives}
 
 On the topic of combining the \textit{RRT} algorithm with robust motion
 primitives, Tedrake~\cite{tedrakeLQRtreesFeedbackMotion2009} creates a tree of
 robust LQR controllers, in order to guarantee safe traversal of the dynamical
-system at hand.
+system at hand. Luders generate robust motion primitives in real-time for an
+\texit{RRT*} algorithm through chance constraints in~\cite{luders2013robust}.
+Another robust extension to the \textit{RRT} algorithm can be found in
+Melchior~\cite{melchior2007particle}, where each extension to the tree is
+treated as a stochastic process, and simulated multiple times, and since pruned
+based on the expected probability of successful execution.
 
-A lot of interesting research has been done on the topic of merging \textit{SOS}
-theory with motion planning. In Tedrake~\cite{tedrakeLQRtreesFeedbackMotion2009}
-a tree of LQR-controllers is created, in order to safely take a dynamical system
-from one intial state to a final state. The difference however is that in this
-paper the funnels are computed off-line, and are employed as motion primitives
-to a RRT-planner, in addition the LQR-trees algoritm plans backwards, while this
-implementation plans forwards in time. The funnel generation is also slightly
-different, as the funnels in this paper, are based off of the formulation
-in~\cite{majumdarFunnelLibrariesRealtime2017}, which also seeks to limit the
-size of the funnels. Other approaches that are similar in spirit to this
-implementation is~\cite{lenySequentialCompositionRobust2012}, as the paper also
-employs an RRT algorithm which builds a tree of funnels. The differences however
-are that this algorithm is discrete and the funnels are computed using a SOS
-framework.
+
+\subsubsection{SOS and Robust Motion Planning}
+
+The research done on the topic of merging \textit{SOS} theory with motion
+planning is not yet vast, but interesting due to its general robustness
+guarantees, with no probability involved. In
+Tedrake~\cite{tedrakeLQRtreesFeedbackMotion2009} a tree of LQR-controllers is
+created, in order to safely take a dynamical system from one intial state to a
+final state. In~\cite{majumdarFunnelLibrariesRealtime2017}, Majumdar seeks to
+limit the size of the area in which a controller will take a dynamic system.
 
 
 This paper builds upon the work done on verifying regions of attraction for
 nonlinear dynamical systems through the use of Lyapunov functions which are
-verified for polynomial systems through the use of SOS programming. These
-regions of attraction are referred to as funnels, and first appeared in the
-literature in \cite{masonMechanicsManipulation1985}, but is later employed in a
-lot of research.
-
+verified for a polynomial system through the use of SOS programming.
 
 \subsection{Contributions}
 
