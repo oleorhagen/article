@@ -1,8 +1,15 @@
 
-The results from the given simulations can be found in table \cref{table:results}
+The results from the given simulations can be found in
+table \cref{table:results}, and shows the collisions, and the number of branches
+added to each search tree. It is seen that the \rrtfunnel{} algorithm performs
+better in terms of robustness up to and including its uncertainty bound
+of \(3\) \IEEEUnit{m/s}, while the benchmark planner does collide in the same
+environment, with the same uncertainty.
 
 For the results in \cref{table:results}, a density of \(\lambda=0.2\) was set
-for the difficulty (tree density) of the experiment environment.
+for the difficulty (tree density) of the experiment environment. The number of
+iterations needed to find a solution of a hundred test runs are summed up
+in \cref{table:results-iterations}.
 
 \begin{table}[!t]
   \centering
@@ -14,9 +21,42 @@ for the difficulty (tree density) of the experiment environment.
     \IEEEeqnarrayseprow[3pt]\\
     &\mathrm{\rrtfunnel}&& 0 && 0 && 4 &\IEEEeqnarraystrutsize{0pt}{0pt}\\
     \IEEEeqnarrayseprow[3pt]\\
+    %%
     \IEEEeqnarrayrulerow\\
     \IEEEeqnarrayseprow[3pt]\\
     &\mathrm{Benchmark}&& 0 && 6 && 10 &\IEEEeqnarraystrutsize{0pt}{0pt}\\
+    \IEEEeqnarrayseprow[3pt]\\
+    \IEEEeqnarrayrulerow
+    %%
+    \vspace{2em}
+    %%
+    \IEEEeqnarrayrulerow\\
+    \IEEEeqnarrayrulerow\\
+    &\mbox{Number of Iterations}&&w=0 \, m/s&&w=3 \, m/s&& w=6 \, m/s\\
+    \IEEEeqnarraydblrulerow\\
+    \IEEEeqnarrayseprow[3pt]\\
+    &\mathrm{\rrtfunnel}&& 447.646 && 190.713 && 213.638 &\IEEEeqnarraystrutsize{0pt}{0pt}\\
+    \IEEEeqnarrayseprow[3pt]\\
+    %%
+    \IEEEeqnarrayrulerow\\
+    \IEEEeqnarrayseprow[3pt]\\
+    &\mathrm{Benchmark}&& 29.120 && 52.768 && 33.936 &\IEEEeqnarraystrutsize{0pt}{0pt}\\
+    \IEEEeqnarrayseprow[3pt]\\
+    \IEEEeqnarrayrulerow
+    %%
+    \vspace{2em}
+    %%
+    \IEEEeqnarrayrulerow\\
+    \IEEEeqnarrayrulerow\\
+    &\mbox{Solution Path Length}&&w=0 \, m/s&&w=3 \, m/s&& w=6 \, m/s\\
+    \IEEEeqnarraydblrulerow\\
+    \IEEEeqnarrayseprow[3pt]\\
+    &\mathrm{\rrtfunnel}&& 1.506 && 3.418 && 4.754 &\IEEEeqnarraystrutsize{0pt}{0pt}\\
+    \IEEEeqnarrayseprow[3pt]\\
+    %%
+    \IEEEeqnarrayrulerow\\
+    \IEEEeqnarrayseprow[3pt]\\
+    &\mathrm{Benchmark}&& 3.582 && 4.162 && 3.174 &\IEEEeqnarraystrutsize{0pt}{0pt}\\
     \IEEEeqnarrayseprow[3pt]\\
     \IEEEeqnarrayrulerow
   \end{IEEEeqnarraybox}
