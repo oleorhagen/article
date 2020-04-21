@@ -6,7 +6,7 @@ benchmark-planner is a RRT algorithm employing the same motion primitive set as
 the \rrtfunnel{} algorithm, with the same LQR controller, and the same distance
 metric. The difference is that the benchmark planner does not take uncertainty
 into account, and instead maximizes the distance to the nearest obstacle as the
-extension operator \ie{}
+extension operator i.e.,
 \begin{equation}
   \max_{i}\min_{t,j} \bigl( \vect{x}_{i}(t), o_{j} \bigr)
 \end{equation}
@@ -175,7 +175,6 @@ around them, so that safe traversal can be guaranteed. Thus for this to happen,
 the funnel generator needs an initial condition set from which to start. This is
 given by the hyper-ellipsoid
 \begin{align}
-
   \mathcal{X}_0 &= \set{\vect{x} \in \R^{3} \mid \vect{x}^{T} Q \vect{x}} \\
 
   Q &= \begin{bmatrix}
