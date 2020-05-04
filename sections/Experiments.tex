@@ -6,7 +6,7 @@ benchmark-planner is a RRT algorithm employing the same motion primitive set as
 the \rrtfunnel{} algorithm, with the same LQR controller, and the same distance
 metric. The difference is that the benchmark planner does not take uncertainty
 into account, and instead maximizes the distance to the nearest obstacle as the
-extension operator \ie{}
+extension operator i.e.,
 \begin{equation}
   \max_{i}\min_{t,j} \bigl( \vect{x}_{i}(t), o_{j} \bigr)
 \end{equation}
@@ -175,9 +175,7 @@ around them, so that safe traversal can be guaranteed. Thus for this to happen,
 the funnel generator needs an initial condition set from which to start. This is
 given by the hyper-ellipsoid
 \begin{align}
-
   \mathcal{X}_0 &= \set{\vect{x} \in \R^{3} \mid \vect{x}^{T} Q \vect{x}} \\
-
   Q &= \begin{bmatrix}
     2 & 0 & 0 \\
     0 & 2 & 0 \\
@@ -286,15 +284,15 @@ values for a simulation run can be seen in \cref{fig:lyapunov-values}.
 The funnels generated thus far are created from a point model of the airplane,
 and its dynamics. If the grid that the simulations are run on are set to have an
 unit size of one meter, then the funnels from the basic set are given a velocity
-of \([v(t)] = \IEEEunit{m/s}\), \([\theta] = \IEEEunit{rad}\), and \([\dot{\theta}]
-= \IEEEunit{rad/s}\), where \( [\, \cdot \,] \) is the unit operator. The
-size of the airplane is arbitrary, and can be chosen freely, but if it is
-imagined as a radio controlled aircraft, with a speed of \(10}\) \IEEEunit{m/s},
-then a size of \(10 \times 20 \) \IEEEunit{c/m} keeps everything within the
-realm of a normal radio controlled aircraft and its capabilities. The mass is
-not relevant for our first order dynamics, but still the airplane is assigned a
-mass of \(1\, \textit{kilo}\), so that the translation of the model dynamics is not
-irrelevant.
+of \( [v(t)] = \text{\IEEEunit{m/s}} \), \( [\theta] = \text{\IEEEunit{rad}} \),
+and \( [\dot{\theta}] = \text{\IEEEunit{rad/s}} \), where \( [\, \cdot \,] \) is
+the unit operator. The size of the airplane is arbitrary, and can be chosen
+freely, but if it is imagined as a radio controlled aircraft, with a speed of
+\(10\) \IEEEunit{m/s}, then a size of \(10 \times 20 \) \IEEEunit{c/m} keeps
+everything within the realm of a normal radio controlled aircraft and its
+capabilities. The mass is not relevant for our first order dynamics, but still
+the airplane is assigned a mass of \(1\, \textit{kilo}\), so that the
+translation of the model dynamics is not irrelevant.
 
 \subsection{Expanding the Funnels around the Airplane Model}
 \label{subsec:expand-funnel}
