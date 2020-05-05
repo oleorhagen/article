@@ -20,7 +20,7 @@ tries to maximize the distance to the obstacles.
 
 The end goal is set so that it will not take pose into account, and will only be
 concerned with getting within an \(\epsilon\) of the \((x,y)\) in the test map.
-For all the experiments below, an \(\epsilon\) of 5\IEEEunit{m} is given to the
+For all the experiments an \(\epsilon\) of 5\IEEEunit{m} is given to the
 planners.
 
 Each test-run will be run in a forest generated with a \textit{Poisson process}
@@ -28,10 +28,8 @@ method.
 
 The experiments will record the number of collisions for each algorithm across
 all test-runs. The planners will run in the same environment for each test, with
-the same initial starting point, but the environments will be different for each
-run, as the Poisson process generating the obstacle forest is random in nature.
-With this test setup the difference between a planner which takes into account,
-and one that does not, should become evident.
+the same initial starting point. The environment will be redrawn using the Poisson process to generate the obstacle forest for each consecutive run.
+With this test setup the difference between the planners should become evident.
 
 Before the experiments are run, all individual funnels in the base set are run
 with a hundred simulations runs from random starting positions in its inlet, to
@@ -43,14 +41,15 @@ times. Uncertainty is added in terms of an additive noise with \(w =
 
 The algorithm will be tested by generating a random strip of forest of depth
 \(25\)\IEEEunit{m}, and then letting the \rrtfunnel{}, along with the benchmark algorithm
-find a way through the environment to the other side, whilst being subjected to
-a crosswind of \(0\) \IEEEunit{m/s} in the first experiment, in order to set up
-a experiment baseline. Second a run with a crosswind of \(0.3\) \IEEEunit{m/s},
-which is the maximum the \rrtfunnel{} algorithm is set up to handle is done, to
-show the difference between explicitly handling uncertainty, in comparison to
-not doing it. Lastly, an experiment with a \(0.6\) \IEEEunit{m/s} is done, to
-show that if the uncertainty assumptions are broken, the \rrtfunnel{} algorithm
-does no longer guarantee safe traversal. The obstacles are imagined to be trees
+find a way through the environment to the other side. Three seperate experiments will be conducted where the amount of crosswind will vary. The first experiment will have a crosswind of \(0\) \IEEEunit{m/s}, in order to set up
+the experiment baseline. The second experiment will have a crosswind of \(0.3\) \IEEEunit{m/s},
+which is the maximum crosswind modelled in the \rrtfunnel{} algorithm. This experiment will
+show the difference between explicitly handling uncertainty in comparison to
+handling it heuristically. Lastly, an experiment with a \(0.6\) \IEEEunit{m/s} is perfomed, to
+verify the assumed result that if the uncertainty assumptions are broken the \rrtfunnel{} algorithm
+does no longer guarantee safe traversal.
+
+The obstacles are imagined to be trees
 with trunks modelled as circles with a radius of \(0.1\) \IEEEunit{m}, and are
 placed randomly on the area \(O=\{ \vect{x} \mid -50 \le x_{1} \le 50 \text{ and
 } 5 \le x_{2} \le 25 \}\), as the realization of a \textit{Poisson process} with
@@ -78,11 +77,11 @@ This paper employs the simple unicycle model from
   -v \sin(\theta) \\ v \cos(\theta) \\ u \\ \end{bmatrix} ,
 \end{equation}
 which is a first-order unicycle model with a constant speed. Although this is
-the only model used in this paper, the framework and the code can be adapted
-into accommodating a different and more complicated model.
+the only model used in this paper, the method can be adapted
+into accommodating a different and more complex model.
 
 
-\subsubsection{Generating the Trajectories}
+%\subsubsection{Generating the Trajectories}
 
 The trajectories for the base set of motion primitives is generated through the
 direct collocation method on the dynamical system given in
@@ -91,7 +90,7 @@ direct collocation method on the dynamical system given in
 The basis set of motion primitives should be small, yet cover enough of the
 finer movements of the dynamical system so that the motion of the planning unit
 can be near continuous when composed together. Thus in order to generate a dense
-set of motion primitives generated, points along the arc of a circle with \(N\)
+set of motion primitives, points along the arc of a circle with \(N\)
 different radii as the initial points for the trajectory generator described in
 \cref{subsec:generating-the-trajectories}. The initial trajectories employed in
 the experiments can be seen in \cref{fig:intial-trajectories-exp}.
@@ -167,6 +166,8 @@ Which means that
 V_{i}(t, \vect{x}) = \vect{x}^{T}S_{i}\vect{x}
 \]
 as needed.
+
+\kma{Kom hit}
 
 \subsection{Generating the Funnels around the Initial Trajectories}
 
