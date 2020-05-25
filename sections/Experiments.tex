@@ -20,7 +20,7 @@ tries to maximize the distance to the obstacles.
 
 The end goal is set so that it will not take pose into account, and will only be
 concerned with getting within an \(\epsilon\) of the \((x,y)\) in the test map.
-For all the experiments below, an \(\epsilon\) of 5\IEEEunit{m} is given to the
+For all the experiments an \(\epsilon\) of 5\IEEEunit{m} is given to the
 planners.
 
 Each test-run will be run in a forest generated with a \textit{Poisson process}
@@ -28,10 +28,8 @@ method.
 
 The experiments will record the number of collisions for each algorithm across
 all test-runs. The planners will run in the same environment for each test, with
-the same initial starting point, but the environments will be different for each
-run, as the Poisson process generating the obstacle forest is random in nature.
-With this test setup the difference between a planner which takes into account,
-and one that does not, should become evident.
+the same initial starting point. The environment will be redrawn using the Poisson process to generate the obstacle forest for each consecutive run.
+With this test setup the difference between the planners should become evident.
 
 Before the experiments are run, all individual funnels in the base set are run
 with a hundred simulations runs from random starting positions in its inlet, to
@@ -43,14 +41,15 @@ times. Uncertainty is added in terms of an additive noise with \(w =
 
 The algorithm will be tested by generating a random strip of forest of depth
 \(25\)\IEEEunit{m}, and then letting the \rrtfunnel{}, along with the benchmark algorithm
-find a way through the environment to the other side, whilst being subjected to
-a crosswind of \(0\) \IEEEunit{m/s} in the first experiment, in order to set up
-a experiment baseline. Second a run with a crosswind of \(0.3\) \IEEEunit{m/s},
-which is the maximum the \rrtfunnel{} algorithm is set up to handle is done, to
-show the difference between explicitly handling uncertainty, in comparison to
-not doing it. Lastly, an experiment with a \(0.6\) \IEEEunit{m/s} is done, to
-show that if the uncertainty assumptions are broken, the \rrtfunnel{} algorithm
-does no longer guarantee safe traversal. The obstacles are imagined to be trees
+find a way through the environment to the other side. Three seperate experiments will be conducted where the amount of crosswind will vary. The first experiment will have a crosswind of \(0\) \IEEEunit{m/s}, in order to set up
+the experiment baseline. The second experiment will have a crosswind of \(0.3\) \IEEEunit{m/s},
+which is the maximum crosswind modelled in the \rrtfunnel{} algorithm. This experiment will
+show the difference between explicitly handling uncertainty in comparison to
+handling it heuristically. Lastly, an experiment with a \(0.6\) \IEEEunit{m/s} is perfomed, to
+verify the assumed result that if the uncertainty assumptions are broken the \rrtfunnel{} algorithm
+does no longer guarantee safe traversal.
+
+The obstacles are imagined to be trees
 with trunks modelled as circles with a radius of \(0.1\) \IEEEunit{m}, and are
 placed randomly on the area \(O=\{ \vect{x} \mid -50 \le x_{1} \le 50 \text{ and
 } 5 \le x_{2} \le 25 \}\), as the realization of a \textit{Poisson process} with
@@ -78,11 +77,11 @@ This paper employs the simple unicycle model from
   -v \sin(\theta) \\ v \cos(\theta) \\ u \\ \end{bmatrix} ,
 \end{equation}
 which is a first-order unicycle model with a constant speed. Although this is
-the only model used in this paper, the framework and the code can be adapted
-into accommodating a different and more complicated model.
+the only model used in this paper, the method can be adapted
+into accommodating a different and more complex model.
 
 
-\subsubsection{Generating the Trajectories}
+%\subsubsection{Generating the Trajectories}
 
 The trajectories for the base set of motion primitives is generated through the
 direct collocation method on the dynamical system given in
@@ -91,7 +90,7 @@ direct collocation method on the dynamical system given in
 The basis set of motion primitives should be small, yet cover enough of the
 finer movements of the dynamical system so that the motion of the planning unit
 can be near continuous when composed together. Thus in order to generate a dense
-set of motion primitives generated, points along the arc of a circle with \(N\)
+set of motion primitives, points along the arc of a circle with \(N\)
 different radii as the initial points for the trajectory generator described in
 \cref{subsec:generating-the-trajectories}. The initial trajectories employed in
 the experiments can be seen in \cref{fig:intial-trajectories-exp}.
@@ -232,10 +231,11 @@ the~\cref{eq:model-dynamics}, it is not necessary to handle the non-cyclic case.
 \subsection{Funnel Composition}
 \label{subsec:funnel-no-composable}
 
-In accordance with \cref{sec:composable-funnels}, the funnel robustness
+%In accordance with \cref{sec:composable-funnels}
+The funnel robustness
 guarantees are only valid if the funnels are composable 
-\cref{def:funnel-composition}. Unfortunately, the funnels do not
-compose as per this definition in the experiments run, and the composition
+according to \cref{def:funnel-composition}. Unfortunately, the funnels do not
+compose acccording to this definition in the experiments run, and the composition
 testing of the algorithm has to be left out. Thus the experiments are run with a
 funnel graph that is complete, and all funnels can compose with each other, at
 the cost of the mathematical robustness guarantees of the system. This is
@@ -258,7 +258,7 @@ referred to as future work.
   \label{fig:funnel-inlet-outlet}
 \end{figure}
 
-\subsection{Continuous Verification of Invariance}
+%\subsection{Continuous Verification of Invariance}
 \label{subsec:check-vehicle-in-funnel}
 
 In order to remedy this off-line compositional robustness guarantees, the
@@ -286,11 +286,12 @@ and its dynamics. If the grid that the simulations are run on are set to have an
 unit size of one meter, then the funnels from the basic set are given a velocity
 of \( [v(t)] = \text{\IEEEunit{m/s}} \), \( [\theta] = \text{\IEEEunit{rad}} \),
 and \( [\dot{\theta}] = \text{\IEEEunit{rad/s}} \), where \( [\, \cdot \,] \) is
-the unit operator. The size of the airplane is arbitrary, and can be chosen
-freely, but if it is imagined as a radio controlled aircraft, with a speed of
-\(10\) \IEEEunit{m/s}, then a size of \(10 \times 20 \) \IEEEunit{c/m} keeps
-everything within the realm of a normal radio controlled aircraft and its
-capabilities. The mass is not relevant for our first order dynamics, but still
+the unit operator.
+In this experiment we assume that the aircraft if a small radio controlled aircraft
+with a maximal speed of
+\(10\) \IEEEunit{m/s} and a size of \(10 \times 20 \) \IEEEunit{cm}, however
+the speed and size of the aircraft can be set arbitrary.
+The mass is not relevant for our first order dynamics, but still
 the airplane is assigned a mass of \(1\, \textit{kilo}\), so that the
 translation of the model dynamics is not irrelevant.
 
