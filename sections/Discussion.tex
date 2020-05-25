@@ -15,7 +15,7 @@ have a tight reachable set on one side of the trajector, the symmetry of the
 quadratic Lyapunov function might lead the funnel to be too conservative on one
 side of the trajector. For this paper however, the system dynamics are
 symmetrical, so this was not an issue. That the funnels generated do provide
-tight outer approximations was shown to be true through a Monte-Carlo simulation
+tight outer approximations was verified through a Monte-Carlo simulation
 of the nonlinear system with bounded uncertainty. Over the course of \(100\)
 simulations the system never left the funnels, and the funnels were shown to
 provide a tight outer approximation.
@@ -24,9 +24,9 @@ provide a tight outer approximation.
 The strength of the algorithm lies in that it can separate handling the
 uncertainty into an off-line pre-computation phase. Therefore, the global motion
 planner does not need to be significantly more complex than if it had not
-reasoned about uncertainty at all. In fact, it can remain oblivious to the
+taken uncertainty into account. In fact, it can remain oblivious to the
 overarching problem difficulty of handling uncertainties for a complex nonlinear
-system. In fact once the motion primitives have been calculated and verified
+system. In fact, once the motion primitives have been calculated and verified
 off-line, they might as well be employed in any global motion planner able to
 handle discrete motion primitives.
 
