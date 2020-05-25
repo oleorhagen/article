@@ -5,10 +5,10 @@ feasible path from an initial configuration to a defined end state in a safe
 manner. In order for a motion planner to handle real world motion planning tasks
 it needs to handle the uncertainty that comes with a real-life planning problem.
 This is especially difficult for nonlinear dynamical systems. Knowledge of
-position, the environment and the dynamics of the system are all uncertain to
-some degree. Sensory noise, tuning and readings may be off. Limited precision,
+the system's position, the environment and the dynamics of the system are all uncertain to
+some degree. Limited precision,
 and accidents may hinder the measurements and leave them with an error term.
-Sensory noise, tuning and readings may be off. Thus in order for a planner to
+Thus in order for a planner to
 guarantee safe traversal through a real world environment, a motion planner
 needs to handle uncertainties.
 
@@ -22,20 +22,23 @@ area. If uncertainties are accounted for, going straight through is an
 acceptable maneuver for a planner that has guarantees on the whereabouts of the
 dynamical system, and hence is not afraid to get close to an obstacle.
 
-\subsection{Literature Review}
+%\subsection{Literature Review}
 
 
-\subsubsection{Robust Motion Planning}
+%\subsubsection{Robust Motion Planning}
 
-This work is a part of the broader field of planning under uncertainty. The
-algorithms are further classified depending on classes of uncertainty they can
-handle. That is, uncertainty in the planning environment, uncertainty in the
-model, uncertainty in sensing, and uncertainty in the map.
+% This work is a part of the broader field of planning under uncertainty. The
+% algorithms are further classified depending on classes of uncertainty they can
+% handle. That is, uncertainty in the planning environment, uncertainty in the
+% model, uncertainty in sensing, and uncertainty in the map.
+%
+% kma - Det ser ikke ut som du gpr igjennom tidligere arbeid som du beskriver over, men klassifiserer dem teer RRT og SOS
 
-\subsubsection{RRT with Robust Motion Primitives}
 
-On the topic of combining the \textit{RRT} algorithm with robust motion
-primitives, Tedrake~\cite{tedrakeLQRtreesFeedbackMotion2009} creates a tree of
+%\subsubsection{RRT with Robust Motion Primitives}
+Previous efforts to handle uncertainties include using
+the Rapidly exploring Random tree (RRT) algorithm with robust motion
+primitives. Tedrake~\cite{tedrakeLQRtreesFeedbackMotion2009} creates a tree of
 robust LQR controllers, in order to guarantee safe traversal of the dynamical
 system at hand. Luders generate robust motion primitives in real-time for an
 \textit{RRT*} algorithm through chance constraints in~\cite{luders2013robust}.
@@ -45,10 +48,11 @@ treated as a stochastic process, and simulated multiple times, and since pruned
 based on the expected probability of successful execution.
 
 
-\subsubsection{SOS and Robust Motion Planning}
+%\subsubsection{SOS and Robust Motion Planning}
 
-The research done on the topic of merging \textit{SOS} theory with motion
-planning is not yet vast, but interesting due to its general robustness
+Another approach has been to use 
+Sum of Squares (SOS) theory with motion
+planning. The current research on the topic is limited, but interesting due to its general robustness
 guarantees, with no probability involved. In
 Tedrake~\cite{tedrakeLQRtreesFeedbackMotion2009} a tree of LQR-controllers is
 created, in order to safely take a dynamical system from one intial state to a
@@ -60,14 +64,14 @@ This paper builds upon the work done on verifying regions of attraction for
 nonlinear dynamical systems through the use of Lyapunov functions which are
 verified for a polynomial system through the use of SOS programming.
 
-\subsection{Contributions}
+%\subsection{Contributions}
 
 This paper combines the theory of verified reachable sets, referred to as
 funnels, with a discrete RRT motion planner in order to provide provably robust
 motion planning for a nonlinear dynamical system. To the best of the authors'
 knowledge, this is the only known RRT algorithm which implements verified
 reachable sets as discrete motion primitives as extension operators for the a
-RRT algorithm.
+RRT algorithm. The novel method is then compared with ab RRT algorithm that maximize the distance to the nearest obstacles in order to handle uncertainty.
 
 The result of this work is the RRT-Funnel motion planning algorithm, a discrete
 motion planning algorithm which can guarantee safe passage through an obstacle
