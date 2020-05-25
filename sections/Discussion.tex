@@ -5,7 +5,8 @@ systems.
 
 Currently the algorithm handles uncertainties in position, but not in the
 environment, and must therefore be run in a known environment, and is hence a
-strictly off-line motion planner.
+strictly off-line motion planner. However, it is possible to generalize the
+algorithm to handle unknown environments.
 
 In general, the funnels generated are tight outer approximations of the true
 reachable set for the system. However, note that since the Lyapunov function
@@ -45,4 +46,14 @@ be expected to be a lot higher in a denser planning environment, but this would
 also significantly add to the time of the off-line planning phase. As can be
 seen in the last column, when the cross-wind added to the experiment violated
 the upper bound of \(3\) \IEEEunit{m/s}, the \rrtfunnel{} algorithm did also
-start crashing.
+start crashing. It is seen that the
+\rrtfunnel{} algorithm performs better in terms of robustness up to and
+including its uncertainty bound of \( w = 3 \) \IEEEunit{m/s}, while the
+benchmark planner does collide in the same environment, with the same
+uncertainty.
+
+Although the \rrtfunnel{} algorithm performed better in terms of collisions, it
+does a lot worse in terms of exploring the planning space, than does the
+benchmark planner. This only increases with the difficulty of the planning
+space, and hence the time spent by the \rrtfunnel{} algorithm is significantly
+longer.

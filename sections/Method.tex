@@ -188,34 +188,35 @@ is then scaled relative to the translation distance by \(w_{1}\) and \(w_{2}\).
 Which helps solve some of the problems with the Euclidean distance metric
 \cite{Lav06}.
 
-\subsubsection{The Funnel-Graph}
+%% \subsubsection{The Funnel-Graph}
 
-Even though the \rrtfunnel{} algorithm can work just fine with a collection of
-funnels, and simply brute-force all funnels at the planning stage, it is helpful
-to associate some kind of structure with the collection. Therefore the funnels
-will be organized into a graph structure \(\mathcal{G}\) where each funnel is an
-edge in the graph, and the inlets and the outlets are vertices. The planner
-needs information about which funnels that are composable, as they may not all
-be composable with each other, implying that the resultant graph is not
-necessarily complete.
+%% Even though the \rrtfunnel{} algorithm can work just fine with a collection of
+%% funnels, and simply brute-force all funnels at the planning stage, it is helpful
+%% to associate some kind of structure with the collection. Therefore the funnels
+%% will be organized into a graph structure \(\mathcal{G}\) where each funnel is an
+%% edge in the graph, and the inlets and the outlets are vertices. The planner
+%% needs information about which funnels that are composable, as they may not all
+%% be composable with each other, implying that the resultant graph is not
+%% necessarily complete.
 
-\begin{figure}[!t]
-  \begin{minipage}[l]{.45\columnwidth}
-    \includegraphics[trim={-5cm 5cm -5cm 5cm},
-    width=.9\columnwidth,
-    scale=2]
-    {figures/method/trajectory-sampled}
-    \caption{Trajectory sampled 21 times.}
-  \end{minipage} \; %
-  \begin{minipage}[r]{.45\columnwidth}
-    \includegraphics[trim={-5cm 5cm -5cm 5cm},
-    width=.9\columnwidth,
-    scale=2]{figures/method/funnel-sampled}
-    \caption{The verified trajectory ellipsis overlaid at the sample times.}
-    \label{fig:funnel-straight-sampled}
-  \end{minipage}
-\end{figure}
+%% \kma{Er det ikke RRT algoritmen som lager grafen?}
 
+% \begin{figure}[!t]
+%   \begin{minipage}[l]{.45\columnwidth}
+%     \includegraphics[trim={-5cm 5cm -5cm 5cm},
+%     width=.9\columnwidth,
+%     scale=2]
+%     {figures/method/trajectory-sampled}
+%     \caption{Trajectory sampled 21 times.}
+%   \end{minipage} \; %
+%   \begin{minipage}[r]{.45\columnwidth}
+%     \includegraphics[trim={-5cm 5cm -5cm 5cm},
+%     width=.9\columnwidth,
+%     scale=2]{figures/method/funnel-sampled}
+%     \caption{The verified trajectory ellipsis overlaid at the sample times.}
+%     \label{fig:funnel-straight-sampled}
+%   \end{minipage}
+% \end{figure}
 
 
 \subsubsection{Expanding the Size of the Funnels}
