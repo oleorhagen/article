@@ -43,7 +43,7 @@ obstacles, in order to handle uncertainty.
 
 The uncertainty guarantees in this paper is given through the creation of
 \textit{funnels}. Funnels are the parameterizations of the \textit{finite time
-  reachable sets} for the dynamical system at hand.
+  reachable sets} for the dynamic system in \refeq{eq:dynamicalsystem}.
 
 This means that a Funnel holds all the states the dynamical system can be in
 during a planning task. Mathematically the reachable set of the system is
@@ -58,9 +58,9 @@ interval, and \(F(t)\) is the set of states that the system can be in at time
 itself with approximating the reachable set through \textit{Lyapunov} functions,
 a useful analogy is imagining the funnel created through a \textit{Monte-Carlo}
 simulation, where the funnel is the set of all the paths traversed by the
-dynamical system.
+dynamic system.
 
-\subsection{Generating the Trajectories}
+\subsubsection{Generating the Trajectories}
 \label{subsec:generating-the-trajectories}
 
 In order to verify the robust regions surrounding a trajectory, first the
@@ -79,20 +79,21 @@ where \(\matr{R} = 1\), because it will minimize the system input, and thus give
 a smooth output trajectory~\cite{majumdarRobustOnlineMotion2013}.
 
 
-\subsubsection{Initializing the Funnel Calculations}
+%\subsubsection{Initializing the Funnel Calculations}
 \label{subsec:initializing-tvlqr}
 
 The funnel calculation algorithm has to be initialized with a candidate Lyapunov
 function. In the same way as in Majumdar~\cite{majumdarRobustOnlineMotion2013},
-the funnel generation algorithm will be initialized with a TV-LQR controller as
+the funnel generation algorithm will be initialized with a Time Varying Linear Quadratic Regulator (TV-LQR) as
 the initial Lyapunov function employing a cost function of the form
 \begin{IEEEeqnarray*}{ll}
   J &= \vect{x}^{T} (t_f) \matr{F}(t_f) \vect{x} (t_f) \IEEEyesnumber \\
     &+ \int_{t_{0}}^{t_{f}} \left( \vect{x}^{T} \matr{Q} \vect{x} + \vect{u}^{T} \matr{R} \vect{u} + 2 \vect{x}^T \matr{N} \vect{u} \right) \mathrm{d}t,
 \end{IEEEeqnarray*}
 
+\kma{Er dette egentlig ``Generating funnels?'', siden du setter dem sammen i neste avsnitt?}
 
-\subsection{Sequential Funnel Composition}
+\subsubsection{Sequential Funnel Composition}
 \label{sec:composable-funnels}
 
 
@@ -147,7 +148,8 @@ and create a guaranteed robust motion plan.
 \begin{figure}[!t]
   \centering {\includegraphics[width=.8\columnwidth]{figures/method/funnel-composition}}
   \caption[Two composable funnels]{Two funnels that can be successfully composed, as the outlet of the
-    first one is fully contained in the inlet of the second.}
+    first one is fully contained in the inlet of the second.
+    The system start position is the left side of the figure and the goal position to the right.}
   \label{fig:two-funnels-composed}
 \end{figure}
 
@@ -157,22 +159,19 @@ and create a guaranteed robust motion plan.
 With the basic framework for dealing with funnels as motion primitives
 constructed, it is time to build the RRT part of the \rrtfunnel{} algorithm. The
 reason for basing the global path planning framework on the RRT motion planning
-algorithm is as follows. One, it has the ability to quickly expand deep into the
+algorithm is twofold. Firstly, it has the ability to quickly expand deep into the
 search-space, and then later progress towards a finer sampling, which is
-valuable as it avoids local minima. Two, the RRT algorithm is easily extensible
-to larger state spaces, and thus adding to the generality of the \rrtfunnel{}
-algorithm, such that it can be adapted to fit a wide range of dynamical systems,
-while at the same time it has only three main components that needs to be in
-place in order for successful path planning to succeed in an arbitrary
-configuration space. Namely, a suitable probability distribution to sample from,
-and a distance metric for the nearest neighbor and the extension step. The RRT
+valuable as it avoids local minima. Secondly, the RRT algorithm is easily extensible
+to larger state spaces, and the  \rrtfunnel{}
+algorithm can therefore be adapted to fit a wide range of dynamical systems.
+Extending the RRT algorithm to a larger state space only require modifying the three main components;  the probability distribution to sample from, the distance metric for the nearest neighbor and the extension step. The RRT
 algorithm is beneficial as most of the complexity accompanied with the planning
 problem (like uncertainty and controller calculations) has already been handled
 by the SOS framework, and hence the RRT algorithm need only concern itself with
 stacking one robust motion primitive after the other without any concern for the
 complexities associated with uncertain dynamical systems.
 
-\subsection{Distance in Configuration Space}
+\subsubsection{Distance in Configuration Space}
 
 The \rrtfunnel{} algorithm will use the same metric for both the closest node
 and the extend operation on the funnel graph. The metric chosen is a modified
@@ -189,7 +188,7 @@ is then scaled relative to the translation distance by \(w_{1}\) and \(w_{2}\).
 Which helps solve some of the problems with the Euclidean distance metric
 \cite{Lav06}.
 
-\subsection{The Funnel-Graph}
+\subsubsection{The Funnel-Graph}
 
 Even though the \rrtfunnel{} algorithm can work just fine with a collection of
 funnels, and simply brute-force all funnels at the planning stage, it is helpful
@@ -218,7 +217,8 @@ necessarily complete.
 \end{figure}
 
 
-\subsection{Expanding the Size of the Funnels}
+
+\subsubsection{Expanding the Size of the Funnels}
 
 In general the funnels generated are computed only for the point model in
 \cref{eq:dynamicalsystem}, and hence, in order to run the algorithm with a
