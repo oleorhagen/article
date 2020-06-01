@@ -50,14 +50,14 @@ based on the expected probability of successful execution.
 
 %\subsubsection{SOS and Robust Motion Planning}
 
-Another approach has been to use 
-Sum of Squares (SOS) theory with motion
-planning. The current research on the topic is limited, but interesting due to its general robustness
-guarantees, with no probability involved. In
-Tedrake~\cite{tedrakeLQRtreesFeedbackMotion2009} a tree of LQR-controllers is
-created, in order to safely take a dynamical system from one intial state to a
-final state. In~\cite{majumdarFunnelLibrariesRealtime2017}, Majumdar seeks to
-limit the size of the area in which a controller will take a dynamic system.
+Another approach is to use Sum of Squares (SOS) optimization theory to solve
+motion planning problems. The current research on the topic is limited, but
+interesting due to its general robustness guarantees, with no probability
+involved. In Tedrake~\cite{tedrakeLQRtreesFeedbackMotion2009} a tree of
+LQR-controllers is created, in order to safely take a dynamical system from one
+intial state to a final state. In~\cite{majumdarFunnelLibrariesRealtime2017},
+Majumdar seeks to limit the size of the area in which a controller will take a
+dynamic system.
 
 
 This paper builds upon the work done on verifying regions of attraction for
