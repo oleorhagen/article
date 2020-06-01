@@ -165,7 +165,8 @@ Which means that
 \[
 V_{i}(t, \vect{x}) = \vect{x}^{T}S_{i}\vect{x}
 \]
-as needed.
+as needed, where \(V_{i}(t, \vect{x}) \) is a quadratic Lyapunov function, which
+is used by the SoS optimizer to generate the funnels.
 
 \subsection{Generating the Funnels around the Initial Trajectories}
 
@@ -245,7 +246,7 @@ direction of speed. This is exemplified in \cref{fig:funnel-inlet-outlet}, where
 the inlet is overlaid the outlets for the projected xy-funnel, and it can be
 seen that the controller is able to converge the xy-funnel in the x-direction,
 but not in the y-direction, as it has no control over this dimension at all. The
-framework can be expanded with this functionality however, but this will be
+framework can be expanded with this functionality however, but this is
 referred to as future work.
 
 \begin{figure}[!t]
