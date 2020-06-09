@@ -5,17 +5,24 @@
 feasible path from an initial configuration to a defined end state in a safe
 manner. In order for a motion planner to handle real world motion planning tasks
 it needs to handle the uncertainty that comes with a real-life planning problem.
-This is especially difficult for nonlinear dynamical systems. Knowledge of
-the system's state, the environment and the dynamics of the system are all uncertain to
-some degree. Limited measurement precision and use of imperfect world and vehicle models will therefore leave error terms in the state and world estimations.
-Thus, in order for a planner to guarantee safe traversal through a real world environment, a motion planner needs to handle uncertainties.
+This is especially difficult for nonlinear dynamical systems. Knowledge of the
+system's state, the environment and the dynamics of the system are all uncertain
+to some degree. Limited measurement precision and use of imperfect world and
+vehicle models will therefore leave error terms in the state and world
+estimations. Thus, in order for a planner to guarantee safe traversal through a
+real world environment, a motion planner needs to handle uncertainties.
 
 In the face of uncertainty, some planners choose to ignore these error sources
 and instead apply heuristics such as maximizing the distance to the obstacles in
-the environment or setting a fixed safety radius \cite{Hoy2015ClutteredEnvironmentSurvey}.
-However, this adds the disadvantage that the plans can become overly conservative. 
-Explicitly handling the uncertainties in the planning stage enables the planner to employ more aggressive maneuvers, such as going through two obstacles that are close together, as opposed to going around the difficult area. 
-If uncertainties are accounted for, going straight through is an acceptable maneuver for a planner that has guarantees on the whereabouts of the dynamical system, and hence is not afraid to get close to an obstacle.
+the environment or setting a fixed safety radius
+\cite{Hoy2015ClutteredEnvironmentSurvey}. However, this adds the disadvantage
+that the plans can become overly conservative. Explicitly handling the
+uncertainties in the planning stage enables the planner to employ more
+aggressive maneuvers, such as going through two obstacles that are close
+together, as opposed to going around the difficult area. If uncertainties are
+accounted for, going straight through is an acceptable maneuver for a planner
+that has guarantees on the whereabouts of the dynamical system, and hence is not
+afraid to get close to an obstacle.
 
 %\subsection{Literature Review}
 
@@ -27,7 +34,6 @@ If uncertainties are accounted for, going straight through is an acceptable mane
 % handle. That is, uncertainty in the planning environment, uncertainty in the
 % model, uncertainty in sensing, and uncertainty in the map.
 %
-% kma - Det ser ikke ut som du gpr igjennom tidligere arbeid som du beskriver over, men klassifiserer dem teer RRT og SOS
 
 
 %\subsubsection{RRT with Robust Motion Primitives}
