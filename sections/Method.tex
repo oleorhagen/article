@@ -36,6 +36,7 @@ to a RRT algorithm which does not employ the reachable sets around the base
 trajectories, but instead relies on maximizing the distance to the nearest
 obstacles, in order to handle uncertainty.
 
+\kma{Litt usikker på om du burde skrive om problem statement litt. Du skriver en slags problemstilling eller hva du skal vise i artikkelen. Burde kanskje heller være problemet som skal løses, dvs. får stystemet fra en inital pose til en goal pose? Og her er metoden som presenteres en mulig løsning på problemet.}
 
 
 \subsection{Funnels}
@@ -148,10 +149,6 @@ in~\cref{fig:two-funnels-composed} to emphasize this observation.
 %                   \bigl( \rho_1(T_1) - V_1(T_1,\bar{\vect{x}}) \bigr) \quad \text{is SOS}} \mathEoS \nonumber
 % \end{IEEEeqnarray*}
 % \cite{majumdarRobustOnlineMotion2013}
-
-Funnel composition can be checked in the same way that the funnels are generated
--- through a SOS program. See Majumdar, section TODO
-\cite{majumdarRobustOnlineMotion2013}.
 
 Since the funnels can be shifted freely around the configuration space along the
 cyclic coordinates of the system to create new motion primitives, the funnels
