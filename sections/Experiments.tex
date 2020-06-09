@@ -168,8 +168,6 @@ V_{i}(t, \vect{x}) = \vect{x}^{T}S_{i}\vect{x}
 as needed, where \(V_{i}(t, \vect{x}) \) is a quadratic Lyapunov function, which
 is used by the SoS optimizer to generate the funnels.
 
-\kma{Kom hit}
-
 \subsection{Generating the Funnels around the Initial Trajectories}
 
 With the inital trajectory set defined, it is time to generate the funnels
@@ -329,8 +327,6 @@ is the wingspan. A picture of the initial funnel and the funnel expanded around
 the airplane model can be seen in
 figure~\cref{fig:expanded-funnel}.
 
-\kma{Hvis dette er generelt så bør det nok flyttes til metode-delen. Synes det virket gnaske generelt.}
-
 \begin{figure}[!t]
   \centering
   %% \begin{minipage}[c]{.9\columnwidth}
@@ -339,14 +335,16 @@ figure~\cref{fig:expanded-funnel}.
   %% \end{minipage}
   %% \newline
   \begin{minipage}[c]{.9\columnwidth}
-  \includegraphics[scale=.5, trim={5cm, 9cm, 5cm, 7cm}, clip]{figures/experiments/rrtfunnel-101samples.pdf}
-  \caption[The expansion of the \rrtfunnel algorithm at 1, and 101 iterations]{Visualized is the expansion of the \rrtfunnel algorithm at 101 iterations of the algorithm.}
+  \includegraphics[scale=.5, trim={5cm, 9cm, 5cm, 7cm}, clip]{figures/experiments/rrtfunnel-101samples-dyn-merged.pdf}
+  \caption[The expansion of the \rrtfunnel{} algorithm at 1, and 101
+  iterations]{Visualized is the expansion of the \rrtfunnel{} (red) algorithm at 101
+    iterations of the algorithm alongside the benchmark planner (blue).}
   \end{minipage}
-  \newline
-  \begin{minipage}[c]{.9\columnwidth}
-    \includegraphics[scale=.5, trim={5cm, 9cm, 5cm, 7cm}, clip]{figures/experiments/rrtfunnel-101samples-dyn.pdf}
-  \caption[The expansion of the \rrtfunnel algorithm at 1, and 101 iterations]{Visualized is the expansion of the \rrtfunnel algorithm at 101 iterations of the algorithm}
-  \end{minipage}
+  % \newline
+  % \begin{minipage}[c]{.9\columnwidth}
+  %   \includegraphics[scale=.5, trim={5cm, 9cm, 5cm, 7cm}, clip]{figures/experiments/rrtfunnel-101samples-dyn.pdf}
+  % \caption[The expansion of the \rrtfunnel algorithm at 1, and 101 iterations]{Visualized is the expansion of the \rrtfunnel algorithm at 101 iterations of the algorithm}
+  % \end{minipage}
 \end{figure}
 
 %% \begin{figure}[!t]

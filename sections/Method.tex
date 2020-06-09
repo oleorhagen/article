@@ -27,16 +27,9 @@ Given the nonlinear dynamical system
   \big), \label{eq:dynamicalsystem}
 \end{equation}
 with state \(\vect{x}(t) \in \R^3\), \(\vect{u}(t) \in \R\), and \(w(t) \in
-\R\). Then create a set of robustly verified discrete motion primitives through
-the use of SOS programming to verify the reachable set for each of the
-trajectories in a base set of trajectories \(T_{0}\). Next, apply these
-trajectories, with the robust reachable set surrounding them as motion
-primitives for a discrete RRT motion planning algorithm and compare the results
-to a RRT algorithm which does not employ the reachable sets around the base
-trajectories, but instead relies on maximizing the distance to the nearest
-obstacles, in order to handle uncertainty.
-
-\kma{Litt usikker på om du burde skrive om problem statement litt. Du skriver en slags problemstilling eller hva du skal vise i artikkelen. Burde kanskje heller være problemet som skal løses, dvs. får stystemet fra en inital pose til en goal pose? Og her er metoden som presenteres en mulig løsning på problemet.}
+\R\). Get the dynamical system safely from an initial pose \(I_{0}\), to a final
+pose \(I_{f}\) through a known environment with bounded uncertainty in the
+postition of the system.
 
 
 \subsection{Funnels}
