@@ -165,7 +165,8 @@ Which means that
 \[
 V_{i}(t, \vect{x}) = \vect{x}^{T}S_{i}\vect{x}
 \]
-as needed.
+as needed, where \(V_{i}(t, \vect{x}) \) is a quadratic Lyapunov function, which
+is used by the SoS optimizer to generate the funnels.
 
 \kma{Kom hit}
 
@@ -233,10 +234,11 @@ the~\cref{eq:model-dynamics}, it is not necessary to handle the non-cyclic case.
 \subsection{Funnel Composition}
 \label{subsec:funnel-no-composable}
 
-In accordance with \cref{sec:composable-funnels}, the funnel robustness
+%In accordance with \cref{sec:composable-funnels}
+The funnel robustness
 guarantees are only valid if the funnels are composable 
-\cref{def:funnel-composition}. Unfortunately, the funnels do not
-compose as per this definition in the experiments run, and the composition
+according to \cref{def:funnel-composition}. Unfortunately, the funnels do not
+compose acccording to this definition in the experiments run, and the composition
 testing of the algorithm has to be left out. Thus the experiments are run with a
 funnel graph that is complete, and all funnels can compose with each other, at
 the cost of the mathematical robustness guarantees of the system. This is
@@ -246,7 +248,7 @@ direction of speed. This is exemplified in \cref{fig:funnel-inlet-outlet}, where
 the inlet is overlaid the outlets for the projected xy-funnel, and it can be
 seen that the controller is able to converge the xy-funnel in the x-direction,
 but not in the y-direction, as it has no control over this dimension at all. The
-framework can be expanded with this functionality however, but this will be
+framework can be expanded with this functionality however, but this is
 referred to as future work.
 
 \begin{figure}[!t]
@@ -259,7 +261,7 @@ referred to as future work.
   \label{fig:funnel-inlet-outlet}
 \end{figure}
 
-\subsection{Continuous Verification of Invariance}
+%\subsection{Continuous Verification of Invariance}
 \label{subsec:check-vehicle-in-funnel}
 
 In order to remedy this off-line compositional robustness guarantees, the
@@ -267,17 +269,7 @@ In order to remedy this off-line compositional robustness guarantees, the
 during execution, and aborts the simulation with the emergency maneuver if the
 airplane leaves one of the funnels at runtime. This happens if the value of the
 Lyapunov function is larger than one. This will be counted in the experiments as
-a collision on the part of the \rrtfunnel{} algorithm. A plot of the Lyapunov
-values for a simulation run can be seen in \cref{fig:lyapunov-values}.
-
-\begin{figure}[!t]
-  \centering
-  \includegraphics[width=.8\columnwidth]{figures/experiments/lyapunov-values-simulation-run}
-  \caption[A plot of the Lyapunov values for an experiment]{The plot of the Lyapunov values for a simulation run at the sampling
-    times \(t_k\).}
-  \label{fig:lyapunov-values}
-\end{figure}
-
+a collision on the part of the \rrtfunnel{} algorithm.
 
 \subsection{The Size of the Airplane and the Obstacles Models}
 \label{subsec:deciding-model-size}
@@ -287,11 +279,12 @@ and its dynamics. If the grid that the simulations are run on are set to have an
 unit size of one meter, then the funnels from the basic set are given a velocity
 of \( [v(t)] = \text{\IEEEunit{m/s}} \), \( [\theta] = \text{\IEEEunit{rad}} \),
 and \( [\dot{\theta}] = \text{\IEEEunit{rad/s}} \), where \( [\, \cdot \,] \) is
-the unit operator. The size of the airplane is arbitrary, and can be chosen
-freely, but if it is imagined as a radio controlled aircraft, with a speed of
-\(10\) \IEEEunit{m/s}, then a size of \(10 \times 20 \) \IEEEunit{c/m} keeps
-everything within the realm of a normal radio controlled aircraft and its
-capabilities. The mass is not relevant for our first order dynamics, but still
+the unit operator.
+In this experiment we assume that the aircraft if a small radio controlled aircraft
+with a maximal speed of
+\(10\) \IEEEunit{m/s} and a size of \(10 \times 20 \) \IEEEunit{cm}, however
+the speed and size of the aircraft can be set arbitrary.
+The mass is not relevant for our first order dynamics, but still
 the airplane is assigned a mass of \(1\, \textit{kilo}\), so that the
 translation of the model dynamics is not irrelevant.
 
@@ -336,6 +329,7 @@ is the wingspan. A picture of the initial funnel and the funnel expanded around
 the airplane model can be seen in
 figure~\cref{fig:expanded-funnel}.
 
+\kma{Hvis dette er generelt så bør det nok flyttes til metode-delen. Synes det virket gnaske generelt.}
 
 \begin{figure}[!t]
   \centering

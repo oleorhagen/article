@@ -1,12 +1,12 @@
 
-The results from the given simulations can be found in table
-\cref{table:results}, and shows the number of collisions, the total length of
-the solution trajectories, and the number of branches added to each search tree
-over a total of hundred simulation runs for each column. It is seen that the
-\rrtfunnel{} algorithm performs better in terms of robustness up to and
-including its uncertainty bound of \( w = 3 \) \IEEEunit{m/s}, while the benchmark
-planner does collide in the same environment, with the same uncertainty.
-
+The results from the given simulations are summarized using the performance
+measures number of collisions, the total length of the solution trajectories,
+and the number of branches added to each search tree. These perfomance measures
+are shown in \cref{table:results}, \cref{table:results-length}
+and \cref{table:results-iterations} respectivly. For each column total of
+hundred simulation is performed. In the first table a count of how many of the
+simulations runs that had a collision is given, while in the later two tables an
+average of the hundred simulation rund are given.
 
 \begin{table}[!t]
   \centering
@@ -62,7 +62,7 @@ planner does collide in the same environment, with the same uncertainty.
 
 \begin{table}[!t]
   \centering
-  \caption{The total length of the solutions found for each algorithm over a total of 100 simulation runs, with three different values for the cross-wind (w).} \label{table:results-iterations}
+  \caption{The total length of the solutions found for each algorithm over a total of 100 simulation runs, with three different values for the cross-wind (w).} \label{table:results-length}
   \begin{IEEEeqnarraybox}[\IEEEeqnarraystrutmode \IEEEeqnarraystrutsizeadd{2pt}{1pt}]{v/c/v/c/v/c/v/c/v}
     \IEEEeqnarrayrulerow\\
     &\mbox{Solution Trajectory's Length}&&w=0 \, m/s&&w=3 \, m/s&& w=6 \, m/s\\
@@ -97,3 +97,16 @@ planner does collide in the same environment, with the same uncertainty.
     \IEEEeqnarrayrulerow
   \end{IEEEeqnarraybox}
 \end{table}
+
+
+A plot of the Lyapunov
+values for a simulation run can be seen in \cref{fig:lyapunov-values}.
+
+\begin{figure}[!t]
+  \centering
+  \includegraphics[width=.8\columnwidth]{figures/experiments/lyapunov-values-simulation-run}
+  \caption[A plot of the Lyapunov values for an experiment]{The plot of the Lyapunov values for a simulation run at the sampling
+    times \(t_k\).}
+  \label{fig:lyapunov-values}
+\end{figure}
+

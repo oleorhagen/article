@@ -92,7 +92,19 @@ the initial Lyapunov function employing a cost function of the form
     &+ \int_{t_{0}}^{t_{f}} \left( \vect{x}^{T} \matr{Q} \vect{x} + \vect{u}^{T} \matr{R} \vect{u} + 2 \vect{x}^T \matr{N} \vect{u} \right) \mathrm{d}t,
 \end{IEEEeqnarray*}
 
-\kma{Er dette egentlig ``Generating funnels?'', siden du setter dem sammen i neste avsnitt?}
+\subsubsection{Generating Funnels around the Initial Trajectories}
+\label{sec:generating-funnels-initial}
+
+With the set of initial trajectories generated from the \textit{direct
+  collocation method} in \ref{subsec:generating-the-trajectories}, using SoS
+optimization it is possible to generate an area around the trajectories which
+are able to handle a bounded uncertainty parameters. This is done through the
+SoS optimization framework from Majumdar
+\cite{majumdarFunnelLibrariesRealtime2017}. This method takes as input the
+initial trajectories, and an initial trajectory, and outputs a verified region
+around the trajectories which are guaranteed to be collision free as long as the
+input uncertainties are bounded.
+
 
 \subsubsection{Sequential Funnel Composition}
 \label{sec:composable-funnels}
@@ -108,44 +120,41 @@ needs to be completely contained within the inlet of the other. An abstract
 pictorial representation of two funnels composed together can be seen
 in~\cref{fig:two-funnels-composed} to emphasize this observation.
 
-This means that
-if \(\mathcal{F}_1 = F_1(T)\) is the outlet of funnel \(F_1\), and
-\(\mathcal{F}_2 = F_2(0)\) is the inlet of \(F_2\), then
-\begin{equation}
-  \label{eq:funnel-subset}
-  \mathcal{F}_1 \subseteq \mathcal{F}_2
-\end{equation}
-is required in order for the funnels to be composable.
-\begin{definition}
-  \label{def:funnel-composition}
-  An ordered pair \((F_{1}, F_{2})\) of funnels \(F_1 \colon [0,T_1] \rightarrow
-  \mathcal{P}(\R^n)\) and \(F_2 \colon [0,T_2] \rightarrow \mathcal{P}(\R^n)\)
-  are sequentially composable if \(F_1(T) \subseteq F_2(0)\).
-\end{definition}
-Because the implication
-\begin{equation}
-  V_1(T_1,\bar{\vect{x}}) \leq \rho_1(T_1) \implies V_2(0,\bar{\vect{x}}) \leq
-  \rho_2(0)
-\end{equation}
-\kma{Hvor har vi $V_1$, $V_2$, $\rho_1$ og $\rho_2$ fra? De burde forklares i teksten}
-is an equivalent condition to \cref{eq:funnel-subset}, and because it can be
-checked through the following SOS program
-\begin{IEEEeqnarray*}{lC}
-  \text{Find } \; L(\bar{x}) \IEEEyesnumber \\
-  \text{s.t.} \\
-  \IEEEeqnarraymulticol{2}{l}{\rho_2(0) - V_2( 0,\bar{\vect{x}}) - L(\bar{\vect{x}})
-                  \bigl( \rho_1(T_1) - V_1(T_1,\bar{\vect{x}}) \bigr) \quad \text{is SOS}} \mathEoS \nonumber
-\end{IEEEeqnarray*}
-\cite{majumdarRobustOnlineMotion2013}
-
-Which means that funnel composition can be checked in the same way that the
-funnels are generated -- through a SOS program. Also note that the above program
-is a simple search for existence, and hence no cost function is needed.
+% This means that
+% if \(\mathcal{F}_1 = F_1(T)\) is the outlet of funnel \(F_1\), and
+% \(\mathcal{F}_2 = F_2(0)\) is the inlet of \(F_2\), then
+% \begin{equation}
+%   \label{eq:funnel-subset}
+%   \mathcal{F}_1 \subseteq \mathcal{F}_2
+% \end{equation}
+% is required in order for the funnels to be composable.
+% \begin{definition}
+%   \label{def:funnel-composition}
+%   An ordered pair \((F_{1}, F_{2})\) of funnels \(F_1 \colon [0,T_1] \rightarrow
+%   \mathcal{P}(\R^n)\) and \(F_2 \colon [0,T_2] \rightarrow \mathcal{P}(\R^n)\)
+%   are sequentially composable if \(F_1(T) \subseteq F_2(0)\).
+% \end{definition}
+% Because the implication
+% \begin{equation}
+%   V_1(T_1,\bar{\vect{x}}) \leq \rho_1(T_1) \implies V_2(0,\bar{\vect{x}}) \leq
+%   \rho_2(0)
+% \end{equation}
+% \kma{Hvor har vi $V_1$, $V_2$, $\rho_1$ og $\rho_2$ fra? De burde forklares i teksten}
+% is an equivalent condition to \cref{eq:funnel-subset}, and because it can be
+% checked through the following SOS program
+% \begin{IEEEeqnarray*}{lC}
+%   \text{Find } \; L(\bar{x}) \IEEEyesnumber \\
+%   \text{s.t.} \\
+%   \IEEEeqnarraymulticol{2}{l}{\rho_2(0) - V_2( 0,\bar{\vect{x}}) - L(\bar{\vect{x}})
+%                   \bigl( \rho_1(T_1) - V_1(T_1,\bar{\vect{x}}) \bigr) \quad \text{is SOS}} \mathEoS \nonumber
+% \end{IEEEeqnarray*}
+% \cite{majumdarRobustOnlineMotion2013}
 
 Since the funnels can be shifted freely around the configuration space along the
 cyclic coordinates of the system to create new motion primitives, the funnels
-can be composed together by the RRT algorithm into the planning environment in
-and create a guaranteed robust motion plan.
+can be composed together by the RRT algorithm in the planning environment and
+create a guaranteed robust motion plan through chaining multiple verified
+funnels together into a longer and verified motion primitive.
 
 \begin{figure}[!t]
   \centering {\includegraphics[width=.8\columnwidth]{figures/method/funnel-composition}}
@@ -192,16 +201,14 @@ Which helps solve some of the problems with the Euclidean distance metric
 
 \subsubsection{The Funnel-Graph}
 
-Even though the \rrtfunnel{} algorithm can work just fine with a collection of
-funnels, and simply brute-force all funnels at the planning stage, it is helpful
-to associate some kind of structure with the collection. Therefore the funnels
-will be organized into a graph structure \(\mathcal{G}\) where each funnel is an
-edge in the graph, and the inlets and the outlets are vertices. The planner
-needs information about which funnels that are composable, as they may not all
-be composable with each other, implying that the resultant graph is not
-necessarily complete.
-
-\kma{Er det ikke RRT algoritmen som lager grafen?}
+It is helpful to associate some structure along with the funnels which the
+\rrtfunnel{} algorithm employs at the planning stage. This is because not all
+funnels are compatible, as one funnels outlet might not fit into the outlet of
+another. Thus the funnels generated can be imagined as a directed graph, where
+an edge from funnel A to funnel B means that \((A,B)\) are composable. Thus a
+brute-force search for compatible funnels at planning time is eliminated. Hence
+the funnels are organized into a graph structure \(\mathcal{G}\) where each
+funnel is an edge in the graph.
 
 % \begin{figure}[!t]
 %   \begin{minipage}[l]{.45\columnwidth}
@@ -230,7 +237,6 @@ radius of the model. Since the funnels are ellipsis around the point at the
 trajectory that they verify, the funnels can be expanded by any radius with a
 linear transformation. An expansion of a funnel around the point model used in
 this paper can be seen in \cref{fig:expanded-funnel}.
-\kma{Kanskje en referanse til paperet som beskriver motoden?}
 
 \begin{figure}[!t]
   \centering \includegraphics[scale=.3]{figures/method/expanded-funnel}
