@@ -3,26 +3,36 @@
 
 \section{Method}
 
-The motion planning problem is the problem of finding a path for a robot from an initial configuration to a goal configuration while avoiding obstacles. 
-With uncertainties present, the problem is challenging as a collision free regular path no longer can guarantee that obstacles are avoided. 
-However, by assuming that the uncertainties are bounded, guarantees can be made in the path planning.
-In this paper, we develop the \rrtfunnel algorithm to solve motion planning problem in the presence of bounded uncertainties.
+The motion planning problem is the problem of finding a path for a robot from an
+initial configuration to a final configuration while avoiding obstacles. With
+uncertainties present, the problem is challenging as a collision free regular
+path no longer can guarantee that obstacles are avoided. However, by assuming
+that the uncertainties are bounded, guarantees can be made. In this paper, we
+develop the \rrtfunnel algorithm to solve motion planning problem in the
+presence of bounded uncertainties.
 
-In the work presented in \cite{majumdarFunnelLibrariesRealtime2017}, a framework for motion planning with uncertainties is presented. 
-The framework is capable of finding robust funnels: regions that the vehicle are guaranteed to stay within, as long as the uncertainties are bounded.
-The robust funnels themselves are computationally heavy to compute, and are therefore found offline. 
-A full collection of funnels is created, corresponding to different feasible maneuvers. 
-At run-time, the funnels are evaluated against the obstacle map, and an collision free funnel is selected for path following. 
-The selection of a single funnel to follow at a time limits the planning horizon to the funnel length. 
-In our work, we seek to combine funnels sequentially in the planning process in order to extend the planning horizon of the motion planning algorithm.
+In the work presented in \cite{majumdarFunnelLibrariesRealtime2017}, a framework
+for motion planning with uncertainties is presented. The framework is capable of
+finding robust funnels: regions that the vehicle are guaranteed to stay within,
+as long as the uncertainties are bounded. The robust funnels themselves are
+computationally heavy to compute, and are therefore found offline. A full
+collection of funnels is created, corresponding to different feasible maneuvers.
+At run-time, the funnels are evaluated against the obstacle map, and a collision
+free funnel is selected for path following. The selection of a single funnel to
+follow at a time limits the planning horizon to the funnel length. In our work,
+we seek to combine funnels sequentially in the planning process in order to
+extend the planning horizon of the motion planning algorithm.
 
 
-We use the RRT algorithm as basis for our new method, as it is widely used and is the basis for many recent motion planning algorithms. 
-However, the concepts presented in our work could be implemented with any sampling-based algorithm that can use samples consisting of motion primitives.
-The main steps of our method is as follows:
-First, we create a collection of funnels that we can use as simple and robust motion primitives.
-Then, we ensure that the funnels can be sequentially composed without losing robustness guarantees.
-Lastly, we use the funnels as motion primitives in the RRT algorithm, thereby obtaining a robust path planning algorithm.
+We use the RRT algorithm as basis for our new method, as it is widely used and
+is the basis for many recent motion planning algorithms. However, the concepts
+presented in our work could be implemented with any sampling-based discrete
+algorithm which handles discrete motion primitives. The main steps of our method
+is as follows: First, we create a collection of funnels that are used as simple
+and robust motion primitives. Then, we ensure that the funnels can be
+sequentially composed without losing robustness guarantees on-line. Lastly, we
+use the funnels as motion primitives in the RRT algorithm, thereby obtaining a
+robust path planning algorithm.
 
 
 % This paper develops the \rrtfunnel{} algorithm, by two means: First it employs
@@ -40,16 +50,10 @@ Lastly, we use the funnels as motion primitives in the RRT algorithm, thereby ob
 % choose a primitive that is close to an obstacle, as one that is far away, since
 % the funnel is guaranteed to be collision-free in both cases. 
 
-\todo[inline]{Flytt dette til intro:}
-This means that a robust motion algorithm can perform more aggressive maneuvers than one that is
-inherently conservative about its environment and
-maneuvers~\cite{singhRobustOnlineMotion2017}.
+% \todo[inline]{Flytt dette til intro:}
 
 
-% \subsection{Problem Statement}
-\subsection{Funnels}
-\label{sec:funnels}
-
+\subsection{Problem Statement}
 Given the nonlinear dynamical system
 \begin{equation}
   \dot{\vect{x}} = f\big(\vect{x}(t), \vect{u}(t), w(t)
@@ -58,16 +62,18 @@ Given the nonlinear dynamical system
 with state \(\vect{x}(t) \in \R^3\), \(\vect{u}(t) \in \R\), and \(w(t) \in
 \R\). Get the dynamical system safely from an initial pose \(I_{0}\), to a final
 pose \(I_{f}\) through a known environment with bounded uncertainty in the
-postition of the system, given a set of robustly verified discrete motion primitives through
-the use of SOS programming to verify the reachable set for each of the
-trajectories in a base set of trajectories \(T_{0}\).
+position of the system, given a set of robustly verified discrete motion
+primitives. 
+
+\subsection{Funnels}
+\label{sec:funnels}
 
 
 The uncertainty guarantees in this paper is given through the creation of
 \textit{funnels}. Funnels are the parameterizations of the \textit{finite time
-  reachable sets} for the dynamic system in \refeq{eq:dynamicalsystem}.
+  reachable sets} for the dynamic system in equation~\refeq{eq:dynamicalsystem}.
 
-This means that a Funnel holds all the states the dynamical system can be in
+This means that a funnel contains all the states the dynamical system can be in
 during a planning task. Mathematically the reachable set of the system is
 defined as
 \[
@@ -79,10 +85,11 @@ interval, and \(F(t)\) is the set of states that the system can be in at time
 \(t\) \cite{majumdarFunnelLibrariesRealtime2017}. Although this paper concerns
 itself with approximating the reachable set through \textit{Lyapunov} functions,
 a useful analogy is imagining the funnel created through a \textit{Monte-Carlo}
-simulation, where the funnel is the set of all the paths traversed by the
-dynamic system.
+simulation, where the funnel is the set of all the possible paths traversed by
+the dynamic system from the initial configuration to the final in the uncertain
+planning environment.
 
-\subsubsection{Generating the Trajectories}
+\subsubsection{Generating Trajectories}
 \label{subsec:generating-the-trajectories}
 
 In order to verify the robust regions surrounding a trajectory, first the
@@ -117,14 +124,14 @@ the initial Lyapunov function employing a cost function of the form
 \label{sec:generating-funnels-initial}
 
 With the set of initial trajectories generated from the \textit{direct
-  collocation method} in \ref{subsec:generating-the-trajectories}, using SoS
+  collocation method} in \ref{subsec:generating-the-trajectories}, using SOS
 optimization it is possible to generate an area around the trajectories which
 are able to handle a bounded uncertainty parameters. This is done through the
-SoS optimization framework from Majumdar
+SOS optimization framework from Majumdar
 \cite{majumdarFunnelLibrariesRealtime2017}. This method takes as input the
-initial trajectories, and an initial trajectory, and outputs a verified region
-around the trajectories which are guaranteed to be collision free as long as the
-input uncertainties are bounded.
+initial trajectories, and an initial Lyapunov function, and outputs a verified
+region around the trajectories which are guaranteed to be collision free as long
+as the system uncertainties are bounded.
 
 
 \subsubsection{Sequential Funnel Composition}
@@ -191,17 +198,19 @@ funnels together into a longer and verified motion primitive.
 With the basic framework for dealing with funnels as motion primitives
 constructed, it is time to build the RRT part of the \rrtfunnel{} algorithm. The
 reason for basing the global path planning framework on the RRT motion planning
-algorithm is twofold. Firstly, it has the ability to quickly expand deep into the
-search-space, and then later progress towards a finer sampling, which is
-valuable as it avoids local minima. Secondly, the RRT algorithm is easily extensible
-to larger state spaces, and the  \rrtfunnel{}
-algorithm can therefore be adapted to fit a wide range of dynamical systems.
-Extending the RRT algorithm to a larger state space only require modifying the three main components;  the probability distribution to sample from, the distance metric for the nearest neighbor and the extension step. The RRT
-algorithm is beneficial as most of the complexity accompanied with the planning
-problem (like uncertainty and controller calculations) has already been handled
-by the SOS framework, and hence the RRT algorithm need only concern itself with
-stacking one robust motion primitive after the other without any concern for the
-complexities associated with uncertain dynamical systems.
+algorithm is twofold. Firstly, it has the ability to quickly expand deep into
+the search-space, and then later progress towards a finer sampling, which is
+valuable as it avoids local minima. Secondly, the RRT algorithm is easily
+extensible to larger state spaces, and the \rrtfunnel{} algorithm can therefore
+be adapted to fit a wide range of dynamical systems. Extending the RRT algorithm
+to a larger state space only requires modifying the three main components: the
+probability distribution to sample from, the distance metric for the nearest
+neighbor and the extension step. The RRT algorithm is beneficial as most of the
+complexity accompanied with the planning problem (like uncertainty and
+controller calculations) has already been handled by the SOS framework, and
+hence the RRT algorithm need only concern itself with stacking one robust motion
+primitive after the other without any concern for the complexities associated
+with uncertain dynamical systems.
 
 \subsubsection{Distance in Configuration Space}
 

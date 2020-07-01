@@ -746,9 +746,16 @@ IEEE, IEEEtran, IEEE Transactions on Control Systems Technology, journal, \LaTeX
 
 \section{Conclusion}
 
-This paper has developed and shown that the \rrtfunnel{} motion planning
-algorithm does provide robust feedback motion planning for nonlinear dynamical
-systems.
+This paper has shown that the \rrtfunnel{} motion planning algorithm does
+provide robust feedback motion planning for nonlinear dynamical systems. It
+shows that a motion planning algorithm employing discrete verified robust motion
+primitives outperforms a traditional motion planning algorithm significantly in
+terms of safe traversal through a known environment. It has also shown that the
+robust planner is only reliable up to and including its uncertainty bounds, and
+will start misbehaving, just like other motion planning algorithms, once the
+uncertainty assumptions on the algorithm are broken. All, in all it is shown
+that the \rrtfunnel{} algorithm is a viable option for a global motion planner
+in an uncertain environment.
 
 
 % if have a single appendix:
@@ -780,7 +787,7 @@ systems.
 \section*{Acknowledgments}
 
 
-The author greatly acknowledges the help and guidance given by Majumedar for his
+The author greatly acknowledges the help and guidance given by Majumdar for his
 help in getting started with SOS programming, and for his example code which
 laid the foundation for the current implementation. A thanks also goes out to
 Russ Tedrake, who, even though his time was limited, took the time to politely
@@ -836,17 +843,23 @@ answer questions who in hindsight seem naive, but at the time helped greatly.
 %\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{mshell}}]{Michael Shell}
 % or if you just want to reserve a space for a photo:
 
-\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{ole-p-biography-pic.png}}]{Ole
-  Petter Orhagen}
+\begin{IEEEbiographynophoto}{Ole Petter Orhagen}
 Ole Petter Orhagen is a former master student at the \textit{University of Oslo}, and is
 currently working as a software engineer at \textit{Northern Tech}.
-\end{IEEEbiography}
+\end{IEEEbiographynophoto}
 
 % if you will not have a photo at all:
 \begin{IEEEbiographynophoto}{Kim Mathiassen}
-Kim Mathiassen received a Masters degree in engineering cybernetics from the Norwegian University of Science and Technology in 2010 and a PhD in robotics from the University of Oslo in 2017. His PhD thesis was on a semi-autonomous system for diagnostics and treatment using medical ultrasound.
+  Kim Mathiassen received a Masters degree in engineering cybernetics from the
+  Norwegian University of Science and Technology in 2010 and a PhD in robotics
+  from the University of Oslo in 2017. His PhD thesis was on a semi-autonomous
+  system for diagnostics and treatment using medical ultrasound.
 %Before his studies he attended the Norwegian Army Officer Candidate School for one year and served one year as sergeant in the Norwegian Army Signals Battalion.
-In 2015 he started working at the Norwegian Defence Research Establishment with Unmanned Ground Vehicles (UGV) and autonomous systems. In addition to his research position he is an associate professor at the University of Oslo teaching advanced robotics. His current research interests span from low level robot control to high level planning and reasoning.
+  In 2015 he started working at the Norwegian Defence Research Establishment
+  with Unmanned Ground Vehicles (UGV) and autonomous systems. In addition to his
+  research position he is an associate professor at the University of Oslo
+  teaching advanced robotics. His current research interests span from low level
+  robot control to high level planning and reasoning.
 \end{IEEEbiographynophoto}
 
 % insert where needed to balance the two columns on the last page with
@@ -854,7 +867,12 @@ In 2015 he started working at the Norwegian Defence Research Establishment with 
 %\newpage
 
 \begin{IEEEbiographynophoto}{Marius Thoresen}
-Marius Thoresen received a Master's degree in engineering cybernetics from the Norwegian University of Science and Technology in 2015. In 2015, he started working as a researcher at the Norwegian Defence Research Establishment with UGVs and autonomous systems. In 2019 he started a  PhD with the Norwegian University of Science and Technology, with motion planning for UGVs in rough terrain as his topic of research.
+  Marius Thoresen received a Master's degree in engineering cybernetics from the
+  Norwegian University of Science and Technology in 2015. In 2015, he started
+  working as a researcher at the Norwegian Defence Research Establishment with
+  UGVs and autonomous systems. In 2019 he started a PhD with the Norwegian
+  University of Science and Technology, with motion planning for UGVs in rough
+  terrain as his topic of research.
 \end{IEEEbiographynophoto}
 
 % You can push biographies down or up by placing
