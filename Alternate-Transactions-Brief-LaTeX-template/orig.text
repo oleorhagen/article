@@ -1,0 +1,1052 @@
+GENERIC COLORIZED JOURNAL, VOL. XX, NO. XX, XXXX 2017
+
+1
+
+The RRT-Funnel Algorithm for
+IEEE T RANSACTIONS ON C ONTROL S YSTEMS
+T ECHNOLOGY
+Ole Petter Orhagen, Marius Thoresen, and Kim Mathiassen,
+
+Abstract— This paper shows the feasibility of combining robust motion primitives generated through the Sums
+Of Squares programming theory with a discrete Rapidly
+exploring Random Tree algorithm. The generated robust
+motion primitives, referred to as funnels, are then employed as local motion primitives, each with its locally
+valid LQR controller, which is verified through a Lyapunov
+function found through a SOS search in the function space.
+These funnels are then combined together at execution
+time by the RRT planner, and is shown to provide provably
+robust traversal of a simulated forest environment. The
+experiments benchmark the RRT-Funnel algorithm against
+an RRT algorithm which employs a maximum distance to
+the nearest obstacle heuristic in order to avoid collisions,
+as opposed to explicitly handling uncertainty. The results
+show that employing funnels as robust motion primitives
+outperform the heuristic planner in the experiments run on
+both algorithms, where the RRT-Funnel algorithm does not
+collide a single time, and creates shorter solution paths
+than the benchmark planner overall, although it takes a
+significantly longer time to find a solution.
+Index Terms— Collision avoidance, Motion planning,
+Nonlinear control systems, Robot control
+
+I. I NTRODUCTION
+
+M
+
+OTION planning concerns the problem of finding a
+dynamically feasible path from an initial configuration
+to a defined end state in a safe manner. In order for a motion
+planner to handle real world motion planning tasks it needs
+to handle the uncertainty that comes with a real-life planning
+problem. This is especially difficult for nonlinear dynamical
+systems. Knowledge of the system’s state, the environment and
+the dynamics of the system are all uncertain to some degree.
+Limited measurement precision and use of imperfect world
+and vehicle models will therefore leave error terms in the
+state and world estimations. Thus, in order for a planner to
+guarantee safe traversal through a real world environment, a
+motion planner needs to handle uncertainties.
+In the face of uncertainty, some planners choose to ignore these error sources and instead apply heuristics such as
+maximizing the distance to the obstacles in the environment
+or setting a fixed safety radius [1]. However, this adds the
+disadvantage that the plans can become overly conservative.
+Explicitly handling the uncertainties in the planning stage
+enables the planner to employ more aggressive maneuvers,
+This work was supported by the Norwegian Defence Research Establishment. Article submitted for review on Oct. 18th 2020.
+
+such as going through two obstacles that are close together,
+as opposed to going around the difficult area. If uncertainties
+are accounted for, going straight through is an acceptable
+maneuver for a planner that has guarantees on the whereabouts
+of the dynamical system, and hence is not afraid to get close
+to an obstacle. This means that a robust motion algorithm can
+perform more aggressive maneuvers than one that is inherently
+conservative about its environment and maneuvers [2].
+In motion planning, there is a separation between global
+and local methods [1], where global methods assumes a known
+map of the environment and local methods assumes only local
+knowledge. Thus, global methods can plan paths from the start
+state to the goal, whereas local methods can only plan a part
+of the way. As local methods explicitly consider the end goal
+during planning, they are more susceptible to getting trapped
+in local minima.
+Previous efforts to handle uncertainties in global path
+planning include using the Rapidly-exploring Random Tree
+(RRT) algorithm with robust motion primitives. This approach
+is taken by Tedrake [3], where a tree consisting of robust
+LQR (Linear-Quadratic Regulator) controllers are created, in
+order to guarantee safe traversal of the planning environment.
+Van den Berg [4] has a similar approach of creating motion
+primitives where a LQR is used, and a Gaussian process
+is used to model uncertainty, thus allowing robust control
+along with an uncertain system. Luders generate robust motion
+primitives in real-time for an RRT* algorithm through chance
+constraints in [5], but also ensures asymptotic optimality.
+Another robust extension to the RRT algorithm can be found
+in Melchior [6], where each extension to the tree is treated
+as a stochastic process, and simulated multiple times, and
+since pruned based on the expected probability of successful
+execution.
+A recent approach to the local path planning problem
+has been to use Sum of Squares (SOS) theory with motion
+planning. As mentioned above, this is the approach taken by
+Tedrake in [3]. In [7], Majumdar expands upon this idea and
+seeks to limit the size of the area in which a controller will take
+a dynamic system, while at the same time giving guarantees
+of safe traversal. This enables real-time motion planning in
+highly complex environments with advanced vehicle models,
+as long as the controllers are generated off-line. The offline generation is a requirement due to the time they take
+to generate. The current research on the topic is limited, but
+interesting due to the formal general robustness guarantees it
+
+2
+
+GENERIC COLORIZED JOURNAL, VOL. XX, NO. XX, XXXX 2017
+
+provides.
+However, the method is a local method, and thus has a
+limited planning horizon. In [7], a simulated experiment with
+large-scale environments is conducted, but only by repeating
+the local process several times. If we instead can use the theory
+and framework introduced here and combine it with a global
+planner, we can achieve longer planning horizons and thereby
+reduce likelihood of getting trapped in local minima .
+This paper builds upon the work done on verifying regions of attraction — referred to as funnels — for nonlinear
+dynamical systems through the use of Lyapunov functions.
+Verification is achieved for a polynomial system through the
+use of SOS programming. We combine the theory of funnels
+with a discrete RRT motion planner in order to provide a provably robust global motion planner for a nonlinear dynamical
+system. To the best of the authors’ knowledge, this is the only
+known RRT algorithm which implements verified reachable
+sets generated through SOS programming as discrete motion
+primitives as extension operators for the an RRT algorithm.
+The novel method is then compared with a RRT algorithm
+that maximize the distance to the nearest obstacles, in order
+to show which handles the planning task best. The result
+of this work is the RRT-Funnel motion planning algorithm,
+a discrete motion planning algorithm which can guarantee
+safe passage through an obstacle space, given the assumption
+that the uncertainty in the system is bounded. The funnel
+definitions in this paper is taken from a series of articles on
+funnels [3], [7]–[10], with the main focus being on [7].
+II. M ETHOD
+The motion planning problem is the problem of finding a
+path for a robot from an initial configuration to a final configuration while avoiding obstacles. With uncertainties present,
+the problem is challenging as a collision free regular path no
+longer can guarantee that obstacles are avoided. However, by
+assuming that the uncertainties are bounded, guarantees can
+be made. In this paper, we develop the RRT-Funnelalgorithm
+to solve motion planning problem in the presence of bounded
+uncertainties.
+In the work presented in [7], a framework for motion
+planning with uncertainties is presented. The framework is
+capable of finding robust funnels: regions that the vehicle are
+guaranteed to stay within, as long as the uncertainties are
+bounded. The robust funnels themselves are computationally
+heavy to compute, and are therefore found offline. A full
+collection of funnels is created, corresponding to different
+feasible maneuvers. At run-time, the funnels are evaluated
+against the obstacle map, and a collision free funnel is selected
+for path following. The selection of a single funnel to follow at
+a time limits the planning horizon to the funnel length. In our
+work, we seek to combine funnels sequentially in the planning
+process in order to extend the planning horizon of the motion
+planning algorithm.
+We use the RRT algorithm as basis for our new method,
+as it is widely used and is the basis for many recent motion
+planning algorithms. However, the concepts presented in our
+work could be implemented with any sampling-based discrete
+
+algorithm which handles discrete motion primitives. The main
+steps of our method is as follows: First, we create a collection
+of funnels that are used as simple and robust motion primitives.
+Then, we ensure that the funnels can be sequentially composed
+without losing robustness guarantees on-line. Lastly, we use
+the funnels as motion primitives in the RRT algorithm, thereby
+obtaining a robust path planning algorithm.
+
+A. Problem Statement
+Given the nonlinear dynamical system
+
+ẋ = f x(t), u(t), w(t) ,
+
+(1)
+
+with state x(t) ∈ R3 , u(t) ∈ R, and w(t) ∈ R. Get the
+dynamical system safely from an initial pose I0 , to a final pose
+If through a known environment with bounded uncertainty in
+the position of the system, given a set of robustly verified
+discrete motion primitives.
+
+B. Funnels
+The uncertainty guarantees in this paper is given through
+the creation of funnels. Funnels are the parameterizations
+of the finite time reachable sets for the dynamic system in
+equation (1).
+This means that a funnel contains all the states the dynamical system can be in during a planning task. Mathematically
+the reachable set of the system is defined as
+x(0) ∈ X0 =⇒ x(t) ∈ F (t), ∀t ∈ [0, T ],
+where X0 is the set of initial conditions, [0, T ] the time
+interval, and F (t) is the set of states that the system can
+be in at time t [7]. Although this paper concerns itself with
+approximating the reachable set through Lyapunov functions,
+a useful analogy is imagining the funnel created through a
+Monte-Carlo simulation, where the funnel is the set of all
+the possible paths traversed by the dynamic system from the
+initial configuration to the final in the uncertain planning
+environment.
+1) Generating Trajectories: In order to verify the robust
+regions surrounding a trajectory, first the trajectories themselves have to be created. Generating optimal trajectories
+is a rich field in the motion planning literature [11]. The
+initial trajectories can be generated by many different methods,
+however the direct collocation method [12] suited the needs
+of this paper best. It was chosen as it builds locally optimal
+trajectories from a discrete set of sampled points along a
+sought trajectory, which is beneficial for the discrete funnel
+verification employed. For this problem the cost function
+chosen for the solver to minimize is:
+Z T
+
+
+J=
+1 + u0 T Ru0 dt,
+(2)
+0
+
+where R = 1, because it will minimize the system input, and
+thus give a smooth output trajectory [9].
+
+AUTHOR et al.: PREPARATION OF PAPERS FOR IEEE TRANSACTIONS AND JOURNALS (FEBRUARY 2017)
+
+2) Initializing the Funnel Calculations: The funnel calcula-
+
+tion algorithm has to be initialized with a candidate Lyapunov
+function. In the same way as in Majumdar [9], the funnel
+generation algorithm will be initialized with a Time Varying
+Linear Quadratic Regulator (TV-LQR) as the initial Lyapunov
+function employing a cost function of the form
+J= xT (tf )F (tf )x(tf )
+Z tf
+
++
+xT Qx + uT Ru + 2xT N u dt,
+
+(3)
+
+t0
+
+3) Generating Funnels around the Initial Trajectories: With
+the set of initial trajectories generated from the direct collocation method in II-B.1, using SOS optimization it is possible
+to generate an area around the trajectories which are able to
+handle a bounded uncertainty parameters. This is done through
+the SOS optimization framework from Majumdar [7]. This
+method takes as input the initial trajectories, and an initial
+Lyapunov function, and outputs a verified region around the
+trajectories which are guaranteed to be collision free as long
+as the system uncertainties are bounded.
+4) Sequential Funnel Composition: Once funnels have been
+generated as discrete motion primitives, it is time to handle
+the overarching goal of creating a plan consisting of multiple
+funnels chained from start to finish, so that safe traversal
+can be guaranteed along the given planning trajectory. In
+order for two funnels to create one extended motion primitive
+from multiple smaller primitives, the funnels in use must be
+composable. In order for two funnels to be composable, the
+outlet of one funnel needs to be completely contained within
+the inlet of the other. An abstract pictorial representation of
+two funnels composed together can be seen in Fig. II-B.4 to
+emphasize this observation.
+Since the funnels can be shifted freely around the configuration space along the cyclic coordinates of the system to
+create new motion primitives, the funnels can be composed
+together by the RRT algorithm in the planning environment
+and create a guaranteed robust motion plan through chaining
+multiple verified funnels together into a longer and verified
+motion primitive.
+
+C. RRT
+With the basic framework for dealing with funnels as
+motion primitives constructed, it is time to build the RRT
+part of the RRT-Funnel algorithm. The reason for basing the
+global path planning framework on the RRT motion planning
+algorithm is twofold. Firstly, it has the ability to quickly
+expand deep into the search-space, and then later progress
+towards a finer sampling, which is valuable as it avoids local
+
+3
+
+Fig. 1. The original funnel created from the point model, with a funnel
+expanded by a radius of 0.1 surrounding it.
+
+minima. Secondly, the RRT algorithm is easily extensible
+to larger state spaces, and the RRT-Funnel algorithm can
+therefore be adapted to fit a wide range of dynamical systems.
+Extending the RRT algorithm to a larger state space only
+requires modifying the three main components: the probability distribution to sample from, the distance metric for the
+nearest neighbor and the extension step. The RRT algorithm
+is beneficial as most of the complexity accompanied with the
+planning problem (like uncertainty and controller calculations)
+has already been handled by the SOS framework, and hence
+the RRT algorithm need only concern itself with stacking one
+robust motion primitive after the other without any concern for
+the complexities associated with uncertain dynamical systems.
+1) Distance in Configuration Space: The RRT-Funnel algorithm will use the same metric for both the closest node and
+the extend operation on the funnel graph. The metric chosen
+is a modified Euclidean metric which weights the angle θ
+depending on how close the dynamical system is to the final
+configuration, and is defined as
+ρ(x1 , x2 ) = w1 kX − X k + w2 f (θ1 , θ2 ),
+where kX − X k is the standard Euclidean metric, f is
+a positive scalar function giving the angle between headings [13]. The rotations and distance is then scaled relative
+to the translation distance by w1 and w2 . Which helps solve
+some of the problems with the Euclidean distance metric [14].
+2) The Funnel-Graph: It is helpful to associate some structure along with the funnels which the RRT-Funnel algorithm
+employs at the planning stage. This is because not all funnels
+are compatible, as one funnels outlet might not fit into the
+outlet of another. Thus the funnels generated can be imagined
+as a directed graph, where an edge from funnel A to funnel B
+means that (A, B) are composable. Thus a brute-force search
+for compatible funnels at planning time is eliminated. Hence
+the funnels are organized into a graph structure G where each
+funnel is an edge in the graph.
+3) Expanding the Size of the Funnels: In general the funnels
+generated are computed only for the point model in (1), and
+hence, in order to run the algorithm with a model of some
+defined size, the funnels have to be expanded by the largest
+radius of the model. Since the funnels are ellipsis around
+the point at the trajectory that they verify, the funnels can
+be expanded by any radius with a linear transformation. An
+expansion of a funnel around the point model used in this
+paper can be seen in (1).
+
+4
+
+GENERIC COLORIZED JOURNAL, VOL. XX, NO. XX, XXXX 2017
+
+3
+
+III. E XPERIMENTS
+
+i
+
+t,j
+
+where xi (t) ∈ T , is a trajectory from the basic motion
+primitive set, and oj ∈ O is an obstacle in the configuration
+space C. Note also that in order to guide the expansion towards
+the goal, a goal bias of 10% is given to the benchmark
+planner, which is beneficial for decreasing the dispersion of
+the algorithm [14]. This is introduced to counter the distance
+metric, which tries to maximize the distance to the obstacles.
+The end goal is set so that it will not take pose into account,
+and will only be concerned with getting within an  of the
+(x, y) in the test map. For all the experiments an  of 5m is
+given to the planners.
+Each test-run will be run in a forest generated with a random
+Poisson process, see [15] for an introduction to Poisson
+processes.
+The experiments will record the number of collisions for
+each algorithm across all test-runs. The planners will run in the
+same environment for each test, with the same initial starting
+point. The environment will be redrawn using the Poisson
+process to generate the obstacle forest for each consecutive
+run.
+Before the experiments are run, all individual funnels in the
+base set are run with a hundred simulations runs from random
+starting positions in its inlet, to check if the invariant holds, and
+that the model stays within the funnel at all times. Uncertainty
+is added in terms of an additive noise with w = 0.3 m/s in
+the world x-direction, imitating a cross-wind.
+A. Experiment Setup
+The algorithm is tested by generating a random strip of
+forest of depth 25m, and then letting the RRT-Funnel, along
+with the benchmark algorithm find a way through the environment to the other side. Three separate experiments will be
+conducted where the amount of crosswind will vary. The first
+experiment will have a crosswind of 0m/s, in order to set
+up the experiment baseline. The second experiment will have
+a crosswind of 0.3m/s, which is the maximum crosswind
+handled in the RRT-Funnel algorithm. This experiment will
+show the difference between explicitly handling uncertainty in
+comparison to handling it heuristically. Lastly, an experiment
+with a 0.6m/s is performed, to verify the basic assumption
+that if the uncertainty bounds are violated the RRT-Funnel
+algorithm no longer guarantees safe traversal.
+The obstacles are imagined to be trees with trunks modeled
+as circles with a radius of 0.1m, and are placed randomly on
+the area O = {x | −50 ≤ x1 ≤ 50 and 5 ≤ x2 ≤ 25}, as
+
+2.5
+
+2
+
+x2
+
+The experiments will run the RRT-Funnel algorithm against
+a benchmark regular RRT planner with the motion primitive
+set pictured in Fig. 2 on a forest traversal problem. The
+benchmark-planner is an RRT algorithm employing the same
+motion primitive set as the RRT-Funnel algorithm, with the
+same LQR controller, and the same distance metric. The difference is that the benchmark planner does not take uncertainty
+into account, and instead maximizes the distance to the nearest
+obstacle as the extension operator i.e.,
+
+max min xi (t), oj
+(4)
+
+1.5
+
+1
+
+0.5
+
+0
+-1.5
+
+-1
+
+-0.5
+
+0
+
+0.5
+
+1
+
+1.5
+
+x1
+
+Fig. 2. The initial trajectories used in the RRT-Funnel algorithm.
+
+the realization of a Poisson process with density λ = 0.2. For
+each trial run, a new forest is generated in this random fashion,
+and the algorithms are given the task to traverse the generated
+map in turn.
+The funnels for the RRT-Funnel algorithm are in this case
+made to handle uncertainty, in the form of a cross-wind up
+to and including 3 in the x-direction of the airplane, but does
+not currently have any control over the y-direction. Since the
+model used is single input, and only controls the angle of
+travel, not the speed of the aircraft. A maximum of 5000
+nodes is set as an upper threshold on both of the algorithms’
+exploration trees.
+B. Generating Robust Motion Primitives
+This paper employs the simple unicycle model from [14]
+which is modified slightly into
+
+
+ 
+−v sin(θ)
+x
+(5)
+x = y  , ẋ =  v cos(θ)  ,
+u
+θ
+which is a first-order unicycle model with a constant speed.
+Although this is the only model used in this paper, the method
+can be adapted into accommodating a different and more
+complex model.
+The trajectories for the base set of motion primitives is generated through the direct collocation method on the dynamical
+system given in (5).
+The basis set of motion primitives is small, yet covers
+enough of the finer movements of the dynamical system so
+that the motion of the planning unit can be near continuous
+when composed together. Thus in order to generate a dense set
+of motion primitives, points along the arc of a circle with N
+different radii as the initial points for the trajectory generator
+are used. The initial trajectories employed in the experiments
+can be seen in Fig. 2.
+C. Initializing the Funnel Calculations
+As noted in Section II-B.2, the funnel calculations need to
+be initialized with a candidate Lyapunov function. For this
+paper, this is a TV-LQR controller.
+
+AUTHOR et al.: PREPARATION OF PAPERS FOR IEEE TRANSACTIONS AND JOURNALS (FEBRUARY 2017)
+
+Then to get the initial Lyapunov function, the system error
+dynamics are linearized.
+x̄˙ ≈ A(t)x̄(t) + B(t)ū(t)
+
+0
+x̄˙ ≈ 0
+0
+
+0
+0
+0
+
+
+ 
+−v cos(θ)
+0
+−v sin(θ)  x̄(t) + 0 ū(t),
+0
+1
+
+(6)
+
+(7)
+
+which is an an initial candidate Lyapunov function of the form
+V (t, x̄) = x̄T Si x̄,
+
+(8)
+
+where Si is a solution of the Ricatti equation
+− Ṡ(t) = AT S(t) + S(t)A − (S(t)B + N ) R−1
+
+B T S(t) + N T + Q
+
+(9)
+
+associated with the LQR controller. The feedback is gained
+from
+
+K(t) = R−1 BS(t) + N T ,
+and enables the system dynamics (5) to be written fcl (t, x) by
+direct substitution of u = −Kx, where K is a 1 × 3 matrix,
+and hence making the system in (5) dependent only on t and
+x,
+ 
+
+
+x
+−v sin(θ)
+x = y  , ẋ =  v cos(θ)  .
+(10)
+θ
+−Kx
+Which means that
+Vi (t, x) = xT Si x
+, where Vi (t, x) is a quadratic Lyapunov function, which is
+used by the SOS optimizer to generate the funnels.
+
+D. Generating the Funnels around the Initial Trajectories
+With the initial trajectory set defined, it is time to generate
+the funnels around them, so that safe traversal can be guaranteed. For this to happen, the funnel generator needs an initial
+condition set from which to start. This is given by the hyperellipsoid
+X0 = {x ∈ R3
+
+2 0
+Q = 0 2
+0 0
+
+| xT Qx}
+
+0
+0 .
+4
+
+(11)
+(12)
+
+which means that the dynamical system can start in a wide
+variety of initial states, and the controller will be able to take
+it safely to the outlet of the funnel. This is also beneficial, as
+this means it is easier to compose with another funnel, as the
+inlet is bigger.
+
+5
+
+E. Funnel Transformation and Invariance
+Given the model from (5) the cyclic coordinates of the
+system are found from:
+1
+1
+L = T − V = mv 2 + I θ̇2
+2
+2
+
+
+1
+2
+2
+m ẋ sin θ + ẋ2 cos2 θ + I θ̇2
+=
+2
+
+1 2
+=
+mẋ + I θ̇2
+2
+which shows that the Lagrangian is invariant to shifts in the
+∂L
+(x, y, θ) variables, since ∂q
+= 0, qi = x, y, θ. Now any
+i
+funnel in the base set can be shifted freely around in the
+cyclic coordinates of the system without changing the solution
+to the system dynamic equation, and thus create an infinite
+set of funnels in the state space for the planner to work
+with. Through the partitioning of coordinates into cyclic- and
+T
+non-cyclic coordinates of the form x = [xc xnc ] , the state
+dynamics (5) only depends on the cyclic coordinates of the
+system. Thus, a trajectory
+ of the form t → x(t), u(t) which
+solves ẋ = f x(t), u(t) can then be transformed through a
+shift Ψc along the cyclic coordinates of the system to yield a
+valid solution of the form
+
+t → Ψx (x(t)), u(t)
+where the transform Ψ is given by
+(
+ 
+0
+xc → xc
+xc 
+Ψ
+=
+xnc
+xnc → xnc .
+However, since dim(x) = dim(xc ), for the (5), it is not
+necessary to handle the non-cyclic case for this model.
+F. Funnel Composition
+The funnel robustness guarantees are only valid if the
+funnels are composable. When the funnels do not compose
+according to this definition in the experiments run, funnels
+are verified during the on-line plan of the algorithm, to verify
+that a funnel composition is valid for the model. Thus the
+experiments are run with a funnel graph that is complete, and
+all funnels can compose with each other, at the cost of offline funnel composition guarantees. This is required, because
+in the model used, the one dimensional controller employed
+has no influence on the speed of the airplane, and hence there
+is no way to make the system converge in the direction of
+speed. This is exemplified in Fig. 3, where the inlet is overlaid
+the outlets for the projected xy-funnel, and it can be seen
+that the controller is able to converge the xy-funnel in the
+x-direction, but not in the y-direction, as it has no control
+over this dimension. The framework can be expanded with this
+functionality however, but this is referred to as future work.
+Thus, in order to remedy the lack of the off-line compositional robustness guarantees, the RRT-Funnel algorithm keeps
+track of whether the model has left the funnel during execution, and aborts the simulation with an emergency maneuver if
+the airplane leaves one of the funnels at run-time. This happens
+if the value of the Lyapunov function is larger than one, and
+can be seen in Fig. 5. In the experiments, this is counted as a
+collision on the part of the RRT-Funnel algorithm.
+
+6
+
+GENERIC COLORIZED JOURNAL, VOL. XX, NO. XX, XXXX 2017
+
+xy-projection
+
+1
+
+Inlet
+Outlet
+
+0.8
+
+0.6
+
+0.4
+
+0.2
+
+0
+
+-0.2
+
+-0.4
+
+-0.6
+
+-0.8
+
+-1
+-1
+
+-0.8
+
+-0.6
+
+-0.4
+
+-0.2
+
+0
+
+0.2
+
+0.4
+
+0.6
+
+0.8
+
+1
+
+Fig. 3. The projection of the funnel inlet and outlet in the xy-plane. It
+is seen that the controller is able to make the funnel converge in the
+x-direction as expected, however, it has no control in the y-direction, as
+there is no controller steering the speed of the vehicle.
+
+Fig. 4. Visualized is the expansion of the RRT-Funnel (red) algorithm at 101 iterations of the algorithm alongside the benchmark
+planner (blue).
+
+G. The Size of the Airplane and the Obstacles Models
+The funnels generated thus far are created from a point
+model of the airplane, and its dynamics. If the grid that the
+simulations are run on are set to have an unit size of one
+meter, then the funnels from the basic set are given a velocity
+of [v(t)] = m/s, [θ] = rad, and [θ̇] = rad/s, where [ · ] is the
+unit operator. In this experiment we assume that the aircraft
+if a small radio controlled aircraft with a maximal speed of
+10m/s and a size of 10 × 20cm, however the speed and size
+of the aircraft can be set arbitrary. The mass is not relevant
+for our first order dynamics, but still the airplane is assigned
+a mass of 1 kilo, so that the translation of the model dynamics
+is not irrelevant.
+
+TABLE I
+T HE TOTAL NUMBER OF COLLISIONS FOR EACH ALGORITHM OVER A
+TOTAL OF 100 SIMULATION RUNS , WITH THREE DIFFERENT VALUES FOR
+THE CROSS - WIND ( W ).
+Number of Collisions
+
+w = 0 m/s
+
+w = 3 m/s
+
+w = 6 m/s
+
+RRT − Funnel
+
+0
+
+0
+
+4
+
+Benchmark
+
+0
+
+6
+
+10
+
+of the airplane model) is given by:
+(P)
+
+Sk
+
+= RT R
+
+x = R−1 y
+C = {y ∈ R2 | yT y ≤ 1 + ra }
+Eexp = {R−1 y | y ∈ C}
+
+H. Expanding the Funnels around the Airplane Model
+The size of the airplane in the original model is a single point, and as such, the expanded airplane model is not
+accounted for in the current funnels. Therefore the funnels
+have to be expanded in order for them to accommodate the
+necessary robustness guarantees that are expected from the
+algorithm. However, the size of the airplane only affects the
+size of the funnel ellipsis projected down into the xy-plane.
+Therefore, first extract the projected size of the funnel,
+through
+
+a projection map: P : R3 → R2 , where P = I2×2 02×2
+such that for the projected ellipsoid Ep = {x̄ ∈ R2 |
+−1
+(p)
+(p)
+(p)
+x̄T Sk x̄ ≤ 1}, with Sk given by Sk = P Sk−1 P T
+,
+is the set containing the funnel projected down into the xyplane. Here Ep is the projected set of the ellipsoid in the
+xy-plane. In general an ellipse centered at the origin is a
+linear transformation of the unit circle [16]. Exploiting this
+fact, the funnel ellipsoids can be expanded to encompass the
+airplane model. Take note that the matrix Sk is Positive semidefinite, and hence can be Cholezky factorized [16]. Then the
+expanded ellipsis (which now contains all the possible states
+
+where Eexp are the ellipsoids which contains the volume of
+the airplane for all verified states in the funnel, and ra is
+the widest part of the model at hand, which in this case is
+the wingspan. A picture of the initial funnel and the funnel
+expanded around the airplane model can be seen in Fig. 1.
+IV. R ESULTS
+The results from the given simulations are summarized
+through the number of collisions, the total length of the
+solution trajectories, and the number of branches added to each
+search tree. These performance measures are shown in Table I,
+II and III respectively. For each column a total of a hundred
+simulations are performed. In the first table a count of how
+many of the simulations runs that resulted in a collision is
+given, while in the later two tables an average of the hundred
+simulation runs are given.
+A plot of the Lyapunov values for a simulation run can be
+seen in Fig. 5.
+
+AUTHOR et al.: PREPARATION OF PAPERS FOR IEEE TRANSACTIONS AND JOURNALS (FEBRUARY 2017)
+
+TABLE II
+T HE TOTAL LENGTH OF THE SOLUTIONS FOUND FOR EACH ALGORITHM
+OVER A TOTAL OF 100 SIMULATION RUNS , WITH THREE DIFFERENT
+VALUES FOR THE CROSS - WIND ( W ).
+Solution Trajectory’s Length
+
+w = 0 m/s
+
+w = 3 m/s
+
+w = 6 m/s
+
+RRT − Funnel
+
+1.506
+
+3.418
+
+4.754
+
+Benchmark
+
+3.582
+
+4.162
+
+3.174
+
+TABLE III
+T HE TOTAL NUMBER OF ITERATIONS FOR EACH ALGORITHM OVER A
+TOTAL OF 100 SIMULATION RUNS , WITH THREE DIFFERENT VALUES FOR
+THE CROSS - WIND ( W ).
+Number of Iterations
+
+w = 0 m/s
+
+w = 3 m/s
+
+w = 6 m/s
+
+RRT − Funnel
+
+447.646
+
+190.713
+
+213.638
+
+Benchmark
+
+29.120
+
+52.768
+
+33.936
+
+0.9
+
+0.8
+
+0.7
+
+0.6
+
+0.5
+
+0.4
+
+0.3
+
+0.2
+
+0.1
+
+0
+0
+
+10
+
+20
+
+30
+
+40
+
+50
+
+60
+
+70
+
+80
+
+90
+
+100
+
+Fig. 5. The plot of the Lyapunov values for a simulation run at the
+sampling times tk .
+
+V. D ISCUSSION
+Currently the algorithm handles uncertainties in position,
+but not in the environment, and must therefore be run in a
+known environment, and is hence a strictly off-line motion
+planner. However, it is possible to generalize the algorithm to
+handle unknown environments.
+In general, the funnels generated are tight outer approximations of the true reachable set for the system. However, note
+that since the Lyapunov function employed is quadratic, it will
+always be symmetric around the trajector verified. This means
+that even though the real nonlinear system dynamics can have
+a tight reachable set on one side of the trajector, the symmetry
+of the quadratic Lyapunov function might lead the funnel to
+be too conservative on one side of the trajector. For this paper
+however, the system dynamics are symmetrical, so this was
+not an issue. The funnels generated were shown to provide
+tight outer approximations of the dynamical system through a
+Monte-Carlo simulation of the nonlinear system with bounded
+uncertainty. Over the course of 100 simulation runs the system
+never left any of the funnels. Thus showing that the funnels
+did provide a tight outer approximation of the dynamics of the
+system.
+The strength of the algorithm lies in that it can separate
+
+7
+
+handling the uncertainty into an off-line pre-computational
+phase. Therefore, the global motion planner does not need
+to be significantly more complex than if it had not taken
+uncertainty into account. In fact, it can remain oblivious to the
+overarching problem difficulty of handling uncertainties for a
+complex nonlinear system. In fact, once the motion primitives
+have been calculated and verified off-line, they might as well
+be employed in any global motion planner able to handle
+discrete motion primitives.
+Even though the robustness guarantees of the SOS framework could not be guaranteed for an entire off-line phase, due
+to the planner not handling multiple controller inputs. Still,
+the RRT-Funnel algorithm did run-time verification of funnel
+abidance. Even though the model leaving a non-composable
+funnel at run-time was theoretically possible, this did not
+happen a single time over the course of 300 simulation runs.
+This was in starch contrast to the benchmark planner, which
+did not handle uncertainty at all, and instead relied on avoiding
+the obstacles by as big a margin as possible, and therefore
+consistently had a collision rate of 6% or higher. Also, this
+collision rate is expected to be a lot higher in a denser planning
+environment, but this would also significantly add to the time
+of the off-line planning phase. As can be seen in the last
+column, when the cross-wind added to the experiment violated
+the upper bound of 3 m/s, the RRT-Funnel algorithm did
+also start crashing. It is seen that the RRT-Funnel algorithm
+performs better in terms of robustness up to and including
+its uncertainty bound of w = 3 m/s, while the benchmark
+planner does collide in the same environment, with the same
+uncertainty.
+Although the RRT-Funnel algorithm performed better in
+terms of collisions, it does a lot worse in terms of exploring the
+planning space, than does the benchmark planner. This only
+increases with the difficulty of the planning space, and hence
+the time spent by the RRT-Funnel algorithm is significantly
+longer.
+VI. C ONCLUSION
+This paper has shown that the RRT-Funnel motion planning
+algorithm does provide robust feedback motion planning for
+nonlinear dynamical systems. It shows that a motion planning
+algorithm employing discrete verified robust motion primitives
+outperforms a traditional motion planning algorithm significantly in terms of safe traversal through a known environment.
+It has also shown that the robust planner is only reliable
+up to and including its uncertainty bounds, and will start
+misbehaving, just like other motion planning algorithms, once
+the uncertainty assumptions on the algorithm are broken.
+All, in all it is shown that the RRT-Funnel algorithm is a
+viable option for a global motion planner in an uncertain
+environment.
+ACKNOWLEDGMENTS
+The author greatly acknowledges the help and guidance
+given by Majumdar for his help in getting started with SOS
+programming, and for his example code which laid the foundation for the current implementation. A thanks also goes out
+
+8
+
+GENERIC COLORIZED JOURNAL, VOL. XX, NO. XX, XXXX 2017
+
+to Russ Tedrake, who, even though his time was limited, took
+the time to politely answer questions who in hindsight seem
+naive, but at the time helped greatly.
+
+First A. Author Ole Petter Orhagen was born in
+Gjovik, Norway in 1989. He received a B.S. in
+Informatics, and M.S degree in cybernetics from
+the University of Oslo, in 2017 and 2019.
+
+R EFERENCES
+[1] M. Hoy, A. S. Matveev, and A. V. Savkin, “Algorithms for collisionfree navigation of mobile robots in complex cluttered environments: A
+survey,” Robotica, vol. 33, no. 3, pp. 463–497, 2015.
+[2] S. Singh, A. Majumdar, J.-J. Slotine, and M. Pavone, “Robust online
+motion planning via contraction theory and convex optimization,” in
+2017 IEEE International Conference on Robotics and Automation
+(ICRA). IEEE, pp. 5883–5890. [Online]. Available: http://ieeexplore.
+ieee.org/document/7989693/
+[3] R. Tedrake, “LQR-trees: Feedback motion planning on sparse
+randomized trees,” in Robotics: Science and Systems V. Robotics:
+Science and Systems Foundation. [Online]. Available: http://www.
+roboticsproceedings.org/rss05/p3.pdf
+[4] J. van den Berg, P. Abbeel, and K. Goldberg, “LQG-MP: Optimized
+path planning for robots with motion uncertainty and imperfect
+state information,” vol. 30, no. 7, pp. 895–913. [Online]. Available:
+http://journals.sagepub.com/doi/10.1177/0278364911406562
+[5] B. D. Luders, S. Karaman, and J. P. How, “Robust sampling-based motion planning with asymptotic optimality guarantees,” in AIAA Guidance,
+Navigation, and Control (GNC) Conference, 2013, p. 5097.
+[6] N. A. Melchior and R. Simmons, “Particle rrt for path planning with
+uncertainty,” in Proceedings 2007 IEEE International Conference on
+Robotics and Automation. IEEE, 2007, pp. 1617–1624.
+[7] A. Majumdar and R. Tedrake, “Funnel libraries for real-time robust
+feedback motion planning,” vol. 36, no. 8, pp. 947–982. [Online].
+Available: http://journals.sagepub.com/doi/10.1177/0278364917712421
+[8] M. M. Tobenkin, I. R. Manchester, and R. Tedrake, “Invariant Funnels
+around Trajectories using Sum-of-Squares Programming,” vol. 44,
+no. 1, pp. 9218–9223. [Online]. Available: https://doi.org/10.3182%
+2F20110828-6-it-1002.03098
+[9] A. Majumdar and R. Tedrake, “Robust Online Motion Planning with
+Regions of Finite Time Invariance,” in Algorithmic Foundations of
+Robotics X, E. Frazzoli, T. Lozano-Perez, N. Roy, and D. Rus, Eds.
+Springer Berlin Heidelberg, vol. 86, pp. 543–558. [Online]. Available:
+http://link.springer.com/10.1007/978-3-642-36279-8 33
+[10] A. A. Ahmadi and A. Majumdar, “DSOS and SDSOS optimization: LP
+and SOCP-based alternatives to sum of squares optimization,” in 2014
+48th Annual Conference on Information Sciences and Systems (CISS).
+IEEE, pp. 1–5.
+[11] J. T. Betts, “Survey of Numerical Methods for Trajectory Optimization,”
+vol. 21, no. 2, pp. 193–207. [Online]. Available: https://doi.org/10.
+2514%2F2.4231
+[12] O. Von Stryk, “Numerical solution of optimal control problems by direct
+collocation,” in Optimal Control. Springer, pp. 129–143.
+[13] J. Kuffner, “Effective sampling and distance metrics for 3D rigid body
+path planning,” in IEEE International Conference on Robotics and
+Automation, 2004. Proceedings. ICRA ’04. 2004. IEEE, pp. 3993–3998
+Vol.4. [Online]. Available: http://ieeexplore.ieee.org/document/1308895/
+[14] S. M. LaValle, Planning Algorithms.
+Cambridge University Press,
+available at http://planning.cs.uiuc.edu/.
+[15] D. P. Kroese and Z. I. Botev, “Spatial Process Simulation,”
+in Stochastic Geometry, Spatial Statistics and Random Fields.
+Springer International Publishing, pp. 369–404. [Online]. Available:
+https://doi.org/10.1007%2F978-3-319-10064-7 12
+[16] D. C. Lay, Linear Algebra and Its Applications, 3rd Updated Edition.
+Addison Wesley.
+
+Marius Thoresen Marius Thoresen received a
+Master’s degree in engineering cybernetics from
+the Norwegian University of Science and Technology in 2015. In 2015, he started working as a
+researcher at the Norwegian Defence Research
+Establishment with UGVs and autonomous systems. In 2019 he started a PhD with the Norwegian University of Science and Technology, with
+motion planning for UGVs in rough terrain as his
+topic of research.
+
+Kim Mathiassen Kim Mathiassen received a
+Masters degree in engineering cybernetics from
+the Norwegian University of Science and Technology in 2010 and a PhD in robotics from the
+University of Oslo in 2017. His PhD thesis was
+on a semi-autonomous system for diagnostics
+and treatment using medical ultrasound.
+In 2015 he started working at the Norwegian Defence Research Establishment with
+Unmanned Ground Vehicles (UGV) and autonomous systems. In addition to his research
+position he is an associate professor at the University of Oslo teaching
+advanced robotics. His current research interests span from low level
+robot control to high level planning and reasoning.
+
+
