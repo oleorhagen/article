@@ -1,5 +1,5 @@
 # This is our tex file (golden), use this, and only this for future compilation.
-@default_files= ('./rrtfunnel-transmag.tex');
+@default_files= ('./rrtfunnel.tex');
 # Default to PDF, and only pdf (other options can produce dvi and more)
 $pdf_mode = 1;
 $print_type = 'pdf';
@@ -16,6 +16,6 @@ $show_time = 1;
 # Use a different name for the output
 $jobname = 'rrtfunnel';
 # Success command should open the document for viewing
-$success_cmd = "open build/rrtfunnel.pdf";
+$success_cmd = "okular build/rrtfunnel.pdf";
 $pdflatex = 'pdflatex -synctex=1 -interaction=nonstopmode';
 $pdf_previewer = 'okular';
