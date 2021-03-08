@@ -1,0 +1,235 @@
+\documentclass{IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+
+\newcommand{\rrtfunnel}{RRT-Funnel}
+
+\usepackage{acronym}
+
+% In text referencing
+\usepackage{varioref}
+\usepackage[draft]{hyperref}
+\usepackage{color} % For colouring inkscape include (and more)
+% \usepackage[style=ieee]{biblatex} % Needed for \textcite
+
+% Math helpers
+\usepackage{amssymb}    % Extra symbols
+\usepackage{amsthm}     % Theorem-like environments
+\usepackage{thmtools}   % Theorem-like environments, extends amsthm
+\usepackage{mathtools}  % Fonts and environments for mathematical formulae
+\usepackage{mathrsfs}   % Script font with \mathscr{}
+\usepackage{dsfont}     % Double stroke font with \mathds{}
+\usepackage{cancel}     % Cancel terms with \cancel, \bcancel or \xcancel
+\usepackage{stmaryrd}   % Brackets
+
+
+% IEEE package has no theorem definition
+\newtheorem{definition}{Definition}[section]
+
+
+% Optimization problem definition
+\RequirePackage[nocomma]{optidef}
+
+%% Operators
+\DeclareMathOperator{\im}{im}
+\DeclareMathOperator{\rank}{rank}
+
+
+
+%% Delimiters
+\DeclarePairedDelimiter{\p}{\lparen}{\rparen}          % Parenthesis
+\DeclarePairedDelimiter{\set}{\lbrace}{\rbrace}        % Set
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}          % Absolute value
+\DeclarePairedDelimiter{\norm}{\lVert}{\rVert}         % Norm
+\DeclarePairedDelimiter{\ip}{\langle}{\rangle}         % Inner product, ideal
+\DeclarePairedDelimiter{\sqb}{\lbrack}{\rbrack}        % Square brackets
+\DeclarePairedDelimiter{\ssqb}{\llbracket}{\rrbracket} % Double brackets
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}         % Ceiling
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}      % Floor
+
+
+%% Sets
+\newcommand{\N}{\mathbb{N}}    % Natural numbers
+\newcommand{\Z}{\mathbb{Z}}    % Integers
+\newcommand{\Q}{\mathbb{Q}}    % Rational numbers
+\newcommand{\R}{\mathbb{R}}    % Real numbers
+\newcommand{\C}{\mathbb{C}}    % Complex numbers
+\newcommand{\A}{\mathbb{A}}    % Affine space
+\renewcommand{\P}{\mathbb{P}}  % Projective space
+
+% The IEEE style uses \upshape for units
+\newcommand{\IEEEunit}[1]{{\upshape #1}}
+
+\newcommand{\mathEoS}{\, .} % End of sentence math delimeter
+
+\def \Vectorized{} % Vectorize the math syntax.
+%% Vectors
+% \ifx \Vectorized \undefined
+% \newcommand{\vect}[1]{#1}
+% \renewcommand{\a}{a}
+% \renewcommand{\b}{b}
+% \renewcommand{\c}{c}
+% \newcommand{\x}{x}
+% \newcommand{\y}{y}
+% \newcommand{\uin}{u}
+% \newcommand{\w}{w}
+% % \newcommand{\matr}[1]{\mathbf{#1}} % undergraduate algebra version
+% \newcommand{\matr}[1]{#1}          % pure math version
+% % \newcommand{\matr}[1]{\bm{#1}}     % ISO complying version
+% \else % Vectorize defined.
+\newcommand{\vect}[1]{{\mathbf{\mathsf{#1}}}}
+\renewcommand{\a}{\mathbf{a}}
+\renewcommand{\b}{\mathbf{b}}
+\renewcommand{\c}{\mathbf{c}}
+\newcommand{\x}{\mathbf{x}}
+\newcommand{\y}{\mathbf{y}}
+\newcommand{\uin}{\mathbf{u}}
+\newcommand{\w}{\mathbf{w}}
+\newcommand{\matr}[1]{#1} % undergraduate algebra version
+% \newcommand{\matr}[1]{#1}          % pure math version
+% \newcommand{\matr}[1]{\bm{#1}}     % ISO complying versionnewcommand{\w}{\mathbf{w}}
+% \fi
+\newcommand{\0}{\mathbf{0}}
+\newcommand{\1}{\mathbf{1}}
+
+% Optimization problem definitions
+\DeclareMathOperator{\vol}{vol}
+\DeclareMathOperator{\deter}{det}
+\DeclareMathOperator{\lin}{lin}
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\poi}{Poi}
+
+\newcommand{\modelworld}{\ensuremath{\mathcal{W}}}
+\newcommand{\modelrobot}{\ensuremath{\mathcal{A}}}
+\newcommand{\modelobstacle}{\ensuremath{\mathcal{O}}}
+\newcommand{\modelactionspace}{U}
+\newcommand{\modelconfigurationspace}{\ensuremath{\mathcal{C}}}
+% \newcommand{\modelconfigurationspacesub}[1]{\ensuremath{\mathcal{C}_{\textit{#1}}}}
+\newcommand{\modelconfigurationspacefree}{\modelconfigurationspacesub{free}}
+\newcommand{\modelconfigurationspaceobst}{\modelconfigurationspacesub{obst}}
+
+\newcommand{\matlab}{\textsc{Matlab}\xspace}
+
+\usepackage{textcomp}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\begin{document}
+
+\title{The Rapidly exploring Random Tree Funnel Algorithm for IEEE TRANSACTIONS and JOURNALS (March 2021)}
+
+\author{\IEEEauthorblockN{Ole Petter Orhagen\IEEEauthorrefmark{1},
+    Marius Thoresen\IEEEauthorrefmark{2}, and,
+    Kim Mathiassen\IEEEauthorrefmark{2,3}
+  }
+  \IEEEauthorblockA{\IEEEauthorrefmark{1}Department of Physics,
+    University of Oslo, Oslo, Norway}
+  \IEEEauthorblockA{\IEEEauthorrefmark{2}Norwegian Research Establishment, FFI,
+    Postboks 25, 2027 Kjeller, Norway}
+  \IEEEauthorblockA{\IEEEauthorrefmark{3}Department of Technology Systems, University of Oslo, Kjeller, Norway}% <-this % stops an unwanted space
+  \thanks{TODO -- Manuscript received December 1, 2012; revised August 26, 2015. 
+    Corresponding author: M. Shell (email: http://www.michaelshell.org/contact.html).}}
+
+% \thanks{This paragraph of the first footnote will contain the date on 
+% which you submitted your brief for review. It will also contain support 
+% information, including sponsor and financial support acknowledgment. For 
+% example, ``This work was supported in part by the U.S. Department of 
+% Commerce under Grant BS123456.'' }
+% \thanks{The next few paragraphs should contain 
+% the authors' current affiliations, including current address and e-mail. For 
+% example, F. A. Author is with the National Institute of Standards and 
+% Technology, Boulder, CO 80305 USA (e-mail: author@boulder.nist.gov). }
+% \thanks{S. B. Author, Jr., was with Rice University, Houston, TX 77005 USA. He is 
+% now with the Department of Physics, Colorado State University, Fort Collins, 
+% CO 80523 USA (e-mail: author@lamar.colostate.edu).}
+% \thanks{T. C. Author is with 
+% the Electrical Engineering Department, University of Colorado, Boulder, CO 
+% 80309 USA, on leave from the National Research Institute for Metals, 
+% Tsukuba, Japan (e-mail: author@nrim.go.jp).}}
+
+\maketitle
+
+\begin{abstract}
+  This paper shows the feasibility of combining robust motion primitives
+  generated through the Sums Of Squares programming theory with a discrete
+  Rapidly exploring Random Tree algorithm. The generated robust motion
+  primitives, referred to as funnels, are then employed as local motion
+  primitives, each with its locally valid LQR controller, which is verified
+  through a Lyapunov function found through a SOS search in the function space.
+  These funnels are then combined together at execution time by the RRT planner,
+  and is shown to provide provably robust traversal of a simulated forest
+  environment. The experiments benchmark the RRT-Funnel algorithm against an RRT
+  algorithm which employs a maximum distance to the nearest obstacle heuristic
+  in order to avoid collisions, as opposed to explicitly handling uncertainty.
+  The results show that employing funnels as robust motion primitives outperform
+  the heuristic planner in the experiments run on both algorithms, where the
+  RRT-Funnel algorithm does not collide a single time, and creates shorter
+  solution paths than the benchmark planner overall, although it takes a
+  significantly longer time to find a solution. Index Terms— Collision
+  avoidance, Motion planning, Nonlinear control systems, Robot control
+\end{abstract}
+
+\begin{IEEEkeywords}
+  Collision avoidance, Motion planning, Nonlinear control systems, Robot control
+\end{IEEEkeywords}
+
+\input{sections/PreIntro.tex}
+
+% \section{Method}
+\label{sec:Method}
+\input{sections/Method.tex}
+
+
+\section{Experiments}
+\label{sec:Experiments}
+\input{sections/Experiments.tex}
+
+\section{Results}
+\input{sections/Results.tex}
+
+\section{Discussion}
+\input{sections/Discussion.tex}
+The discussion goes here\ldots
+
+% \section{Conclusion}
+% The conclusion goes here.
+
+% \section{Introduction}
+% \label{sec:introduction}
+
+\bibliographystyle{IEEEtran}
+\bibliography{IEEEabrv,bibtex/zotero}
+
+\begin{IEEEbiographynophoto}{Ole Petter Orhagen}
+  Ole Petter Orhagen was born in Gjovik, Norway in 1989. He received a B.S. in
+  Informatics, and M.S degree in cybernetics from the University of Oslo, in
+  2017 and 2019.
+\end{IEEEbiographynophoto}
+
+\begin{IEEEbiographynophoto}{Marius Thoresen}
+  Marius Thoresen Marius Thoresen received a Master’s degree in engineering
+  cybernetics from the Norwegian University of Science and Technology in 2015.
+  In 2015, he started working as a researcher at the Norwegian Defence Research
+  Establishment with UGVs and autonomous systems. In 2019 he started a PhD with
+  the Norwegian University of Science and Technology, with motion planning for
+  UGVs in rough terrain as his topic of research.
+\end{IEEEbiographynophoto}
+
+\begin{IEEEbiographynophoto}{Kim Mathiassen}
+  Kim Mathiassen Kim Mathiassen received a
+  Masters degree in engineering cybernetics from
+  the Norwegian University of Science and Technology in 2010 and a PhD in robotics from the
+  University of Oslo in 2017. His PhD thesis was
+  on a semi-autonomous system for diagnostics
+  and treatment using medical ultrasound.
+  In 2015 he started working at the Norwegian Defence Research Establishment with
+  Unmanned Ground Vehicles (UGV) and autonomous systems. In addition to his research
+  position he is an associate professor at the University of Oslo teaching
+  advanced robotics. His current research interests span from low level
+  robot control to high level planning and reasoning.
+ \end{IEEEbiographynophoto}
+
+
+
+\end{document}
