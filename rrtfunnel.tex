@@ -156,9 +156,10 @@
   generated through the Sums Of Squares programming theory with a discrete
   Rapidly exploring Random Tree algorithm. The generated robust motion
   primitives, referred to as funnels, are then employed as local motion
-  primitives, each with its locally valid LQR controller, which is verified
-  through a Lyapunov function found through a SOS search in the function space.
-  These funnels are then combined together at execution time by the RRT planner,
+  primitives, each with its locally valid Linear Quadratic Regulator (LQR)
+  controller, which is verified through a Lyapunov function found through a Sum
+  Of Squares (SOS) search in the function space. These funnels are then combined
+  together at execution time by the Rapidly-exploring-Random-Tree (RRT) planner,
   and is shown to provide provably robust traversal of a simulated forest
   environment. The experiments benchmark the RRT-Funnel algorithm against an RRT
   algorithm which employs a maximum distance to the nearest obstacle heuristic

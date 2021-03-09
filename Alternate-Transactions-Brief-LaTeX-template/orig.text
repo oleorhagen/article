@@ -46,6 +46,7 @@ and vehicle models will therefore leave error terms in the
 state and world estimations. Thus, in order for a planner to
 guarantee safe traversal through a real world environment, a
 motion planner needs to handle uncertainties.
+
 In the face of uncertainty, some planners choose to ignore these error sources and instead apply heuristics such as
 maximizing the distance to the obstacles in the environment
 or setting a fixed safety radius [1]. However, this adds the
@@ -62,6 +63,7 @@ of the dynamical system, and hence is not afraid to get close
 to an obstacle. This means that a robust motion algorithm can
 perform more aggressive maneuvers than one that is inherently
 conservative about its environment and maneuvers [2].
+
 In motion planning, there is a separation between global
 and local methods [1], where global methods assumes a known
 map of the environment and local methods assumes only local
@@ -70,6 +72,7 @@ state to the goal, whereas local methods can only plan a part
 of the way. As local methods explicitly consider the end goal
 during planning, they are more susceptible to getting trapped
 in local minima.
+
 Previous efforts to handle uncertainties in global path
 planning include using the Rapidly-exploring Random Tree
 (RRT) algorithm with robust motion primitives. This approach
@@ -87,6 +90,7 @@ in Melchior [6], where each extension to the tree is treated
 as a stochastic process, and simulated multiple times, and
 since pruned based on the expected probability of successful
 execution.
+
 A recent approach to the local path planning problem
 has been to use Sum of Squares (SOS) theory with motion
 planning. As mentioned above, this is the approach taken by
@@ -111,6 +115,7 @@ the local process several times. If we instead can use the theory
 and framework introduced here and combine it with a global
 planner, we can achieve longer planning horizons and thereby
 reduce likelihood of getting trapped in local minima .
+
 This paper builds upon the work done on verifying regions of attraction — referred to as funnels — for nonlinear
 dynamical systems through the use of Lyapunov functions.
 Verification is achieved for a polynomial system through the

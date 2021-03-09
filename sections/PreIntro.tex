@@ -1,86 +1,98 @@
 
 \section{Introduction}
-\IEEEPARstart{M}{otion} planning concerns the problem of finding a dynamically
-feasible path from an initial configuration to a defined end state in a safe
-manner. In order for a motion planner to handle real world motion planning tasks
-it needs to handle the uncertainty that comes with a real-life planning problem.
-This is especially difficult for nonlinear dynamical systems. Knowledge of
-the system's position, the environment and the dynamics of the system are all uncertain to
-some degree. Limited precision,
-and accidents may hinder the measurements and leave them with an error term.
-Thus in order for a planner to
-guarantee safe traversal through a real world environment, a motion planner
-needs to handle uncertainties.
 
-In the face of uncertainty some planners choose to ignore these error sources
+\IEEEPARstart{M}{otion} planning concerns the problem of finding a
+dynamically feasible path from an initial configuration
+to a defined end state in a safe manner. In order for a motion
+planner to handle real world motion planning tasks it needs
+to handle the uncertainty that comes with a real-life planning
+problem. This is especially difficult for nonlinear dynamical
+systems. Knowledge of the system’s state, the environment and
+the dynamics of the system are all uncertain to some degree.
+Limited measurement precision and use of imperfect world
+and vehicle models will therefore leave error terms in the
+state and world estimations. Thus, in order for a planner to
+guarantee safe traversal through a real world environment, a
+motion planner needs to handle uncertainties.
+
+
+In the face of uncertainty, some planners choose to ignore these error sources
 and instead apply heuristics such as maximizing the distance to the obstacles in
-the environment. However, this adds the disadvantage that the plans can become
-overly conservative. Explicitly handling the uncertainties in the planning stage
-enables the planner to employ more aggressive maneuvers, such as going through
-two obstacles that are close together, as opposed to going around the difficult
-area. If uncertainties are accounted for, going straight through is an
-acceptable maneuver for a planner that has guarantees on the whereabouts of the
-dynamical system, and hence is not afraid to get close to an obstacle.
+the environment or setting a fixed safety radius~\cite{hoyAlgorithmsCollisionfreeNavigation2015}. However, this adds the
+disadvantage that the plans can become overly conservative. Explicitly handling
+the uncertainties in the planning stage enables the planner to employ more
+aggressive maneuvers, such as going through two obstacles that are close
+together, as opposed to going around the difficult area. If uncertainties are
+accounted for, going straight through is an acceptable maneuver for a planner
+that has guarantees on the whereabouts of the dynamical system, and hence is not
+afraid to get close to an obstacle. This means that a robust motion algorithm
+can perform more aggressive maneuvers than one that is inherently conservative
+about its environment and maneuvers~\cite{singhRobustOnlineMotion2017}.
 
-%\subsection{Literature Review}
+In motion planning, there is a separation between global
+and local methods~\cite{hoyAlgorithmsCollisionfreeNavigation2015}, where global methods assumes a known
+map of the environment and local methods assumes only local
+knowledge. Thus, global methods can plan paths from the start
+state to the goal, whereas local methods can only plan a part
+of the way. As local methods explicitly consider the end goal
+during planning, they are more susceptible to getting trapped
+in local minima.
 
+Previous efforts to handle uncertainties in global path
+planning include using the Rapidly-exploring Random Tree
+(RRT) algorithm with robust motion primitives. This approach
+is taken by Tedrake~\cite{tedrakeLQRtreesFeedbackMotion2009}, where a tree consisting of robust
+Linear-Quadratic Regulator (LQR) controllers are created, in
+order to guarantee safe traversal of the planning environment.
+Van den Berg [4] has a similar approach of creating motion
+primitives where a LQR is used, and a Gaussian process
+is used to model uncertainty, thus allowing robust control
+along with an uncertain system. Luders generate robust motion
+primitives in real-time for an RRT* algorithm through chance
+constraints in~\cite{luders2013robust}, but also ensures asymptotic optimality.
+Another robust extension to the RRT algorithm can be found
+in Melchior~\cite{melchior2007particle}, where each extension to the tree is treated
+as a stochastic process, and simulated multiple times, and
+since pruned based on the expected probability of successful
+execution.
 
-%\subsubsection{Robust Motion Planning}
+A recent approach to the local path planning problem
+has been to use Sum of Squares (SOS) theory with motion
+planning. As mentioned above, this is the approach taken by
+Tedrake in~\cite{tedrakeLQRtreesFeedbackMotion2009}. In~\cite{majumdarFunnelLibrariesRealtime2017}, Majumdar expands upon this idea and
+seeks to limit the size of the area in which a controller will take
+a dynamic system, while at the same time giving guarantees
+of safe traversal. This enables real-time motion planning in
+highly complex environments with advanced vehicle models,
+as long as the controllers are generated off-line. The offline generation is a requirement due to the time they take
+to generate. The current research on the topic is limited, but
+interesting due to the formal general robustness guarantees it
+provides.
 
-% This work is a part of the broader field of planning under uncertainty. The
-% algorithms are further classified depending on classes of uncertainty they can
-% handle. That is, uncertainty in the planning environment, uncertainty in the
-% model, uncertainty in sensing, and uncertainty in the map.
-%
-% kma - Det ser ikke ut som du gpr igjennom tidligere arbeid som du beskriver over, men klassifiserer dem teer RRT og SOS
+However, the method is a local method, and thus has a
+limited planning horizon. In~\cite{majumdarFunnelLibrariesRealtime2017}, a simulated experiment with
+large-scale environments is conducted, but only by repeating
+the local process several times. If we instead can use the theory
+and framework introduced here and combine it with a global
+planner, we can achieve longer planning horizons and thereby
+reduce likelihood of getting trapped in local minima .
 
-
-%\subsubsection{RRT with Robust Motion Primitives}
-Previous efforts to handle uncertainties include using
-the Rapidly exploring Random tree (RRT) algorithm with robust motion
-primitives. Tedrake~\cite{tedrakeLQRtreesFeedbackMotion2009} creates a tree of
-robust LQR controllers, in order to guarantee safe traversal of the dynamical
-system at hand. Luders generate robust motion primitives in real-time for an
-\textit{RRT*} algorithm through chance constraints in~\cite{luders2013robust}.
-Another robust extension to the \textit{RRT} algorithm can be found in
-Melchior~\cite{melchior2007particle}, where each extension to the tree is
-treated as a stochastic process, and simulated multiple times, and since pruned
-based on the expected probability of successful execution.
-
-
-%\subsubsection{SOS and Robust Motion Planning}
-
-Another approach has been to use 
-Sum of Squares (SOS) theory with motion
-planning. The current research on the topic is limited, but interesting due to its general robustness
-guarantees, with no probability involved. In
-Tedrake~\cite{tedrakeLQRtreesFeedbackMotion2009} a tree of LQR-controllers is
-created, in order to safely take a dynamical system from one intial state to a
-final state. In~\cite{majumdarFunnelLibrariesRealtime2017}, Majumdar seeks to
-limit the size of the area in which a controller will take a dynamic system.
-
-
-This paper builds upon the work done on verifying regions of attraction for
-nonlinear dynamical systems through the use of Lyapunov functions which are
-verified for a polynomial system through the use of SOS programming.
-
-%\subsection{Contributions}
-
-This paper combines the theory of verified reachable sets, referred to as
-funnels, with a discrete RRT motion planner in order to provide provably robust
-motion planning for a nonlinear dynamical system. To the best of the authors'
-knowledge, this is the only known RRT algorithm which implements verified
-reachable sets as discrete motion primitives as extension operators for the a
-RRT algorithm. The novel method is then compared with ab RRT algorithm that maximize the distance to the nearest obstacles in order to handle uncertainty.
-
-The result of this work is the RRT-Funnel motion planning algorithm, a discrete
-motion planning algorithm which can guarantee safe passage through an obstacle
-space, given the assumption that the uncertainty in the system is bounded. The
-funnel definitions in this paper is taken from a series of articles on
+This paper builds upon the work done on verifying regions of attraction —
+referred to as funnels — for nonlinear dynamical systems through the use of
+Lyapunov functions. Verification is achieved for a polynomial system through the
+use of SOS programming. We combine the theory of funnels with a discrete RRT
+motion planner in order to provide a provably robust global motion planner for a
+nonlinear dynamical system. To the best of the authors’ knowledge, this is the
+only known RRT algorithm which implements verified reachable sets generated
+through SOS programming as discrete motion primitives as extension operators for
+the an RRT algorithm. The novel method is then compared with a RRT algorithm
+that maximize the distance to the nearest obstacles, in order to show which
+handles the planning task best. The result of this work is the RRT-Funnel motion
+planning algorithm, a discrete motion planning algorithm which can guarantee
+safe passage through an obstacle space, given the assumption that the
+uncertainty in the system is bounded. The funnel definitions in this paper is
+taken from a series of articles on
 funnels~\cite{Tobenkin_2011,tedrakeLQRtreesFeedbackMotion2009,
   majumdarRobustOnlineMotion2013,
   majumdarFunnelLibrariesRealtime2017,ahmadi2014dsos}, with the main focus being
-on \cite{majumdarFunnelLibrariesRealtime2017}.
-
-
-
+on~\cite{majumdarFunnelLibrariesRealtime2017}.
