@@ -173,9 +173,9 @@ search-space, and then later progress towards a finer sampling, which is
 valuable as it avoids local minima. Secondly, the RRT algorithm is easily extensible
 to larger state spaces, and the  \rrtfunnel{}
 algorithm can therefore be adapted to fit a wide range of dynamical systems.
-Extending the RRT algorithm to a larger state space only require modifying the three main components;  the probability distribution to sample from, the distance metric for the nearest neighbor and the extension step. The RRT
+Extending the RRT algorithm to a larger state space only requires modifying the three main components;  the probability distribution to sample from, the distance metric for the nearest neighbor and the extension step. The RRT
 algorithm is beneficial as most of the complexity accompanied with the planning
-problem (like uncertainty and controller calculations) has already been handled
+problem (like uncertainty and controller calculations) is handled
 by the SOS framework, and hence the RRT algorithm need only concern itself with
 stacking one robust motion primitive after the other without any concern for the
 complexities associated with uncertain dynamical systems.
@@ -197,36 +197,17 @@ is then scaled relative to the translation distance by \(w_{1}\) and \(w_{2}\).
 Which helps solve some of the problems with the Euclidean distance metric
 \cite{Lav06}.
 
-%% \subsubsection{The Funnel-Graph}
+\subsubsection{The Funnel-Graph}
 
-%% Even though the \rrtfunnel{} algorithm can work just fine with a collection of
-%% funnels, and simply brute-force all funnels at the planning stage, it is helpful
-%% to associate some kind of structure with the collection. Therefore the funnels
-%% will be organized into a graph structure \(\mathcal{G}\) where each funnel is an
-%% edge in the graph, and the inlets and the outlets are vertices. The planner
-%% needs information about which funnels that are composable, as they may not all
-%% be composable with each other, implying that the resultant graph is not
-%% necessarily complete.
-
-%% \kma{Er det ikke RRT algoritmen som lager grafen?}
-
-% \begin{figure}[!t]
-%   \begin{minipage}[l]{.45\columnwidth}
-%     \includegraphics[trim={-5cm 5cm -5cm 5cm},
-%     width=.9\columnwidth,
-%     scale=2]
-%     {figures/method/trajectory-sampled}
-%     \caption{Trajectory sampled 21 times.}
-%   \end{minipage} \; %
-%   \begin{minipage}[r]{.45\columnwidth}
-%     \includegraphics[trim={-5cm 5cm -5cm 5cm},
-%     width=.9\columnwidth,
-%     scale=2]{figures/method/funnel-sampled}
-%     \caption{The verified trajectory ellipsis overlaid at the sample times.}
-%     \label{fig:funnel-straight-sampled}
-%   \end{minipage}
-% \end{figure}
-
+It is helpful to associate some structure along with the funnels which the RRT-Funnel algorithm
+employs at the planning stage. This is because not all funnels
+are compatible, as one funnels outlet might not fit into the
+outlet of another. Thus the funnels generated can be imagined
+as a directed graph, where an edge from funnel A to funnel B
+means that (A, B) are composable. Thus a brute-force search
+for compatible funnels at planning time is eliminated. Hence
+the funnels are organized into a graph structure G where each
+funnel is an edge in the graph.
 
 \subsubsection{Expanding the Size of the Funnels}
 

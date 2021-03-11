@@ -299,7 +299,9 @@ the RRT algorithm need only concern itself with stacking one
 robust motion primitive after the other without any concern for
 the complexities associated with uncertain dynamical systems.
 
-1) Distance in Configuration Space: The RRT-Funnel algorithm will use the same metric for both the closest node and
+1) Distance in Configuration Space:
+
+The RRT-Funnel algorithm will use the same metric for both the closest node and
 the extend operation on the funnel graph. The metric chosen
 is a modified Euclidean metric which weights the angle θ
 depending on how close the dynamical system is to the final
