@@ -24,9 +24,10 @@ For all the experiments an \(\epsilon\) of 5\IEEEunit{m} is given to the
 planners.
 
 Each test-run will be run in a forest generated with a \textit{Poisson process}
-method.
+method, see~\cite{kroeseSpatialProcessGeneration} for an introduction to Poisson
+processes.
 
-The experiments will record the number of collisions for each algorithm across
+The experiments records the number of collisions for each algorithm across
 all test-runs. The planners will run in the same environment for each test, with
 the same initial starting point. The environment will be redrawn using the Poisson process to generate the obstacle forest for each consecutive run.
 With this test setup the difference between the planners should become evident.
@@ -39,9 +40,9 @@ times. Uncertainty is added in terms of an additive noise with \(w =
 
 \subsection{Experiment Setup}
 
-The algorithm will be tested by generating a random strip of forest of depth
+The algorithm is tested by generating a random strip of forest of depth
 \(25\)\IEEEunit{m}, and then letting the \rrtfunnel{}, along with the benchmark algorithm
-find a way through the environment to the other side. Three seperate experiments will be conducted where the amount of crosswind will vary. The first experiment will have a crosswind of \(0\) \IEEEunit{m/s}, in order to set up
+find a way through the environment to the other side. Three seperate experiments are conducted where the amount of crosswind will vary. The first experiment will have a crosswind of \(0\) \IEEEunit{m/s}, in order to set up
 the experiment baseline. The second experiment will have a crosswind of \(0.3\) \IEEEunit{m/s},
 which is the maximum crosswind modelled in the \rrtfunnel{} algorithm. This experiment will
 show the difference between explicitly handling uncertainty in comparison to
@@ -56,8 +57,7 @@ placed randomly on the area \(O=\{ \vect{x} \mid -50 \le x_{1} \le 50 \text{ and
 density
 \(\lambda = 0.2\). For each trial run, a new forest is generated in
 this random fashion, and the algorithms are given the task to traverse the
-generated map in turn, see~\cite{Kroese_2014} for an introduction to Poisson
-processes.
+generated map in turn.
 
 The funnels for the \rrtfunnel{} algorithm are in this case made to handle
 uncertainty, in the form of a cross-wind up to and including \(3\)
@@ -80,8 +80,6 @@ which is a first-order unicycle model with a constant speed. Although this is
 the only model used in this paper, the method can be adapted
 into accommodating a different and more complex model.
 
-
-%\subsubsection{Generating the Trajectories}
 
 The trajectories for the base set of motion primitives is generated through the
 direct collocation method on the dynamical system given in
@@ -226,7 +224,8 @@ where the transform \(\Psi\) is given by
   \end{cases}
 \]
 However, since \( \dim (\vect{x}) = \dim(\vect{x}_{c}) \), for
-the~\cref{eq:model-dynamics}, it is not necessary to handle the non-cyclic case.
+the dynamics equation in~\ref{eq:model-dynamics}, it is not necessary to handle
+the non-cyclic case for the model in this experiment.
 
 
 \subsection{Funnel Composition}
@@ -236,17 +235,17 @@ the~\cref{eq:model-dynamics}, it is not necessary to handle the non-cyclic case.
 The funnel robustness
 guarantees are only valid if the funnels are composable 
 according to \cref{def:funnel-composition}. Unfortunately, the funnels do not
-compose acccording to this definition in the experiments run, and the composition
+compose acccording to this definition, and the off-line composition
 testing of the algorithm has to be left out. Thus the experiments are run with a
-funnel graph that is complete, and all funnels can compose with each other, at
-the cost of the mathematical robustness guarantees of the system. This is
+funnel graph that is complete, and all funnels are checked on-line if they compose with each other, at
+the cost of on-line complexity during the algorithm's execution. This is
 because the one dimensional controller employed has no influence on the speed of
 the airplane, and hence there is no way to make the system converge in the
 direction of speed. This is exemplified in \cref{fig:funnel-inlet-outlet}, where
-the inlet is overlaid the outlets for the projected xy-funnel, and it can be
-seen that the controller is able to converge the xy-funnel in the x-direction,
-but not in the y-direction, as it has no control over this dimension at all. The
-framework can be expanded with this functionality however, but this is
+the inlet is overlaid the outlets for the projected \(xy\)-funnel, and it can be
+seen that the controller is able to converge the \(xy\)-funnel in the \(x\)-direction,
+but not in the \(y\)-direction, as it has no control over this dimension at all. The
+framework can be expanded with this functionality. however, this is
 referred to as future work.
 
 \begin{figure}[!t]
@@ -263,10 +262,10 @@ referred to as future work.
 \label{subsec:check-vehicle-in-funnel}
 
 In order to remedy this off-line compositional robustness guarantees, the
-\rrtfunnel{} algorithm will keep track of whether the model has left the funnel
+\rrtfunnel{} algorithm keeps track of whether the model has left the funnel
 during execution, and aborts the simulation with the emergency maneuver if the
 airplane leaves one of the funnels at runtime. This happens if the value of the
-Lyapunov function is larger than one. This will be counted in the experiments as
+Lyapunov function is larger than one. In the experiments, this counts as
 a collision on the part of the \rrtfunnel{} algorithm.
 
 
@@ -293,9 +292,9 @@ translation of the model dynamics is not irrelevant.
 The size of the airplane in the original model is a single point, and as such,
 the expanded airplane model is not accounted for in the current funnels.
 Therefore the funnels have to be expanded in order for them to accommodate the
-necessary robustness guarantees that are expected from the algorithm. However,
+airplane model. However,
 the size of the airplane only affects the size of the funnel ellipsis projected
-down into the xy-plane. Therefore, first extract the projected size of the
+down into the \(xy\)-plane. Therefore, first extract the projected size of the
 funnel, through a projection map: \(P \colon \R^4 \rightarrow \R^2\), where \(P
 = \begin{bmatrix} I_{2 \times 2} & {0}_{2 \times 2} \\ \end{bmatrix} \) such
 that for the projected ellipsoid
@@ -307,8 +306,8 @@ with \(S_{k}^{(p)}\) given by
 \(
   S_{k}^{(p)} = {\left( PS_{k}^{-1}P^T \right)}^{-1},
 \)
-is the set containing the funnel projected down into the xy-plane. Here
-\(\mathcal{E}_{p}\) is the projected set of the ellipsoid in the xy-plane. In general an ellipse centered at
+is the set containing the funnel projected down into the \(xy\)-plane. Here
+\(\mathcal{E}_{p}\) is the projected set of the ellipsoid in the \(xy\)-plane. In general an ellipse centered at
 the origin is a linear transformation of the unit circle~\cite{lay2005linear}.
 Exploiting this fact, the funnel ellipsoids can be expanded to encompass the
 airplane model. Take note that the matrix \(S_{k}\) is
