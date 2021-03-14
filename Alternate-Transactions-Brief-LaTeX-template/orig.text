@@ -356,8 +356,10 @@ The end goal is set so that it will not take pose into account,
 and will only be concerned with getting within an  of the
 (x, y) in the test map. For all the experiments an  of 5m is
 given to the planners.
+
 Each test-run will be run in a forest generated with a random
 Poisson process, see [15] for an introduction to Poisson
+
 processes.
 The experiments will record the number of collisions for
 each algorithm across all test-runs. The planners will run in the
@@ -371,6 +373,7 @@ starting positions in its inlet, to check if the invariant holds, and
 that the model stays within the funnel at all times. Uncertainty
 is added in terms of an additive noise with w = 0.3 m/s in
 the world x-direction, imitating a cross-wind.
+
 A. Experiment Setup
 The algorithm is tested by generating a random strip of
 forest of depth 25m, and then letting the RRT-Funnel, along
