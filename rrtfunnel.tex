@@ -194,11 +194,18 @@
 \input{sections/Discussion.tex}
 The discussion goes here\ldots
 
-% \section{Conclusion}
-% The conclusion goes here.
+\section{Conclusion}
 
-% \section{Introduction}
-% \label{sec:introduction}
+This paper has shown that the \rrtfunnel{} motion planning algorithm does
+provide robust feedback motion planning for a nonlinear dynamic system. It shows
+that a motion planning algorithm employing discrete verified robust motion
+primitives outperforms a traditional motion planning algorithm significantly in
+terms of safe traversal through a known environment. It has also shown that the
+robust planner is only reliable up to and including its uncertainty bounds, and
+will start misbehaving, just like the benchmark motion planner, once the
+uncertainty assumptions on the algorithm are broken. All in all, it is shown
+that the \rrtfunnel{} algorithm is a viable option for a global motion planner
+in an uncertain environment.
 
 \bibliographystyle{IEEEtran}
 \bibliography{IEEEabrv,bibtex/zotero}
