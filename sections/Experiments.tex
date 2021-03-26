@@ -325,7 +325,7 @@ volume of the airplane for all verified states in the funnel, and
 \(r_{\mathit{a}}\) is the widest part of the model at hand, which in this case
 is the wingspan. A picture of the initial funnel and the funnel expanded around
 the airplane model can be seen in
-figure~\cref{fig:expanded-funnel}.
+\cref{fig:expanded-funnel}.
 
 
 \begin{figure}[!t]
@@ -335,15 +335,17 @@ figure~\cref{fig:expanded-funnel}.
   %% \caption[The expansion of the \rrtfunnel algorithm at 1, and 101 iterations]{Visualized is the expansion of the \rrtfunnel algorithm at 1 iterations of the algorithm.}
   %% \end{minipage}
   %% \newline
-  \begin{minipage}[c]{.9\columnwidth}
-  \includegraphics[scale=.5, trim={5cm, 9cm, 5cm, 7cm}, clip]{figures/experiments/rrtfunnel-101samples.pdf}
-  \caption[The expansion of the \rrtfunnel algorithm at 1, and 101 iterations]{Visualized is the expansion of the \rrtfunnel algorithm at 101 iterations of the algorithm.}
-  \end{minipage}
-  \newline
-  \begin{minipage}[c]{.9\columnwidth}
-    \includegraphics[scale=.5, trim={5cm, 9cm, 5cm, 7cm}, clip]{figures/experiments/rrtfunnel-101samples-dyn.pdf}
-  \caption[The expansion of the \rrtfunnel algorithm at 1, and 101 iterations]{Visualized is the expansion of the \rrtfunnel algorithm at 101 iterations of the algorithm}
-  \end{minipage}
+  \begin{subfigure}[b]{\columnwidth}
+  \centering
+  \includegraphics[scale=.6, trim={4.5cm, 9cm, 5cm, 7cm}, clip]{figures/experiments/rrtfunnel-101samples.pdf}
+  \caption{With Funnels.}
+  \end{subfigure}
+  \begin{subfigure}[b]{\columnwidth}
+  \centering
+    \includegraphics[scale=.6, trim={4.5cm, 9cm, 5cm, 7cm}, clip]{figures/experiments/rrtfunnel-101samples-dyn.pdf}
+  \caption{Tree only.}
+  \end{subfigure}
+  \caption[The expansion of the \rrtfunnel algorithm at 1, and 101 iterations]{Visualized is the expansion of the \rrtfunnel~algorithm at 101 iterations of the algorithm.}
 \end{figure}
 
 %% \begin{figure}[!t]

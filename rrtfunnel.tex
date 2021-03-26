@@ -11,9 +11,11 @@
 % In text referencing
 \usepackage{varioref}
 \usepackage[draft]{hyperref}
-\usepackage{cleveref}
+\usepackage[capitalise]{cleveref}
 \usepackage{color} % For colouring inkscape include (and more)
 % \usepackage[style=ieee]{biblatex} % Needed for \textcite
+\usepackage{caption}
+\usepackage{subcaption}
 
 % Math helpers
 \usepackage{amssymb}    % Extra symbols
@@ -118,36 +120,32 @@
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
 
-\title{The Rapidly exploring Random Tree Funnel Algorithm for IEEE TRANSACTIONS and JOURNALS (March 2021)}
+\title{The Rapidly exploring Random Tree Funnel Algorithm}
 
-\author{\IEEEauthorblockN{Ole Petter Orhagen\IEEEauthorrefmark{1},
-    Marius Thoresen\IEEEauthorrefmark{2}, and,
-    Kim Mathiassen\IEEEauthorrefmark{2,3}
+\author{\IEEEauthorblockN{Ole Petter Orhagen,
+    Marius Thoresen, and,
+    Kim Mathiassen,~\IEEEmembership{Member,~IEEE}
   }
-  \IEEEauthorblockA{\IEEEauthorrefmark{1}Department of Physics,
-    University of Oslo, Oslo, Norway}
-  \IEEEauthorblockA{\IEEEauthorrefmark{2}Norwegian Research Establishment, FFI,
-    Postboks 25, 2027 Kjeller, Norway}
-  \IEEEauthorblockA{\IEEEauthorrefmark{3}Department of Technology Systems, University of Oslo, Kjeller, Norway}% <-this % stops an unwanted space
-  \thanks{TODO -- Manuscript received December 1, 2012; revised August 26, 2015. 
-    Corresponding author: M. Shell (email: http://www.michaelshell.org/contact.html).}}
+%  \IEEEauthorblockA{\IEEEauthorrefmark{1}Department of Physics,
+%    University of Oslo, Oslo, Norway}
+%  \IEEEauthorblockA{\IEEEauthorrefmark{2}Norwegian Research Establishment, FFI,
+%    Postboks 25, 2027 Kjeller, Norway}
+%  \IEEEauthorblockA{\IEEEauthorrefmark{3}Department of Technology Systems, University of Oslo, Kjeller, Norway}% <-this % stops an unwanted space
+%  \thanks{TODO -- Manuscript received December 1, 2012; revised August 26, 2015. 
+%    Corresponding author: M. Shell (email: http://www.michaelshell.org/contact.html).}}
 
 % \thanks{This paragraph of the first footnote will contain the date on 
 % which you submitted your brief for review. It will also contain support 
 % information, including sponsor and financial support acknowledgment. For 
 % example, ``This work was supported in part by the U.S. Department of 
 % Commerce under Grant BS123456.'' }
-% \thanks{The next few paragraphs should contain 
-% the authors' current affiliations, including current address and e-mail. For 
-% example, F. A. Author is with the National Institute of Standards and 
-% Technology, Boulder, CO 80305 USA (e-mail: author@boulder.nist.gov). }
-% \thanks{S. B. Author, Jr., was with Rice University, Houston, TX 77005 USA. He is 
-% now with the Department of Physics, Colorado State University, Fort Collins, 
-% CO 80523 USA (e-mail: author@lamar.colostate.edu).}
-% \thanks{T. C. Author is with 
-% the Electrical Engineering Department, University of Colorado, Boulder, CO 
-% 80309 USA, on leave from the National Research Institute for Metals, 
-% Tsukuba, Japan (e-mail: author@nrim.go.jp).}}
+ \thanks{O. P. Orhagen was the Department of Physics,
+    University of Oslo, Oslo, Norway (e-mail: ole.orhagen@northern.tech). }
+ \thanks{M. Thoresen, Norwegian Research Establishment, FFI,
+    Postboks 25, 2027 Kjeller, Norway (e-mail: marius.thoresen@ffi.no).}
+ \thanks{K. Mathiassen is with 
+ Norwegian Research Establishment, FFI,
+    Postboks 25, 2027 Kjeller, Norway and Department of Technology Systems, University of Oslo, Kjeller, Norway (e-mail: kim.mathiassen@ffi.no).}}
 
 \maketitle
 
@@ -211,13 +209,13 @@ in an uncertain environment.
 \bibliography{IEEEabrv,bibtex/zotero}
 
 \begin{IEEEbiographynophoto}{Ole Petter Orhagen}
-  Ole Petter Orhagen was born in Gjovik, Norway in 1989. He received a B.S. in
+  was born in Gjovik, Norway in 1989. He received a B.S. in
   Informatics, and M.S degree in cybernetics from the University of Oslo, in
   2017 and 2019.
 \end{IEEEbiographynophoto}
 
 \begin{IEEEbiographynophoto}{Marius Thoresen}
-  Marius Thoresen Marius Thoresen received a Master’s degree in engineering
+  received a Master’s degree in engineering
   cybernetics from the Norwegian University of Science and Technology in 2015.
   In 2015, he started working as a researcher at the Norwegian Defence Research
   Establishment with UGVs and autonomous systems. In 2019 he started a PhD with
@@ -226,7 +224,7 @@ in an uncertain environment.
 \end{IEEEbiographynophoto}
 
 \begin{IEEEbiographynophoto}{Kim Mathiassen}
-  Kim Mathiassen Kim Mathiassen received a
+  (Member IEEE) received a
   Masters degree in engineering cybernetics from
   the Norwegian University of Science and Technology in 2010 and a PhD in robotics from the
   University of Oslo in 2017. His PhD thesis was
