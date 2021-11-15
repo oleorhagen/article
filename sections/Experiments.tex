@@ -90,7 +90,7 @@ finer movements of the dynamical system so that the motion of the planning unit
 can be near continuous when composed together. Thus in order to generate a dense
 set of motion primitives, points along the arc of a circle with \(N\)
 different radii as the initial points for the trajectory generator described in
-\cref{subsec:generating-the-trajectories}. The initial trajectories employed in
+\cref{subsec:generating-trajectories}. The initial trajectories employed in
 the experiments can be seen in \cref{fig:intial-trajectories-exp}.
 
 \begin{figure}[!t]
@@ -232,26 +232,24 @@ the non-cyclic case for the model in this experiment.
 \label{subsec:funnel-no-composable}
 
 %In accordance with \cref{sec:composable-funnels}
-The funnel robustness
-guarantees are only valid if the funnels are composable 
-according to \cref{def:funnel-composition}. Unfortunately, the funnels do not
-compose acccording to this definition, and the off-line composition
-testing of the algorithm has to be left out. Thus the experiments are run with a
-funnel graph that is complete, and all funnels are checked on-line if they compose with each other, at
-the cost of on-line complexity during the algorithm's execution. This is
-because the one dimensional controller employed has no influence on the speed of
-the airplane, and hence there is no way to make the system converge in the
-direction of speed. This is exemplified in \cref{fig:funnel-inlet-outlet}, where
-the inlet is overlaid the outlets for the projected \(xy\)-funnel, and it can be
-seen that the controller is able to converge the \(xy\)-funnel in the \(x\)-direction,
-but not in the \(y\)-direction, as it has no control over this dimension at all. The
-framework can be expanded with this functionality. however, this is
-referred to as future work.
+The funnel robustness guarantees are only valid if the funnels are composable.
+Unfortunately, the funnels do not compose, and the off-line composition testing
+of the algorithm has to be left out. Thus the experiments are run with a funnel
+graph that is complete, and all funnels are checked on-line if they compose with
+each other, at the cost of on-line complexity during the algorithm's execution.
+This is because the one dimensional controller employed has no influence on the
+speed of the airplane, and hence there is no way to make the system converge in
+the direction of speed. This is exemplified in \cref{fig:funnel-inlet-outlet},
+where the inlet is overlaid the outlets for the projected \(xy\)-funnel, and it
+can be seen that the controller is able to converge the \(xy\)-funnel in
+the \(x\)-direction, but not in the \(y\)-direction, as it has no control over
+this dimension at all. The framework can be expanded with this functionality.
+however, this is referred to as future work.
 
 \begin{figure}[!t]
   \centering
   \includegraphics[width=.8\columnwidth]{figures/experiments/funnel-inlet-outlet}
-  \caption[The projection of the funnel inlet and outlet in the xy-plane]{The projection of the funnel inlet and outlet in the xy-plane. It is
+  \caption[The projection of the funnel inlet and outlet in the xy-plane]{The projection of the funnel inlet and outlet onto the xy-plane, in meters. It is
     seen that the controller is able to make the funnel converge in the
     x-direction as expected, however, it has no control in the y-direction, as
     there is no controller steering the speed of the vehicle.}
@@ -312,7 +310,7 @@ the origin is a linear transformation of the unit circle~\cite{lay2005linear}.
 Exploiting this fact, the funnel ellipsoids can be expanded to encompass the
 airplane model. Take note that the matrix \(S_{k}\) is
 \textit{Positive semidefinite}, and hence can be Cholezky
-factorized~\cite{lay2005linear}. Then expanded ellipsis (which now contains all
+factorized~\cite{lay2005linear}. The expanded ellipsis (which now contains all
 the possible states of the airplane model) is given by:
 \begin{align*}
   S_{k}^{(\mathcal{P})} &= R^{T}R \\
@@ -345,7 +343,7 @@ the airplane model can be seen in
     \includegraphics[scale=.6, trim={4.5cm, 9cm, 5cm, 7cm}, clip]{figures/experiments/rrtfunnel-101samples-dyn.pdf}
   \caption{Tree only.}
   \end{subfigure}
-  \caption[The expansion of the \rrtfunnel algorithm at 1, and 101 iterations]{Visualized is the expansion of the \rrtfunnel~algorithm at 101 iterations of the algorithm.}
+  \caption[The expansion of the \rrtfunnel algorithm at 1, and 101 iterations]{Visualized is the expansion of the \rrtfunnel~algorithm at 101 iterations of the algorithm. Both axis dimens are in meters.}
 \end{figure}
 
 %% \begin{figure}[!t]

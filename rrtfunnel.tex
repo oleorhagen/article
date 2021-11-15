@@ -125,7 +125,7 @@
 \author{\IEEEauthorblockN{Ole Petter Orhagen,
     Marius Thoresen,~\IEEEmembership{Student Member,~IEEE} and,
     Kim Mathiassen,~\IEEEmembership{Member,~IEEE}
-  }
+  }}
 %  \IEEEauthorblockA{\IEEEauthorrefmark{1}Department of Physics,
 %    University of Oslo, Oslo, Norway}
 %  \IEEEauthorblockA{\IEEEauthorrefmark{2}Norwegian Research Establishment, FFI,
@@ -139,40 +139,27 @@
 % information, including sponsor and financial support acknowledgment. For 
 % example, ``This work was supported in part by the U.S. Department of 
 % Commerce under Grant BS123456.'' }
- \thanks{This work was supported by the Norwegian Defence Research Establishment (FFI).}
- \thanks{O. P. Orhagen was with the Department of Physics,
-    University of Oslo, Oslo, Norway (e-mail: ole.orhagen@northern.tech). }
- \thanks{M. Thoresen is with
-    the Norwegian Defence Research Establishment (FFI), NO-2007 Kjeller, Norway
-    and the Centre for Autonomous Marine Operations and Systems (NTNU AMOS),
-    Department of Engineering Cybernetics, Norwegian University of Science and Technology, NO-7491 Trondheim, Norway
-    (e-mail: marius.thoresen@ffi.no).}
- \thanks{K. Mathiassen is with
-    the Norwegian Research Establishment (FFI), NO-2007 Kjeller, Norway
-    and the Department of Technology Systems, University of Oslo, NO-2007 Kjeller, Norway
-    (e-mail: kim.mathiassen@ffi.no).}}
+ %% \thanks{}
+ %% \thanks{}
+ %% \thanks{}
+ %% \thanks{}
 
-\maketitle
+%% \maketitle
+
+%% \newpage
+
+%% \ % empty page
+
+%% \newpage
+
+%% \newpage
+
+%% \ % empty page
+
+%% \newpage
 
 \begin{abstract}
-  This paper shows the feasibility of combining robust motion primitives
-  generated through the Sums Of Squares programming theory with a discrete
-  Rapidly exploring Random Tree algorithm. The generated robust motion
-  primitives, referred to as funnels, are then employed as local motion
-  primitives, each with its locally valid Linear Quadratic Regulator (LQR)
-  controller, which is verified through a Lyapunov function found through a Sum
-  Of Squares (SOS) search in the function space. These funnels are then combined
-  together at execution time by the Rapidly-exploring-Random-Tree (RRT) planner,
-  and is shown to provide provably robust traversal of a simulated forest
-  environment. The experiments benchmark the RRT-Funnel algorithm against an RRT
-  algorithm which employs a maximum distance to the nearest obstacle heuristic
-  in order to avoid collisions, as opposed to explicitly handling uncertainty.
-  The results show that employing funnels as robust motion primitives outperform
-  the heuristic planner in the experiments run on both algorithms, where the
-  RRT-Funnel algorithm does not collide a single time, and creates shorter
-  solution paths than the benchmark planner overall, although it takes a
-  significantly longer time to find a solution. Index Terms— Collision
-  avoidance, Motion planning, Nonlinear control systems, Robot control
+  This paper shows the feasibility of combining robust motion primitives generated through the Sums Of Squares programming theory with a discrete Rapidly exploring Random Tree algorithm. The generated robust motion primitives, referred to as funnels, are then employed as local motion primitives, each with its locally valid Linear Quadratic Regulator (LQR) controller, which is verified through a Lyapunov function found through a Sum Of Squares (SOS) search in the function space. These funnels are then combined together at execution time by the Rapidly-exploring-Random-Tree (RRT) planner, and is shown to provide provably robust traversal of a simulated forest environment. The experiments benchmark the RRT-Funnel algorithm against an RRT algorithm which employs a maximum distance to the nearest obstacle heuristic in order to avoid collisions, as opposed to explicitly handling uncertainty. The results show that employing funnels as robust motion primitives outperform the heuristic planner in the experiments run on both algorithms, where the RRT-Funnel algorithm does not collide a single time, and creates shorter solution paths than the benchmark planner overall, although it takes a significantly longer time to find a solution.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -195,7 +182,6 @@
 
 \section{Discussion}
 \input{sections/Discussion.tex}
-The discussion goes here\ldots
 
 \section{Conclusion}
 
