@@ -1,4 +1,4 @@
-\documentclass{IEEEtran}
+\documentclass[conference]{IEEEtran}
 \usepackage{cite}
 \usepackage{amsmath,amsfonts}
 \usepackage{algorithmic}
@@ -118,14 +118,15 @@
 \usepackage{textcomp}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
 \begin{document}
 
-\title{The Rapidly exploring Random Tree Funnel Algorithm}
+%% \title{The Rapidly exploring Random Tree Funnel Algorithm}
 
-\author{\IEEEauthorblockN{Ole Petter Orhagen,
-    Marius Thoresen,~\IEEEmembership{Student Member,~IEEE} and,
-    Kim Mathiassen,~\IEEEmembership{Member,~IEEE}
-  }}
+%% \author{\IEEEauthorblockN{Ole Petter Orhagen,
+%%     Marius Thoresen,~\IEEEmembership{Student Member,~IEEE} and,
+%%     Kim Mathiassen,~\IEEEmembership{Member,~IEEE}
+%%   }}
 %  \IEEEauthorblockA{\IEEEauthorrefmark{1}Department of Physics,
 %    University of Oslo, Oslo, Norway}
 %  \IEEEauthorblockA{\IEEEauthorrefmark{2}Norwegian Research Establishment, FFI,
@@ -157,6 +158,30 @@
 %% \ % empty page
 
 %% \newpage
+
+
+\title{The Rapidly exploring Random Tree Funnel Algorithm}
+
+\author{\IEEEauthorblockN{1\textsuperscript{st} Ole Petter Orhagen}
+  \IEEEauthorblockA{\textit{Department of Physics} \\
+\textit{University of Oslo}\\
+Oslo, Norway \\
+olepor@matnat.uio.no }
+\and
+\IEEEauthorblockN{2\textsuperscript{nd} Marius Thoresen}
+\IEEEauthorblockA{\textit{Defence Systems Division} \\
+  \textit{Norwegian Defence Research Establishment, FFI}\\
+Kjeller, Norway \\
+marius.thoresen@ffi.no }
+\and
+\IEEEauthorblockN{2\textsuperscript{nd} Kim Mathiassen}
+\IEEEauthorblockA{\textit{Department of Techonology Systems} \\
+  \textit{University of Oslo}\\
+  Kjeller, Norway \\
+  kim.mathiassen@ffi.no}
+}
+
+\maketitle
 
 \begin{abstract}
   This paper shows the feasibility of combining robust motion primitives generated through the Sums Of Squares programming theory with a discrete Rapidly exploring Random Tree algorithm. The generated robust motion primitives, referred to as funnels, are then employed as local motion primitives, each with its locally valid Linear Quadratic Regulator (LQR) controller, which is verified through a Lyapunov function found through a Sum Of Squares (SOS) search in the function space. These funnels are then combined together at execution time by the Rapidly-exploring-Random-Tree (RRT) planner, and is shown to provide provably robust traversal of a simulated forest environment. The experiments benchmark the RRT-Funnel algorithm against an RRT algorithm which employs a maximum distance to the nearest obstacle heuristic in order to avoid collisions, as opposed to explicitly handling uncertainty. The results show that employing funnels as robust motion primitives outperform the heuristic planner in the experiments run on both algorithms, where the RRT-Funnel algorithm does not collide a single time, and creates shorter solution paths than the benchmark planner overall, although it takes a significantly longer time to find a solution.
