@@ -1,4 +1,3 @@
-
 The experiments will run the \rrtfunnel{} against a benchmark regular RRT
 planner with the motion primitive set pictured
 in \cref{fig:intial-trajectories-exp} on a forest traversal problem. The
@@ -8,7 +7,7 @@ metric. The difference is that the benchmark planner does not take uncertainty
 into account, and instead maximizes the distance to the nearest obstacle as the
 extension operator i.e.,
 \begin{equation}
-  \max_{i}\min_{t,j} \bigl( \vect{x}_{i}(t), o_{j} \bigr)
+    \max_{i}\min_{t,j} \bigl( \vect{x}_{i}(t), o_{j} \bigr)
 \end{equation}
 where \(x_{i}(t) \in \mathcal{T}\), is a trajectory from the basic motion
 primitive set, and \(o_{j} \in \modelobstacle{}\) is an obstacle in the
@@ -72,9 +71,12 @@ exploration trees.
 This paper employs the simple unicycle model from
 \author{Lav06}~\cite{Lav06} which is modified slightly into
 \begin{equation}
-  \label{eq:model-dynamics} \vect{x} = \begin{bmatrix} x \\
-  y \\ \theta \\ \end{bmatrix}, \, \dot{\vect{x}} = \begin{bmatrix}
-  -v \sin(\theta) \\ v \cos(\theta) \\ u \\ \end{bmatrix} ,
+    \label{eq:model-dynamics} \vect{x} = \begin{bmatrix}
+                                             x \\
+                                             y \\ \theta \\
+    \end{bmatrix}, \, \dot{\vect{x}} = \begin{bmatrix}
+                                           -v \sin(\theta) \\ v \cos(\theta) \\ u \\
+    \end{bmatrix} ,
 \end{equation}
 which is a first-order unicycle model with a constant speed. Although this is
 the only model used in this paper, the method can be adapted
@@ -94,14 +96,12 @@ different radii as the initial points for the trajectory generator described in
 the experiments can be seen in \cref{fig:intial-trajectories-exp}.
 
 \begin{figure}[!t]
-  \centering
-  \includegraphics[width=.8\columnwidth]{figures/experiments/initial-trajectories}
-  \caption[The experiment trajectory set]{The initial trajectories used in the
+    \centering
+    \includegraphics[width=.8\columnwidth]{figures/experiments/initial-trajectories}
+    \caption[The experiment trajectory set]{The initial trajectories used in the
     \rrtfunnel{} algorithm.}
-  \label{fig:intial-trajectories-exp}
+    \label{fig:intial-trajectories-exp}
 \end{figure}
-
-
 
 \subsection{Initializing the Funnel Calculations}
 
@@ -111,57 +111,57 @@ initialized with a candidate Lyapunov function. For this paper, this is a TV-LQR
 Then to get the initial Lyapunov function, the system error dynamics are
 linearized.
 \begin{equation}
-  \dot{\bar{\vect{x}}} \approx \matr{A} (t)\bar{\vect{x}}(t) + \matr{B}(t) \bar{\vect{u}}(t)
+    \dot{\bar{\vect{x}}} \approx \matr{A} (t)\bar{\vect{x}}(t) + \matr{B}(t) \bar{\vect{u}}(t)
 \end{equation}
 \begin{equation}
-  \dot{\bar{\vect{x}}} \approx %
-  \begin{bmatrix}
-    0 & 0 & -v\cos(\theta) \\
-    0 & 0 & -v\sin(\theta) \\
-    0 & 0 & 0 \\
-  \end{bmatrix} %
-  \bar{\vect{x}} (t) %
-  + %
-  \begin{bmatrix}
-    0 \\ 0 \\ 1
-  \end{bmatrix} %
-  \bar{\vect{u}}(t),
-\end{equation} 
+    \dot{\bar{\vect{x}}} \approx %
+    \begin{bmatrix}
+        0 & 0 & -v\cos(\theta) \\
+        0 & 0 & -v\sin(\theta) \\
+        0 & 0 & 0              \\
+    \end{bmatrix} %
+    \bar{\vect{x}} (t) %
+    + %
+    \begin{bmatrix}
+        0 \\ 0 \\ 1
+    \end{bmatrix} %
+    \bar{\vect{u}}(t),
+\end{equation}
 which is an an initial candidate Lyapunov function of the form
 \begin{equation}
-  V(t,\bar{\vect{x}}) = {\bar{\vect{x}}}^{T} \matr{S}_{i}\bar{\vect{x}} ,
+    V(t,\bar{\vect{x}}) = {\bar{\vect{x}}}^{T} \matr{S}_{i}\bar{\vect{x}} ,
 \end{equation}
 where \(S_{i}\) is a solution of the \textit{Ricatti} equation
 \begin{IEEEeqnarray*}{Cr}
-  \label{eq:ricatti}
-  - \dot{\matr{S}}(t) = \matr{A}^{T} \matr{S}(t) +\matr{S}(t) \matr{A} - \left( \matr{S}(t) \matr{B} + \matr{N} \right) \matr{R}^{-1} \IEEEyesnumber \\
-  \IEEEeqnarraymulticol{2}{r}{\left( \matr{B}^{T} \matr{S}(t) + \matr{N}^{T} \right) + \matr{Q}}
-\end{IEEEeqnarray*} 
+    \label{eq:ricatti}
+    - \dot{\matr{S}}(t) = \matr{A}^{T} \matr{S}(t) +\matr{S}(t) \matr{A} - \left( \matr{S}(t) \matr{B} + \matr{N} \right) \matr{R}^{-1} \IEEEyesnumber \\
+    \IEEEeqnarraymulticol{2}{r}{\left( \matr{B}^{T} \matr{S}(t) + \matr{N}^{T} \right) + \matr{Q}}
+\end{IEEEeqnarray*}
 associated with the LQR controller. The feedback is gained from
 \[
-  \matr{K}(t) = \matr{R}^{-1} \left( \matr{B} \matr{S}(t) + \matr{N}^T \right),
+    \matr{K}(t) = \matr{R}^{-1} \left( \matr{B} \matr{S}(t) + \matr{N}^T \right),
 \]
 and enables the system dynamics \cref{eq:model-dynamics} to be written
 \(f_{\mathit{cl}}(t,\vect{x})\) by direct substitution of \(\vect{u} =
--K\vect{x}\), where \(K\) is a \(1 \times 3\) matrix, and hence making the system in \cref{eq:model-dynamics} 
+-K\vect{x}\), where \(K\) is a \(1 \times 3\) matrix, and hence making the system in \cref{eq:model-dynamics}
 dependent only on \(t\) and \(\vect{x}\),
 \begin{equation}
-  \label{eq:model-dynamics-cl}
-  \vect{x} =
-  \begin{bmatrix}
-    x \\ y \\ \theta \\
-  \end{bmatrix}, \, \dot{\vect{x}} =
-  \begin{bmatrix}
-    -v \sin(\theta) \\
-    v \cos(\theta) \\
-    -K\vect{x} \\
-  \end{bmatrix} \mathEoS
+    \label{eq:model-dynamics-cl}
+    \vect{x} =
+    \begin{bmatrix}
+        x \\ y \\ \theta \\
+    \end{bmatrix}, \, \dot{\vect{x}} =
+    \begin{bmatrix}
+        -v \sin(\theta) \\
+        v \cos(\theta)  \\
+        -K\vect{x}      \\
+    \end{bmatrix} \mathEoS
 \end{equation}
 
 Which means that
 
 \[
-V_{i}(t, \vect{x}) = \vect{x}^{T}S_{i}\vect{x}
+    V_{i}(t, \vect{x}) = \vect{x}^{T}S_{i}\vect{x}
 \]
 as needed, where \(V_{i}(t, \vect{x}) \) is a quadratic Lyapunov function, which
 is used by the SoS optimizer to generate the funnels.
@@ -173,12 +173,12 @@ around them, so that safe traversal can be guaranteed. Thus for this to happen,
 the funnel generator needs an initial condition set from which to start. This is
 given by the hyper-ellipsoid
 \begin{align}
-  \mathcal{X}_0 &= \set{\vect{x} \in \R^{3} \mid \vect{x}^{T} Q \vect{x}} \\
-  Q &= \begin{bmatrix}
-    2 & 0 & 0 \\
-    0 & 2 & 0 \\
-    0 & 0 & 4
-  \end{bmatrix} \mathEoS
+    \mathcal{X}_0 &= \set{\vect{x} \in \R^{3} \mid \vect{x}^{T} Q \vect{x}} \\
+    Q &= \begin{bmatrix}
+             2 & 0 & 0 \\
+             0 & 2 & 0 \\
+             0 & 0 & 4
+    \end{bmatrix} \mathEoS
 \end{align}
 which means that the dynamical system can start in a wide variety of initial
 states, and the controller will be able to take it safely to the outlet of the
@@ -190,11 +190,11 @@ another funnel, as the inlet is bigger.
 Given the model from \cref{eq:model-dynamics} the cyclic coordinates of the
 system are found from:
 \begin{align*}
-  \mathcal{L} &= T - V = \frac{1}{2} mv^2 + \frac{1}{2}I\dot{\theta}^2 \\ 
-              &= \frac{1}{2} \left(  m \left(
-                \dot{\vect{x}}^2 \sin^2 \theta + \dot{\vect{x}}^2 \cos^2 \theta
-                \right)  + I {\dot{\theta}}^2 \right) \\
-              &= \frac{1}{2} \left(  m\dot{\vect{x}}^2 + I {\dot{\theta}}^2 \right)
+    \mathcal{L} &= T - V = \frac{1}{2} mv^2 + \frac{1}{2}I\dot{\theta}^2 \\
+    &= \frac{1}{2} \left(  m \left(
+    \dot{\vect{x}}^2 \sin^2 \theta + \dot{\vect{x}}^2 \cos^2 \theta
+    \right)  + I {\dot{\theta}}^2 \right) \\
+    &= \frac{1}{2} \left(  m\dot{\vect{x}}^2 + I {\dot{\theta}}^2 \right)
 \end{align*}
 which shows that the Lagrangian is invariant to shifts in the \((x,y,\theta)\)
 variables, since \(\frac{\partial\mathcal{L}}{\partial q_i} = 0, \, q_i =
@@ -210,23 +210,22 @@ cyclic coordinates of the system. Thus, a trajectory of the form \(t \rightarrow
 \(\Psi_{c}\) along the cyclic coordinates of the system to yield a valid
 solution of the form
 \[
-  t \rightarrow \bigl( \Psi_{x}(\vect{x}(t)), \vect{u}(t) \bigr)
+    t \rightarrow \bigl( \Psi_{x}(\vect{x}(t)), \vect{u}(t) \bigr)
 \]
 where the transform \(\Psi\) is given by
 \[
-  \Psi \bigl( \begin{bmatrix}
-    \vect{x}_{c}  \\ \vect{x}_{\mathit{nc}} 
-  \end{bmatrix}
-  \bigr) =
-  \begin{cases}
-    \vect{x}_{c} \rightarrow \vect{x}^{'}_{c} \\
-    \vect{x}_{\mathit{nc}} \rightarrow \vect{x}_{\mathit{nc}} \mathEoS
-  \end{cases}
+    \Psi \bigl( \begin{bmatrix}
+                    \vect{x}_{c}  \\ \vect{x}_{\mathit{nc}}
+    \end{bmatrix}
+    \bigr) =
+    \begin{cases}
+        \vect{x}_{c} \rightarrow \vect{x}^{'}_{c} \\
+        \vect{x}_{\mathit{nc}} \rightarrow \vect{x}_{\mathit{nc}} \mathEoS
+    \end{cases}
 \]
 However, since \( \dim (\vect{x}) = \dim(\vect{x}_{c}) \), for
 the dynamics equation in~\ref{eq:model-dynamics}, it is not necessary to handle
 the non-cyclic case for the model in this experiment.
-
 
 \subsection{Funnel Composition}
 \label{subsec:funnel-no-composable}
@@ -247,13 +246,13 @@ this dimension at all. The framework can be expanded with this functionality.
 however, this is referred to as future work.
 
 \begin{figure}[!t]
-  \centering
-  \includegraphics[width=.8\columnwidth]{figures/experiments/funnel-inlet-outlet}
-  \caption[The projection of the funnel inlet and outlet in the xy-plane]{The projection of the funnel inlet and outlet onto the xy-plane, in meters. It is
+    \centering
+    \includegraphics[width=.8\columnwidth]{figures/experiments/funnel-inlet-outlet}
+    \caption[The projection of the funnel inlet and outlet in the xy-plane]{The projection of the funnel inlet and outlet onto the xy-plane, in meters. It is
     seen that the controller is able to make the funnel converge in the
     x-direction as expected, however, it has no control in the y-direction, as
     there is no controller steering the speed of the vehicle.}
-  \label{fig:funnel-inlet-outlet}
+    \label{fig:funnel-inlet-outlet}
 \end{figure}
 
 %\subsection{Continuous Verification of Invariance}
@@ -265,7 +264,6 @@ during execution, and aborts the simulation with the emergency maneuver if the
 airplane leaves one of the funnels at runtime. This happens if the value of the
 Lyapunov function is larger than one. In the experiments, this counts as
 a collision on the part of the \rrtfunnel{} algorithm.
-
 
 \subsection{The Size of the Airplane and the Obstacles Models}
 \label{subsec:deciding-model-size}
@@ -281,7 +279,7 @@ with a maximal speed of
 \(10\) \IEEEunit{m/s} and a size of \(10 \times 20 \) \IEEEunit{cm}, however
 the speed and size of the aircraft can be set arbitrary.
 The mass is not relevant for our first order dynamics, but still
-the airplane is assigned a mass of \(1\, \textit{kilo}\), so that the
+the airplane is assigned a mass of \(1\, \textit{kilogram}\), so that the
 translation of the model dynamics is not irrelevant.
 
 \subsection{Expanding the Funnels around the Airplane Model}
@@ -294,15 +292,17 @@ airplane model. However,
 the size of the airplane only affects the size of the funnel ellipsis projected
 down into the \(xy\)-plane. Therefore, first extract the projected size of the
 funnel, through a projection map: \(P \colon \R^3 \rightarrow \R^2\), where \(P
-= \begin{bmatrix} I_{2 \times 2} & {0}_{2 \times 2} \\ \end{bmatrix} \) such
+= \begin{bmatrix}
+      I_{2 \times 2} & {0}_{2 \times 2} \\
+\end{bmatrix} \) such
 that for the projected ellipsoid
 \(
-  \mathcal{E}_{p} = \set{\bar{\vect{x}} \in \R^{2} \mid
-    {\bar{\vect{x}}}^{T}S_{k}^{(p)}\bar{\vect{x}} \leq 1},
+\mathcal{E}_{p} = \set{\bar{\vect{x}} \in \R^{2} \mid
+{\bar{\vect{x}}}^{T}S_{k}^{(p)}\bar{\vect{x}} \leq 1},
 \)
 with \(S_{k}^{(p)}\) given by
 \(
-  S_{k}^{(p)} = {\left( PS_{k}^{-1}P^T \right)}^{-1},
+S_{k}^{(p)} = {\left( PS_{k}^{-1}P^T \right)}^{-1},
 \)
 is the set containing the funnel projected down into the \(xy\)-plane. Here
 \(\mathcal{E}_{p}\) is the projected set of the ellipsoid in the \(xy\)-plane. In general an ellipse centered at
@@ -313,10 +313,10 @@ airplane model. Take note that the matrix \(S_{k}\) is
 factorized~\cite{lay2005linear}. The expanded ellipsis (which now contains all
 the possible states of the airplane model) is given by:
 \begin{align*}
-  S_{k}^{(\mathcal{P})} &= R^{T}R \\
-  \vect{x} &= R^{-1}\vect{y} \\
-  \mathcal{C} &= \set{\vect{y} \in \R^2 \mid \vect{y}^{T}\vect{y} \leq 1 + r_{a}} \\
-  \mathcal{E}_{\mathit{exp}} &= \set{R^{-1}\vect{y} \mid \vect{y} \in \mathcal{C}} \\
+    S_{k}^{(\mathcal{P})} &= R^{T}R \\
+    \vect{x} &= R^{-1}\vect{y} \\
+    \mathcal{C} &= \set{\vect{y} \in \R^2 \mid \vect{y}^{T}\vect{y} \leq 1 + r_{a}} \\
+    \mathcal{E}_{\mathit{exp}} &= \set{R^{-1}\vect{y} \mid \vect{y} \in \mathcal{C}} \\
 \end{align*}
 where \(\mathcal{E}_{\mathit{exp}}\) are the ellipsoids which contains the
 volume of the airplane for all verified states in the funnel, and
@@ -325,25 +325,18 @@ is the wingspan. A picture of the initial funnel and the funnel expanded around
 the airplane model can be seen in
 \cref{fig:expanded-funnel}.
 
+\begin{figure}[!t]
+    \centering
+    \includegraphics[scale=.6, trim={4.5cm, 9cm, 5cm, 7cm}, clip]{figures/experiments/rrtfunnel-101samples.pdf}
+    \caption[The expansion of the \rrtfunnel algorithm at 1, and 101 iterations]{Visualized is the expansion of the \rrtfunnel~algorithm at 101 iterations of the algorithm with the funnels shown. Both axis are in meters.}
+    \label{fig:algorithm_with_funnel}
+\end{figure}
 
 \begin{figure}[!t]
-  \centering
-  %% \begin{minipage}[c]{.9\columnwidth}
-  %% \includegraphics[scale=.5, trim={5cm, 9cm, 5cm, 7cm}, clip]{figures/experiments/rrtfunnel-1samples.pdf}
-  %% \caption[The expansion of the \rrtfunnel algorithm at 1, and 101 iterations]{Visualized is the expansion of the \rrtfunnel algorithm at 1 iterations of the algorithm.}
-  %% \end{minipage}
-  %% \newline
-  \begin{subfigure}[b]{\columnwidth}
-  \centering
-  \includegraphics[scale=.6, trim={4.5cm, 9cm, 5cm, 7cm}, clip]{figures/experiments/rrtfunnel-101samples.pdf}
-  \caption{With Funnels.}
-  \end{subfigure}
-  \begin{subfigure}[b]{\columnwidth}
-  \centering
+    \centering
     \includegraphics[scale=.6, trim={4.5cm, 9cm, 5cm, 7cm}, clip]{figures/experiments/rrtfunnel-101samples-dyn.pdf}
-  \caption{Tree only.}
-  \end{subfigure}
-  \caption[The expansion of the \rrtfunnel algorithm at 1, and 101 iterations]{Visualized is the expansion of the \rrtfunnel~algorithm at 101 iterations of the algorithm. Both axis are in meters.}
+    \caption[The expansion of the \rrtfunnel algorithm at 1, and 101 iterations]{Visualized is the expansion of the \rrtfunnel~algorithm at 101 iterations of the algorithm with the tree shown. Both axis are in meters.}
+    \label{fig:algorithm_with_tree}
 \end{figure}
 
 %% \begin{figure}[!t]
