@@ -14,8 +14,8 @@
 \usepackage[capitalise]{cleveref}
 \usepackage{color} % For colouring inkscape include (and more)
 % \usepackage[style=ieee]{biblatex} % Needed for \textcite
-\usepackage{caption}
-\usepackage{subcaption}
+%\usepackage{caption}
+%\usepackage{subcaption}
 
 % Math helpers
 \usepackage{amssymb}    % Extra symbols
@@ -118,6 +118,16 @@
 \usepackage{textcomp}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+% Need this in order to remove linebreak of table captions.
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd{\@makecaption}
+  {\\}
+  {.\ \qquad}
+  {}
+  {}
+
 
 \begin{document}
 
